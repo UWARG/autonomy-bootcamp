@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(warg-cv-bootcamp CXX) 
 
-set(MODULES)
+set(MODULES core)
 
 # Dependencies (none)
 
