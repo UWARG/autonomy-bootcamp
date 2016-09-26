@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(warg-cv-bootcamp C CXX) 
 
-set(MODULES core)
+set(MODULES core sorts)
+
 
 # Dependencies
 find_package(OpenCV REQUIRED)
@@ -33,6 +34,7 @@ enable_testing()
 # Include Modules
 
 foreach(p ${MODULES})
+    message(status "${p}")
     add_subdirectory("modules/${p}")
 endforeach()
 

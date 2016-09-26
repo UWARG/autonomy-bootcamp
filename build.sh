@@ -18,8 +18,8 @@
 
 WORKSPACE_DIR=
 THREADS=1
-CLEAN=false
-TEST=false
+CLEAN=true
+TEST=true
 INSTALL=false
 BUILD_TYPE="Debug"
 
@@ -73,7 +73,7 @@ fi
 mkdir -p $WORKSPACE_DIR/build
 cd $WORKSPACE_DIR/build
 
-cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE && make -j$THREADS
+cmake .. -B./ -H../ -DCMAKE_BUILD_TYPE=$BUILD_TYPE && make -j$THREADS
 
 RESULT=$?
 
