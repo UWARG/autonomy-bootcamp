@@ -1,8 +1,8 @@
-add_executable(stest test.cpp)
-target_link_libraries(stest Sorts)
+add_executable(merge_sort_test test.cpp)
+target_link_libraries(merge_sort_test Sorts)
 
 # Tests
 add_test(
-    NAME "example test"
-    COMMAND stest
+    NAME "Merge Sort Test"
+    COMMAND merge_sort_test --log-format=XML --log-sink=TEST-merge_sort_test.xml --log-level=all --report-level=no
 )

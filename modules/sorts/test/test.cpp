@@ -1,5 +1,5 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE TestSuiteName
+#define BOOST_TEST_MODULE merge_sort_test
 #include <boost/test/unit_test.hpp>
 #include "merge_sort.h" // declares type foo, header is in the core module
 #include <vector>

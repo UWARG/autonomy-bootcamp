@@ -1,5 +1,5 @@
 /**
- * @file contour_comparison.h
+ * @file merge_sort.h
  * @author WARG
  *
  * @section LICENSE
