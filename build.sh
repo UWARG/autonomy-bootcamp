@@ -18,8 +18,8 @@
 
 WORKSPACE_DIR=
 THREADS=1
-CLEAN=true
-TEST=true
+CLEAN=false
+TEST=false
 INSTALL=false
 BUILD_TYPE="Debug"
 
