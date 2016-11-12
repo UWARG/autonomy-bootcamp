@@ -1,8 +1,22 @@
+/**
+ * @file mergesort.h
+ * @author WARG
+ *
+ * @section LICENSE
+ *
+ * Copyright (c) 2015-2016, Waterloo Aerial Robotics Group (WARG)
+ * All rights reserved.
+ *
+ * This software is licensed under a modified version of the BSD 3 clause license
+ * that should have been included with this software in a file called COPYING.txt
+ * Otherwise it is available at:
+ * https://raw.githubusercontent.com/UWARG/computer-vision/master/COPYING.txt
+ */
+
 #ifndef MERGESORT_H
 #define MERGESORT_H
 
-void MergeSort(int a[], int n);
-void MergeSortHelper(int a[], int n, int aux[], int low, int high);
-void Merge(int a[], int n, int aux[], int low, int mid, int high);
+void merge_sort(int a[], int n);
+
 
 #endif
