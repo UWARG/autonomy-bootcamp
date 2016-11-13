@@ -12,7 +12,7 @@
 
 #include <iostream>
 #include <boost/log/trivial.hpp>
-#niclude <boost/test/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include "mergesort.h"
 
 using namespace std;
