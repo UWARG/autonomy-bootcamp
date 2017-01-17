@@ -1,3 +1,5 @@
 include_directories(include)
+set(SOURCE_FILES include/merge_sort.h)
 add_library(Core src/contour_comparison.cpp)
 target_link_libraries(Core ${Boost_LIBRARIES} ${OpenCV_LIBS})
+add_subdirectory(test)
