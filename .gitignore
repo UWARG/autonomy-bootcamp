@@ -1,2 +1,5 @@
 # Put files to ignore here
 build
+.idea
+cmake-build-debug
+.DS_Store
