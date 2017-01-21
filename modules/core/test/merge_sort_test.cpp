@@ -23,12 +23,21 @@ BOOST_AUTO_TEST_CASE(integer_sorting){
 }
 
 
-BOOST_AUTO_TEST_CASE(dummy_check) {
-    //BOOST_FAIL("FUCKED");
-    //BOOST_ERROR("FUCKED AGAIN");
-    //BOOST_REQUIRE_EQUAL(1, 2);
-    BOOST_WARN(true);
-    BOOST_CHECK(true);
+BOOST_AUTO_TEST_CASE(float_sorting) {
+    std::vector<float> a = {3.32, 2.21, 2.64, 1.005};
+    std::vector<float> sorted = {1.005, 2.21, 2.64, 3.32};
+
+    a = merge_sort<float>(a, [](float x1, float x2) -> int {
+        if(x1 < x2){
+            return -1;
+        }else if(x1 == x2){
+            return 0;
+        }else{
+            return 1;
+        }
+    });
+
+    BOOST_CHECK(a == sorted);
 }
 
 
