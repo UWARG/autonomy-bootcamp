@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(warg-cv-bootcamp C CXX) 
 
-set(MODULES core)
+set(MODULES core mergesort)
 
 # Dependencies
 find_package(OpenCV REQUIRED)
@@ -33,6 +33,7 @@ enable_testing()
 # Include Modules
 
 foreach(p ${MODULES})
+    message(status " Adding module ${p}")
     add_subdirectory("modules/${p}")
 endforeach()
 
@@ -41,7 +42,7 @@ foreach(p ${MODULES})
 endforeach()
 
 if (UNIX)
-    message(status "Setting GCC flags")
+    message(status " Setting GCC flags")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fexceptions -Wall -Wextra")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -mtune=native")
 else()
