@@ -16,7 +16,7 @@
 #ifndef CONTOUR_COMPARISON_H_INCLUDED
 #define CONTOUR_COMPARISION_H_INCLUDED
 
-#include <opencv2/imgproc.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <vector>
 
 /**

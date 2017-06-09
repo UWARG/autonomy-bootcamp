@@ -13,7 +13,7 @@
  *  https://raw.githubusercontent.com/UWARG/computer-vision/master/COPYING.txt
  */
 
-#include <opencv2/imgproc.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/test/unit_test.hpp>
 #include <vector>
@@ -40,11 +40,11 @@ double compare_contours(vector<vector<Point> > & contourA, vector<vector<Point> 
 
     for(int i = 0; i < hullA.size(); i++) {
         convexHull( Mat(contourA[i]), hullA[i], false );
-        drawContours(imgA, hullA, i, Scalar(255,255,255), FILLED);
+        drawContours(imgA, hullA, i, Scalar(255,255,255), CV_FILLED);
     }
     for(int i = 0; i < hullB.size(); i++) {
         convexHull( Mat(contourB[i]), hullB[i], false );
-        drawContours(imgB, hullB, i, Scalar(255,255,255), FILLED);
+        drawContours(imgB, hullB, i, Scalar(255,255,255), CV_FILLED);
     }
     BOOST_LOG_TRIVIAL(trace) << "Comparing images";
     Mat diff = imgA & imgB;
