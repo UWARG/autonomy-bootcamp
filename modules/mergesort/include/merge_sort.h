@@ -14,5 +14,5 @@
  */
  #include <vector>
  // @brief uses mergesort to sort the vector that is inputted
- // @param v = vector to be sorted
-std::vector<float> merge_sort(std::vector<float>& a)
+ // @param a = vector to be sorted
+std::vector<float> merge_sort(std::vector<float>& a);

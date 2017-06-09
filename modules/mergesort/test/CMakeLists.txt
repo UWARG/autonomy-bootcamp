@@ -1,0 +1,3 @@
+add_executable(mergesort_test mergesort_test.cpp)
+target_link_libraries(mergesort_test Mergesort)
+add_test(NAME mergesort_test COMMAND mergesort_test)
