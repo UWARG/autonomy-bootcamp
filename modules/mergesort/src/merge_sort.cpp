@@ -48,18 +48,4 @@ std::vector<float> merge_sort(std::vector<float>& a){
     a = merge(leftHalf,rightHalf);
     return a;
 }
-// int main(){
-// 	// Following code was for debugging.
-//     // float arr[] = {14.2,14,7,6,18,10.2};
-//     // std::vector<float> v(arr ,arr + sizeof(arr)/sizeof(arr[0]) );
-      		
-//     // for(auto i = v.begin(); i !=v.end() ; i += 1){
-//     //     std::cout<< *i <<' ';
-//     // }
-//     // merge_sort(v);
-  
-//     // std::cout <<std::endl;
-//     // for(auto i = v.begin() ; i != v.end() ; i += 1){
-//     //     std::cout<< *i <<' ';
-//     // }
-// }
+

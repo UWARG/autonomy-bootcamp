@@ -13,6 +13,7 @@
  *  https://raw.githubusercontent.com/UWARG/computer-vision/master/COPYING.txt
  */
  #include <vector>
- // @brief uses mergesort to sort the vector that is inputted
- // @param a = vector to be sorted
+/** @brief uses mergesort to sort the vector that is inputted
+ *	@param a = vector to be sorted
+ */
 std::vector<float> merge_sort(std::vector<float>& a);
