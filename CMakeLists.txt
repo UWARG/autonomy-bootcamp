@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(warg-cv-bootcamp C CXX) 
 
-set(MODULES core)
+set(MODULES core sort)
 
 # Dependencies
 find_package(OpenCV REQUIRED)
@@ -18,7 +18,7 @@ if(NOT Threads_FOUND)
     message(warning " Threads library not found. Proceed with caution")
 endif()
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 
@@ -34,6 +34,7 @@ enable_testing()
 
 foreach(p ${MODULES})
     add_subdirectory("modules/${p}")
+    add_subdirectory("modules/${p}/test")
 endforeach()
 
 foreach(p ${MODULES})
@@ -50,3 +51,5 @@ else()
 endif()
 message(status " CMAKE_CXX_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
 message(status " CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
+
+# Testing
