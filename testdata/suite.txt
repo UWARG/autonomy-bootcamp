@@ -1,4 +1,0 @@
-Long
-Negative
-Integer
-Large

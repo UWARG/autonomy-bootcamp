@@ -1,0 +1,7 @@
+#! /bin/bash
+
+make clean
+
+rm cmake_install.cmake CTestTestfile.cmake computer-vision.cfg CMakeCache.txt Makefile
+rm -r build/ CMakeFiles/ Testing/
+

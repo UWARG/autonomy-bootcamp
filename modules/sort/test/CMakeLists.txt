@@ -7,4 +7,5 @@ target_link_libraries(mytest Sort)
 add_test(
   NAME "tests"
   COMMAND mytest --log_format=XML --log_sink=TEST-mytest.xml --log_level=all --report_level=no
+  WORKING_DIRECTORY ${TESTDATA_DIR}
 )

@@ -1,5 +1,7 @@
 #! /usr/bin/python2.7
 
+# test generator
+
 infile_name = raw_input('>> input file name:')
 outfile_name = raw_input('>> output file name:')
 
