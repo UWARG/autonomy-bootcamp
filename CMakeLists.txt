@@ -34,7 +34,6 @@ enable_testing()
 
 foreach(p ${MODULES})
     add_subdirectory("modules/${p}")
-    add_subdirectory("modules/${p}/test")
 endforeach()
 
 foreach(p ${MODULES})

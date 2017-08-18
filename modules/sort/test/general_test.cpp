@@ -46,7 +46,7 @@ bool test_func(std::string testName){
     }
 }
 
-BOOST_AUTO_TEST_SUITE(MySuite);
+BOOST_AUTO_TEST_SUITE(GeneralTest);
 
 BOOST_AUTO_TEST_CASE(Negative) {
     std::string name = "Negative";

@@ -1,25 +1,41 @@
 #! /usr/bin/python2.7
 
-# test generator
+# test data generator
+# useful for small tests.
+# Input a test case name(e.g. mytest), input integers in any order, any non-int
+# input is regarded as EOL.
+# Outputs mytest.in, with total number of inputs as first number
+# followed by numbers you just entered in the same order.
+# Outputs mytest.exp, with same numbers but in sorted order.
 
-infile_name = raw_input('>> input file name:')
-outfile_name = raw_input('>> output file name:')
+# naming your test
+testname = raw_input('>> input test name:')
 
+# filenames
+infile_name = testname + '.in'
+outfile_name = testname + '.exp'
+
+# store the test data
 lst = []
 
+# read in numbers
 while True:
     try:
         num = int(raw_input())
         lst.append(num)
     except:
         break
-
+# create .in file
 infile = open(infile_name,'w')
 infile.write(str(len(lst)))
 infile.write('\n')
 for i in lst:
     infile.write(str(i)+'\n')
+
+# sort the data
 lst.sort()
+
+# create .exp file
 outfile = open(outfile_name, 'w')
 for i in lst:
     outfile.write(str(i)+'\n')
