@@ -16,6 +16,7 @@
 #include <vector>
 #include <boost/log/trivial.hpp>
 #include <boost/test/unit_test.hpp>
+#include <cmath>
 #include "merge_sort.h"
 
 using namespace std;
@@ -24,7 +25,7 @@ template <class T>
 vector<T> merge_sort(vector<T> &arr, int low, int high){
   int mid;
   if(low < high){
-    mid = floor((low + high) / 2);
+    mid = std::floor((low + high) / 2);
     merge_sort(arr, low, mid);
     merge_sort(arr, mid + 1, high);
     merge(arr, low, mid, high);

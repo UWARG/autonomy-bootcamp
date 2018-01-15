@@ -1,7 +1,0 @@
-/Users/vigsivan/Projects/computer-vision-bootcamp/CMakeFiles/rebuild_cache.dir
-/Users/vigsivan/Projects/computer-vision-bootcamp/CMakeFiles/edit_cache.dir
-/Users/vigsivan/Projects/computer-vision-bootcamp/CMakeFiles/test.dir
-/Users/vigsivan/Projects/computer-vision-bootcamp/modules/core/CMakeFiles/test.dir
-/Users/vigsivan/Projects/computer-vision-bootcamp/modules/core/CMakeFiles/rebuild_cache.dir
-/Users/vigsivan/Projects/computer-vision-bootcamp/modules/core/CMakeFiles/edit_cache.dir
-/Users/vigsivan/Projects/computer-vision-bootcamp/modules/core/CMakeFiles/Core.dir

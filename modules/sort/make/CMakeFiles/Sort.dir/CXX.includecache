@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/merge_sort.h
+vector
+-
+
+/computer-vision-bootcamp/modules/sort/src/merge_sort.cpp
+vector
+-
+boost/log/trivial.hpp
+-
+boost/test/unit_test.hpp
+-
+cmath
+-
+merge_sort.h
+/computer-vision-bootcamp/modules/sort/src/merge_sort.h
+

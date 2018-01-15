@@ -1,9 +1,9 @@
-include_directories(${Core_INCLUDE_DIR})
-add_executable(merge_sort_test merge_sort_test.cpp)
-target_link_libraries(merge_sort_test Core)
+enable_testing()
 
-# Tests
-add_test(
-    NAME "example test"
-    COMMAND mytest --log_format=XML --log_sink=TEST-mytest.xml --log_level=all --report_level=no
-)
+if(Boost_FOUND AND OpenCV_FOUND)
+    add_executable(test test.cpp)
+    target_link_libraries(test.out ${Boost_LIBRARIES} ${OpenCV_LIBS} Sort)
+	
+	# Tests
+	add_test("MergeSortTest")
+endif()

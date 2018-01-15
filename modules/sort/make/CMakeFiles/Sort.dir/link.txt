@@ -1,0 +1,2 @@
+/usr/sbin/ar qc libSort.a  CMakeFiles/Sort.dir/src/merge_sort.o
+/usr/sbin/ranlib libSort.a
