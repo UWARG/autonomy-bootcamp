@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(warg-cv-bootcamp C CXX) 
 
-set(MODULES merge)
-set(MODULES core)
+set(MODULES merge core)
 
 
 # Dependencies
