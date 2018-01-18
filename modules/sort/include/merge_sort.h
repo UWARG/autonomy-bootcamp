@@ -30,8 +30,7 @@
  *  @return the sorted array
  */
 
-template<class T>
-std::vector<T> merge_sort(std::vector<T> &arr, int low, int high);
+std::vector<int> merge_sort(std::vector<int> &arr, int low, int high);
 
 /**
  *  @brief A helper function for the merge_sort function
@@ -45,8 +44,7 @@ std::vector<T> merge_sort(std::vector<T> &arr, int low, int high);
  *  @return the sorted array
  */
 
-template<class T>
-std::vector<T> merge(std::vector<T> &arr, int low, int mid, int high);
+std::vector<int> merge(std::vector<int> &arr, int low, int mid, int high);
 
 
 #endif // MERGE_SORT_H_INCLUDED

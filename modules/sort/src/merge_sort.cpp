@@ -21,8 +21,7 @@
 
 using namespace std;
 
-template <class T>
-vector<T> merge_sort(vector<T> &arr, int low, int high){
+vector<int> merge_sort(vector<int> &arr, int low, int high){
   int mid;
   if(low < high){
     mid = std::floor((low + high) / 2);
@@ -33,11 +32,10 @@ vector<T> merge_sort(vector<T> &arr, int low, int high){
   return arr;
 }
 
-template <class T>
-vector<T> merge(vector<T> &arr, int low, int mid, int high){
+vector<int> merge(vector<int> &arr, int low, int mid, int high){
 
-  vector<int> arr1 = vector<T>();
-  vector<int> arr2 = vector<T>();
+  vector<int> arr1 = vector<int>();
+  vector<int> arr2 = vector<int>();
 
   for(int i = low; i <= mid; i++){
     arr1.push_back(arr[i]);

@@ -51,13 +51,16 @@ BOOST_AUTO_TEST_CASE(MergeSortTest)
   example.push_back(2);
   example.push_back(6);
 
+  // this is the expected output
+  std::vector<int> soln = {1, 2, 2, 3, 4, 5, 6, 6};
+
   int max = example.size();
 
   merge_sort(example, 0, max - 1);
 
 
-  for(int i = 1; i < max; i++){
-    BOOST_TEST(example[i-1] <= example[i]);
+  for(int i = 0; i < max; i++){
+    BOOST_TEST(example[i] == soln[i]);
   }
 
   BOOST_TEST_MESSAGE("Test completed");
