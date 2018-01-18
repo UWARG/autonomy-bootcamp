@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(warg-cv-bootcamp C CXX) 
 
-set(MODULES core)
+set(MODULES core sort)
 
 # Dependencies
 find_package(OpenCV REQUIRED)
