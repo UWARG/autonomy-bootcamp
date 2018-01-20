@@ -3,6 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include "merge_sort.cpp"
 
+BOOST_AUTO_TEST_SUITE(merge_sort_test_suite);
 BOOST_AUTO_TEST_CASE( merge_test ){
         std::vector<int> v1 = {1, 1, 1, 1};
         std::vector<int> v2 = {0, 2, 2, 3};
@@ -21,5 +22,7 @@ BOOST_AUTO_TEST_CASE (sort_test){
 
         BOOST_CHECK (v1 == v2);
 }
+
+BOOST_AUTO_TEST_SUITE_END();
 
 
