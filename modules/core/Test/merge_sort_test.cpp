@@ -10,7 +10,7 @@ BOOST_TEST_AUTO_CASE( merge_test ){
 
         v1 = merge(v1, v2);
 
-        BOOST_CHECK ( v1 == v3)
+        BOOST_CHECK ( v1 == v3);
 }
 
 BOOST_TEST_AUTO_CASE (sort_test){
