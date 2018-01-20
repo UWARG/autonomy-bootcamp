@@ -1,7 +1,7 @@
-#ifndef BOOST_TEST_DYN_LINK
-#define MERGE_SORT_MODULE MERGE_SORT_TEST
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE MERGE_SORT_TEST
 #include <boost/test/unit_test.hpp>
-#include <merge_sort.h>
+#include "merge_sort.cpp"
 
 BOOST_AUTO_TEST_CASE( merge_test ){
         std::vector<int> v1 = {1, 1, 1, 1};
