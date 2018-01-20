@@ -1,6 +1,6 @@
 /**
  * @file contour_comparison.h
- * @author Ben Zhang
+ * @author WARG
  *
  * @section LICENSE
  *
@@ -24,7 +24,7 @@
  * @param lo
  * @param hi
  */
-void merge_sort(std::vector<int> a, int lo, int hi);
+std::vector<int> mergeSort(std::vector<int> v);
 
 #endif //COMPUTER_VISION_BOOTCAMP_MERGE_SORT_H
 

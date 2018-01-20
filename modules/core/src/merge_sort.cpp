@@ -1,5 +1,5 @@
 /** @file merge_sort.cpp
- * @author Ben Zhang
+ * @author WARG
  *
  * @section LICENSE
  *
