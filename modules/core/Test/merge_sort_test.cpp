@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <merge_sort.h>
 
-BOOST_TEST_AUTO_CASE( merge_test ){
+BOOST_AUTO_TEST_CASE( merge_test ){
         std::vector<int> v1 = {1, 1, 1, 1};
         std::vector<int> v2 = {0, 2, 2, 3};
         std::vector<int> v3 = {0, 1, 1, 1, 1, 2, 2, 3};
