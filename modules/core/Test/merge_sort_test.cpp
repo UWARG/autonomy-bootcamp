@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_CASE( merge_test ){
         BOOST_CHECK ( v1 == v3);
 }
 
-BOOST_TEST_AUTO_CASE (sort_test){
+BOOST_AUTO_TEST_CASE (sort_test){
         std::vector<int> v1 = { 10, 9, 8, 7, 6, 5};
         std::vector<int> v2 = { 5, 6, 7, 8, 9, 10};
 
