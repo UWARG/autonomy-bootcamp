@@ -9,13 +9,16 @@ int main();
 
 //problem: initial problem was that it is difficult to return a local array in c++
 //Date: 10/24/2018
-//-solution - separate array using only indexes - so you dont actually return any arrays, but only making modifications on top of the original array
+//-solution - separate array using only indexes - so you dont actually return any arrays, 
+//but only making modifications on top of the original array
 
-void merge_sort(int arr[], int leftIndex, int rightIndex) { //you are not passing a new array, but rather the original one but with index restriction (in a sense)
+void merge_sort(int arr[], int leftIndex, int rightIndex) { //you are not passing a new array, but rather 
+                                                            //the original one but with index restriction (in a sense)
 
     if (leftIndex < rightIndex) { //if both are 0, then its a size 1 array
 
-        int middleIndex = (leftIndex + rightIndex) / 2; //if size is 7, we get 7/2 = 3.5 = 3 as middle index -> [0,3] = size 4 , [4,6] = size 3 -> so left side will always be bigger than right side
+        int middleIndex = (leftIndex + rightIndex) / 2; //if size is 7, we get 7/2 = 3.5 = 3 as middle index -> [0,3] = size 4 , 
+                                                        //[4,6] = size 3 -> so left side will always be bigger than right side
 
         merge_sort(arr, 0, middleIndex);
         merge_sort(arr, middleIndex + 1, rightIndex); 
