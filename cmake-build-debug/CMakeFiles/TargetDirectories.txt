@@ -1,0 +1,15 @@
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/CMakeFiles/test.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/CMakeFiles/test.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/CMakeFiles/rebuild_cache.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/CMakeFiles/edit_cache.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/CMakeFiles/Core.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/CMakeFiles/rebuild_cache.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/CMakeFiles/edit_cache.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/CMakeFiles/test.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/CMakeFiles/MergeSort.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/CMakeFiles/rebuild_cache.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/CMakeFiles/edit_cache.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/CMakeFiles/test.dir
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/CMakeFiles/mergesort_test.dir

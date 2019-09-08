@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/include/merge_sort.h
+vector
+-
+
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/test/mergesort_test.cpp
+boost/test/unit_test.hpp
+-
+../include/merge_sort.h
+/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/include/merge_sort.h
+iostream
+-
+

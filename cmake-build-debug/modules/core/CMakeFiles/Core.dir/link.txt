@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libCore.a  CMakeFiles/Core.dir/src/contour_comparison.cpp.o CMakeFiles/Core.dir/__/MergeSort/src/merge_sort.cpp.o CMakeFiles/Core.dir/__/MergeSort/test/mergesort_test.cpp.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libCore.a

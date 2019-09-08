@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(warg-cv-bootcamp C CXX) 
 
-set(MODULES core)
-
+set(MODULES core MergeSort)
+#set(OpenCV_DIR /opt/opencv-2.4.11/share/OpenCV)
 # Dependencies
 find_package(OpenCV REQUIRED)
 find_package(Boost REQUIRED filesystem log thread system program_options unit_test_framework)

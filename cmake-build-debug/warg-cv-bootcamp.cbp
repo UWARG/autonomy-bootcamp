@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="warg-cv-bootcamp"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\usr\local\;CMake Files\..\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\..\usr\local\lib\cmake\;CMake Files\..\..\..\..\..\usr\local\lib\cmake\opencv4\;CMake Files\modules\;CMake Files\modules\core\;CMake Files\modules\MergeSort\;CMake Files\modules\MergeSort\test\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test">
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 test"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Core">
+				<Option output="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/libCore.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/core/include"/>
+					<Add directory="/usr/local/include/opencv4"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/Makefile&quot;  VERBOSE=1 Core"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Core/fast">
+				<Option output="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/libCore.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/core/include"/>
+					<Add directory="/usr/local/include/opencv4"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/Makefile&quot;  VERBOSE=1 Core/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/core/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MergeSort">
+				<Option output="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/libMergeSort.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/Makefile&quot;  VERBOSE=1 MergeSort"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MergeSort/fast">
+				<Option output="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/libMergeSort.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/Makefile&quot;  VERBOSE=1 MergeSort/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mergesort_test">
+				<Option output="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/mergesort_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/Makefile&quot;  VERBOSE=1 mergesort_test"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mergesort_test/fast">
+				<Option output="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/mergesort_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/Makefile&quot;  VERBOSE=1 mergesort_test/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug/modules/MergeSort/test/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/include/merge_sort.h">
+			<Option target="Core"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/src/merge_sort.cpp">
+			<Option target="Core"/>
+			<Option target="MergeSort"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/test/mergesort_test.cpp">
+			<Option target="Core"/>
+			<Option target="mergesort_test"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/core/src/contour_comparison.cpp">
+			<Option target="Core"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/../../../../../usr/local/lib/cmake/opencv4/OpenCVConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\local\lib\cmake\opencv4\"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/../../../../../usr/local/lib/cmake/opencv4/OpenCVConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\local\lib\cmake\opencv4\"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/../../../../../usr/local/lib/cmake/opencv4/OpenCVModules-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\local\lib\cmake\opencv4\"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/../../../../../usr/local/lib/cmake/opencv4/OpenCVModules.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\local\lib\cmake\opencv4\"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/core/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\modules\core\"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\modules\MergeSort\"/>
+		</Unit>
+		<Unit filename="/Users/huberstark/Documents/github/computer-vision-bootcamp-1/modules/MergeSort/test/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\modules\MergeSort\test\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

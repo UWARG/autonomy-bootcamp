@@ -1,0 +1,24 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/huberstark/Documents/github/computer-vision-bootcamp-1
+-- Boost version: 1.70.0
+-- Found the following Boost libraries:
+--   filesystem
+--   log
+--   thread
+--   system
+--   program_options
+--   unit_test_framework
+--   date_time
+--   log_setup
+--   regex
+--   chrono
+--   atomic
+status Boost Include: /usr/local/include
+status Boost Libraries: /usr/local/lib/libboost_filesystem-mt.dylib;/usr/local/lib/libboost_log-mt.dylib;/usr/local/lib/libboost_thread-mt.dylib;/usr/local/lib/libboost_system-mt.dylib;/usr/local/lib/libboost_program_options-mt.dylib;/usr/local/lib/libboost_unit_test_framework-mt.dylib;/usr/local/lib/libboost_date_time-mt.dylib;/usr/local/lib/libboost_log_setup-mt.dylib;/usr/local/lib/libboost_regex-mt.dylib;/usr/local/lib/libboost_chrono-mt.dylib;/usr/local/lib/libboost_atomic-mt.dylib
+status OpenCV Include: /usr/local/include/opencv4
+status OpenCV Libraries: opencv_calib3d;opencv_core;opencv_dnn;opencv_features2d;opencv_flann;opencv_gapi;opencv_highgui;opencv_imgcodecs;opencv_imgproc;opencv_ml;opencv_objdetect;opencv_photo;opencv_stitching;opencv_video;opencv_videoio
+statusSetting GCC flags
+status CMAKE_CXX_FLAGS_DEBUG: -g -fexceptions -Wall -Wextra
+status CMAKE_CXX_FLAGS_RELEASE: -O3 -DNDEBUG -mtune=native
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/huberstark/Documents/github/computer-vision-bootcamp-1/cmake-build-debug
