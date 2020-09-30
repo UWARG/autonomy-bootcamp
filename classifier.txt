@@ -1,0 +1,4 @@
+Hello, I've put in a link below to a google colab notebook where I've made
+the model and trained it (sorry but GPUs are expensive lol)
+
+https://colab.research.google.com/drive/1PQR0G24TPhxVIlSZhIJTUPyS38QvX6VB?usp=sharing
