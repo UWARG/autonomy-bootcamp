@@ -1,9 +1,10 @@
 import pickle
 import numpy as np
+from matplotlib import pyplot
+
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers, models
-from matplotlib import pyplot
 
 # Used to extract information from CIFAR-10 Files
 # Copied from CIFAR-10 Website
@@ -26,8 +27,9 @@ for i in range(2,6):
 testLabels = unpickle("CIFAR10/test_batch")[b'labels']
 testData = unpickle("CIFAR10/test_batch")[b'data']
 
-# Dividing all values by 255.0 to normalize data and resizing data from a 1D to a 32x32x3 Matrix (32x32 corresponding to the size of the image, 
-# and 3 corresponding to the 3 layers of colors).
+# Dividing all values by 255.0 to normalize data
+# Resizing data from a 1D to a 32x32x3 Matrix (32x32 corresponding to the size of the 
+# image, and 3 corresponding to the 3 layers of colors).
 
 trainData = np.true_divide(trainData, 255.0).reshape(len(trainData), 32, 32, 3)
 testData = np.true_divide(testData, 255.0).reshape(len(testData), 32, 32, 3)
