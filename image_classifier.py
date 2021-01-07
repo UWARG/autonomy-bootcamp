@@ -37,8 +37,6 @@ trainLabels = np.array(trainLabels)
 testLabels = np.array(testLabels)
 
 
-
-
 # NEURAL NETWORK ARCHITECTURE
 
 model = models.Sequential()
@@ -57,8 +55,8 @@ model.add(layers.Conv2D(128, (3,3), activation = "relu", padding = "same"))
 model.add(layers.MaxPooling2D(2,2))
 
 
-
 model.add(layers.Flatten())
+# We use Dropout to prevent any possible overfitting
 model.add(layers.Dropout(0.3))
 model.add(layers.Dense(512, activation = "relu"))
 
