@@ -64,7 +64,7 @@ model.add(layers.Dense(512, activation = "relu"))
 
 
 # THE FINAL LAYER:
-#     10, corresponding to the 10 classes of the CIFAR-10 Dataset
+#     10 Neurons, corresponding to the 10 classes of the CIFAR-10 Dataset
 #     Using the softmax activation function to clearly output probability of the image being from either one of the 10 classes.
 model.add(layers.Dense(10, activation = "softmax"))
 
