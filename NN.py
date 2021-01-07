@@ -1,34 +1,51 @@
+import pickle
+import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers, models
-import numpy as np
+from matplotlib import pyplot
 
-def unpickle(file):
-    import pickle
-    
+# Used to extract information from CIFAR-10 Files
+# Copied from CIFAR-10 Website
+def unpickle(file):   
     with open(file, 'rb') as fo:
         dict = pickle.load(fo, encoding='bytes')
-    
     return dict
+						
+# When downloading from the CIFAR-10 Website, data came in 6 batches:
+#     1 Testing Batch
+#     5 Training Batches, which I have here concatenated all into one for ease of use
 
-class_names = ["airplane", "automobile", "bird","cat", "deer", "dog", "frog", "horse", "ship", "truck"]										
-
-training_batch = {"l": unpickle("CIFAR10/data_batch_1")[b'labels'], "d": unpickle("CIFAR10/data_batch_1")[b'data']}
+trainLabels = unpickle("CIFAR10/data_batch_1")[b'labels']
+trainData = unpickle("CIFAR10/data_batch_1")[b'data']
 
 for i in range(2,6):
-    training_batch["l"] += unpickle(f"CIFAR10/data_batch_{i}")[b'labels']
+    trainLabels += unpickle(f"CIFAR10/data_batch_{i}")[b'labels']
+    trainData = np.concatenate((trainData, unpickle(f"CIFAR10/data_batch_{i}")[b'data']))
 
-    training_batch["d"] = np.concatenate((training_batch["d"],unpickle(f"CIFAR10/data_batch_{i}")[b'data']))
+testLabels = unpickle("CIFAR10/test_batch")[b'labels']
+testData = unpickle("CIFAR10/test_batch")[b'data']
+
+# Dividing all values by 255.0 to normalize data and resizing data from a 1D to a 32x32x3 Matrix (32x32 corresponding to the size of the image, 
+# and 3 corresponding to the 3 layers of colors).
+
+trainData = np.true_divide(trainData, 255.0).reshape(len(trainData), 32, 32, 3)
+testData = np.true_divide(testData, 255.0).reshape(len(testData), 32, 32, 3)
+
+# Faced issue with the TF model not accepting the labels as lists and thus had to convert them to numpy arrays.
+trainLabels = np.array(trainLabels)
+testLabels = np.array(testLabels)
 
 
-test_batch = {"l": unpickle("CIFAR10/test_batch")[b'labels'], "d": unpickle("CIFAR10/test_batch")[b'data']}
 
-# Diving all values by 255.0 to normalize data and resizing data from a 1D to a 32x32 Matrix
 
-training_batch["d"] = np.true_divide(training_batch["d"], 255.0).reshape(len(training_batch["d"]), 32, 32, 3)
-test_batch["d"] = np.true_divide(test_batch["d"], 255.0).reshape(len(test_batch["d"]), 32, 32, 3)
+# NEURAL NETWORK ARCHITECTURE
 
 model = models.Sequential()
+
+# 4 sets of VGG Blocks to allow for feature extraction, each consisting of:
+#     1 Convolutional Layer
+#     1 MaxPooling Layer
 
 model.add(layers.Conv2D(64, (3,3), activation = "relu", input_shape = (32,32,3), padding = "same"))
 model.add(layers.MaxPooling2D(2,2))
@@ -39,18 +56,28 @@ model.add(layers.MaxPooling2D(2,2))
 model.add(layers.Conv2D(128, (3,3), activation = "relu", padding = "same"))
 model.add(layers.MaxPooling2D(2,2))
 
+
+
 model.add(layers.Flatten())
 model.add(layers.Dropout(0.3))
+model.add(layers.Dense(512, activation = "relu"))
 
-model.add(layers.Dense(1024, activation = "relu"))
 
-# # THE FINAL LAYER:
-# #   10, corresponding to the 10 classes of the CIFAR-10 Dataset
-# model.add(layers.Dense(10, activation = "softmax"))
+# THE FINAL LAYER:
+#     10, corresponding to the 10 classes of the CIFAR-10 Dataset
+#     Using the softmax activation function to clearly output probability of the image being from either one of the 10 classes.
+model.add(layers.Dense(10, activation = "softmax"))
+
 
 model.compile(optimizer="adam", loss = 'sparse_categorical_crossentropy',metrics=['accuracy'])
-model.fit(training_batch["d"], training_batch["l"], epochs = 6)
 
-test_loss, test_acc = model.evaluate(test_batch["d"], test_batch["l"])
+# Training the NN using the CIFAR-10 Dataset, with information on accuracy across each epoch being stored in 'epochHistory'
+epochHistory = model.fit(trainData, trainLabels, epochs = 6, validation_data = (testData,testLabels))
 
-print(test_acc)
+# Finally Plotting a graph of the loss for both the training and validation sets
+pyplot.plot(epochHistory.history['loss'], label = "Training Loss")
+pyplot.plot(epochHistory.history['val_loss'], label = "Validation Loss")
+pyplot.xlabel("Epoch")
+pyplot.ylabel("Loss")
+pyplot.legend(loc = "lower center")
+pyplot.show()
