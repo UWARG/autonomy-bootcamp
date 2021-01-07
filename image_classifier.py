@@ -1,3 +1,10 @@
+'''
+    FINAL CIFAR-10 IMAGE CLASSIFIER FOR COMPUTER VISION BOOTCAMP
+
+    Authored by: Bassel Al-Omari
+    Date: 7-Jan-2021
+'''
+
 import pickle
 import numpy as np
 from matplotlib import pyplot
