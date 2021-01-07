@@ -41,6 +41,7 @@ testLabels = np.array(testLabels)
 
 # NEURAL NETWORK ARCHITECTURE
 
+
 model = models.Sequential()
 
 # 4 sets of VGG Blocks to allow for feature extraction, each consisting of:
