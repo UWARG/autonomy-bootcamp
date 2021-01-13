@@ -2,76 +2,60 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow.keras as keras
 import tensorflow as tf
+from tensorflow.keras.datasets import cifar10
 
-def unpickle(file):
-    import pickle
-    with open(file, 'rb') as fo:
-        dict = pickle.load(fo, encoding='bytes')
-    return dict
+LABELS = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
 
-files = []
-data = []
-imagesData = []
-imagesLabels = []
-trainData = np.empty((0, 32*32*3))
-trainLabels = np.array([])
-batches = 2 # Must be between 1 to 5 inclusive
-# Note: Only batch 1 and 2 are saved on GitHub, download and unpack others if increasing this number
+# Get data
+(trainData, trainLabels), (testData, testLabels) = cifar10.load_data()
 
-# Unpack image data
-for i in range(0, batches):
-    files.append("cifar-10-batches-py/data_batch_" + str(i + 1))
-    data.append(unpickle(files[i]))
-    imagesRawData = (data[i].get(b"data")) # 10000 rows, each row containing one image's data buffer
-    # np.array required for keras model input
-    imagesData = np.array(tf.keras.utils.normalize(imagesRawData, axis=1)) # Normalization between 0 to 1 inclusive
-    trainData = np.concatenate((trainData, imagesData), axis=0)
-    imagesLabels = np.array(data[i].get(b"labels")) # 10000 rows, each containing classification (0 to 9 inclusive)
-    trainLabels = np.concatenate((trainLabels, imagesLabels))
-
-# Image data to test on
-testFile = "cifar-10-batches-py/test_batch"
-testAllData = unpickle(testFile)
-testRaw = testAllData.get(b"data")
-testData = np.array(tf.keras.utils.normalize(testRaw, axis=1))
-testLabels = np.array(testAllData.get(b"labels"))
-
-
-# Debugging
-#print(data[0].keys())
-
-# Debugging
-# Display first image of batch 1
-# For making sure extraction was done correctly
-# Note: This will display each of the colour channels in greyscale
-#image1Serial = np.array(data[0].get(b"data")[0]) # Extract the raw image data from the dictionary
-#image1RGB = image1Serial.reshape(32*3,32) # Reshape into 2D array
-#print(image1RGB)
-#plt.imshow(image1RGB,cmap="gray")
-#plt.show()
-
+# Normalize image data
+trainData = trainData / 255
+testData = testData / 255
 
 # Build network
 model = tf.keras.models.Sequential()
-# model.add(tf.keras.layers.Flatten()) # This flattens a 2D array, unneeded
-model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu)) # Dense (fully-connected) layer with 128 nodes
-model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
-model.add(tf.keras.layers.Dense(10, activation=tf.nn.softmax)) # Last layer for classification
+
+model.add(tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu', input_shape = [32, 32, 3]))
+
+model.add(tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu'))
+model.add(tf.keras.layers.MaxPool2D(pool_size=(2,2), strides=2, padding='valid'))
+# Drop outer edges with probability
+model.add(tf.keras.layers.Dropout(0.5))
+# Serialize 
+model.add(tf.keras.layers.Flatten())
+# Fully-connected layer
+model.add(tf.keras.layers.Dense(units = 128, activation='relu'))
+# Last layer for classification
+model.add(tf.keras.layers.Dense(units=10, activation='softmax'))
+
+#model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu)) # Dense (fully-connected) layer with 128 nodes
+#model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
+#model.add(tf.keras.layers.Dense(10, activation=tf.nn.softmax)) # Last layer for classification
 
 model.compile(optimizer='adam',  # Good default optimizer to start with
               loss='sparse_categorical_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
               metrics=['accuracy'])  # what to track
 
+epochs = 10
+
 # Run network
-model.fit(trainData, trainLabels, epochs=10) # Train it
+performanceHistory = model.fit(trainData, trainLabels, epochs=epochs) # Train it
+
+epochRange = range(1, epochs + 1)
+plt.plot(epochRange, performanceHistory.history['accuracy'])
+plt.title('Model accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Val'], loc='upper left')
+plt.show()
 
 val_loss, val_acc = model.evaluate(testData, testLabels) # See how well it performs on the test data
 print(val_loss)  # model's loss (error): ~1.58
 print(val_acc)  # model's accuracy: ~0.44
 
-
-# https://pythonprogramming.net/introduction-deep-learning-python-tensorflow-keras/
-# https://keras.io/api/datasets/mnist/#load_data-function
+# Sources
+# https://kgptalkie.com/2d-cnn-in-tensorflow-2-0-on-cifar-10-object-recognition-in-images/
 # https://www.cs.toronto.edu/~kriz/cifar.html
 
 # TODO: Unrelated read
