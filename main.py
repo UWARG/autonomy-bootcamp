@@ -39,20 +39,23 @@ model.compile(optimizer='adam',  # Good default optimizer to start with
 
 epochs = 10
 
-# Run network
-performanceHistory = model.fit(trainData, trainLabels, epochs=epochs) # Train it
+# Train network
+performanceHistory = model.fit(trainData, trainLabels, epochs=epochs)
 
+# Display graph of accuracy and loss vs epoch
 epochRange = range(1, epochs + 1)
 plt.plot(epochRange, performanceHistory.history['accuracy'])
-plt.title('Model accuracy')
-plt.ylabel('Accuracy')
+plt.plot(epochRange, performanceHistory.history['loss'])
+plt.title('Model')
+plt.ylabel('Value')
 plt.xlabel('Epoch')
-plt.legend(['Train', 'Val'], loc='upper left')
+plt.legend(['Accuracy', 'Loss'], loc='upper left')
 plt.show()
 
-val_loss, val_acc = model.evaluate(testData, testLabels) # See how well it performs on the test data
-print(val_loss)  # model's loss (error): ~1.58
-print(val_acc)  # model's accuracy: ~0.44
+# Performance on test data
+val_loss, val_acc = model.evaluate(testData, testLabels)
+print(val_loss)  # model's loss (error): ~0.91
+print(val_acc)  # model's accuracy: ~0.70
 
 # Sources
 # https://kgptalkie.com/2d-cnn-in-tensorflow-2-0-on-cifar-10-object-recognition-in-images/
