@@ -13,5 +13,62 @@ Hints:
 # Import whatever libraries/modules you need
 
 import numpy as np
+import tensorflow as tf 
+from tensorflow.keras import datasets, layers, models
+import matplotlib.pyplot as plt
 
 # Your working code here
+
+# get the training and test images 
+(trainImages, trainLabels), (testImages, testLabels) = datasets.cifar10.load_data()
+trainImages, testImages = trainImages / 255.0, testImages / 255.0
+
+classes=10
+epochs=20
+
+# the CNN model 
+model = models.Sequential([
+    layers.experimental.preprocessing.RandomFlip("horizontal"),
+])
+
+model.add(layers.Conv2D(32, (3, 3), padding='same', activation='relu', input_shape=(32, 32, 3)))
+model.add(layers.BatchNormalization())
+model.add(layers.Conv2D(32, (3, 3), padding='same', activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Dropout(0.2))
+
+model.add(layers.Conv2D(64, (3, 3), padding='same', activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.Conv2D(64, (3, 3), padding='same', activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Dropout(0.3))
+
+model.add(layers.Conv2D(128, (3, 3), activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.Conv2D(128, (3, 3), activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Dropout(0.4))
+
+model.add(layers.Flatten())
+model.add(layers.Dense(classes, activation="softmax"))
+
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+
+history = model.fit(trainImages, trainLabels, epochs=epochs, 
+                    validation_split=0.3)
+plt.plot(history.history['accuracy'], label='accuracy')
+plt.plot(history.history['val_accuracy'], label = 'val_accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.ylim([0, 1])
+plt.legend(loc='lower right')
+
+testLoss, testAcc = model.evaluate(testImages, testLabels, verbose=2)
+
+plt.show()
+
