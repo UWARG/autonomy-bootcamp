@@ -45,14 +45,14 @@ model.add(tf.keras.layers.Dense(10)) #fully connected layer with 10 units for 10
 model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer='adam', metrics=['accuracy'])
 
 #train model for 10 epochs on training and validation data
-cifar10_model = model.fit(xTrain, yTrain, epochs=10, validation_data=(xTest, yTest))
+cifar10Model = model.fit(xTrain, yTrain, epochs=10, validation_data=(xTest, yTest)) #max accuracy about 70%
 
 #graph loss per epoch for training and validation for 10 epoches
-train_loss = cifar10_model.history['loss']
-val_loss = cifar10_model.history['val_loss']
+trainLoss = cifar10Model.history['loss']
+valLoss = cifar10Model.history['val_loss']
 epochs = range(1,11)
-plt.plot(epochs, train_loss, label='Training Loss')
-plt.plot(epochs, val_loss, label='Validation Loss')
+plt.plot(epochs, trainLoss, label='Training Loss')
+plt.plot(epochs, valLoss, label='Validation Loss')
 plt.title('Loss per Epoch')
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
