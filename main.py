@@ -11,7 +11,50 @@ Hints:
 """
 
 # Import whatever libraries/modules you need
-
+import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
 
-# Your working code here
+cifar10 = tf.keras.datasets.cifar10 #loading in cifar10 dataset
+(xTrain, yTrain), (xTest, yTest) = cifar10.load_data() #extracting samples and labels for training and testing
+
+#normalize the training and testing samples so pixel values are between 0-1
+xTrain = tf.keras.utils.normalize(xTrain, axis=1)
+xTest = tf.keras.utils.normalize(xTest, axis=1)
+
+#adding input layer
+model = tf.keras.models.Sequential()
+
+#first hidden layer
+model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3))) #32 units 2D convolution layer with (3,3) kernel size
+model.add(tf.keras.layers.MaxPooling2D((2, 2))) #takes max value from pool matrix of (2,2)
+
+#second hidden layer
+model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu')) #64 units 2D convolution layer with (3,3) kernel
+model.add(tf.keras.layers.MaxPooling2D((2, 2))) #takes max value from pool matrix of (2,2)
+
+#third hidden layer
+model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu')) #64 units 2D convolution layer with (3,3) kernel
+model.add(tf.keras.layers.Flatten()) #convert pixel map into 1D array
+model.add(tf.keras.layers.Dense(64, activation='relu')) #fully connected layer with 64 units
+
+#output layer for 10 outputs
+model.add(tf.keras.layers.Dense(10)) #fully connected layer with 10 units for 10 outputs
+
+#compile model using adam optimizer and crossentropy loss
+model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer='adam', metrics=['accuracy'])
+
+#train model for 10 epochs on training and validation data
+cifar10_model = model.fit(xTrain, yTrain, epochs=10, validation_data=(xTest, yTest))
+
+#graph loss per epoch for training and validation for 10 epoches
+train_loss = cifar10_model.history['loss']
+val_loss = cifar10_model.history['val_loss']
+epochs = range(1,11)
+plt.plot(epochs, train_loss, label='Training Loss')
+plt.plot(epochs, val_loss, label='Validation Loss')
+plt.title('Loss per Epoch')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.show()
