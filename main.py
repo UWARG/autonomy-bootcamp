@@ -11,7 +11,6 @@ Hints:
 """
 
 # Import whatever libraries/modules you need
-
-import numpy as np
+import tensorflow as tf
 
 # Your working code here
