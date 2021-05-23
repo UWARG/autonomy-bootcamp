@@ -16,7 +16,6 @@ from tensorflow.keras import datasets, layers, models
 import matplotlib.pyplot as plt
 
 
-
 (trainImages, trainLabels), (testImages, testLabels) = datasets.cifar10.load_data()
 trainImages, testImages = trainImages/255.0, testImages/255.0 # normalizing the values
 
@@ -33,7 +32,7 @@ model.add(layers.MaxPooling2D((2, 2)))
 # adding dense layers on top of convolutional base
 model.add(layers.Flatten())
 model.add(layers.Dense(512, activation='relu'))
-model.add(layers.Dropout(0.5))
+model.add(layers.Dropout(0.5)) # Added dropout to reduce overfitting 
 model.add(layers.Dense(10))
 
 model.compile(optimizer='adam',
