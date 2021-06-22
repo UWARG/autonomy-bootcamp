@@ -4,10 +4,10 @@ from tensorflow.keras import datasets, layers, models
 import matplotlib.pyplot as plt
 
 # Load the CIFAR-10 dataset
-(train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
+(trainImages, trainLabels), (testImages, testLabels) = datasets.cifar10.load_data()
 
 # Normalize pixel values to be between 0 and 1
-train_images, test_images = train_images / 255.0, test_images / 255.0
+trainImages, testImages = trainImages/255.0, testImages/255.0
 
 # We create a convolutional base using a stack of Conv2D and MaxPooling2D layers.
 model = models.Sequential()
@@ -31,8 +31,8 @@ model.compile(optimizer='adam',
 
 EPOCHS = 10
 # Train the model
-history = model.fit(train_images, train_labels, epochs=EPOCHS,
-                     validation_data=(test_images, test_labels))
+history = model.fit(trainImages, trainLabels, epochs=EPOCHS,
+                     validation_data=(testImages, testLabels))
 
 # Make a plot of loss and validation loss
 plt.plot(history.history['loss'], label='loss')
