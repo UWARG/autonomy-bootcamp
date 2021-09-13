@@ -104,4 +104,3 @@ plt.show()
 # Evaluating the model with the test images to produce the final test accuracy value
 _, testAccuracy = model.evaluate(testX, testY)
 print('\nTEST ACCURACY: ' + '%.3f' % (testAccuracy * 100.0))
-x
