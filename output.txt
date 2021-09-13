@@ -1,0 +1,53 @@
+Epoch 1/25
+782/782 [==============================] - 94s 118ms/step - loss: 2.2430 - accuracy: 0.2812 - val_loss: 1.4375 - val_accuracy: 0.4852
+Epoch 2/25
+782/782 [==============================] - 87s 112ms/step - loss: 1.3196 - accuracy: 0.5304 - val_loss: 1.1194 - val_accuracy: 0.6038
+Epoch 3/25
+782/782 [==============================] - 88s 112ms/step - loss: 1.0858 - accuracy: 0.6178 - val_loss: 0.9440 - val_accuracy: 0.6631
+Epoch 4/25
+782/782 [==============================] - 88s 112ms/step - loss: 0.9386 - accuracy: 0.6732 - val_loss: 0.8028 - val_accuracy: 0.7163
+Epoch 5/25
+782/782 [==============================] - 90s 116ms/step - loss: 0.8704 - accuracy: 0.7014 - val_loss: 0.8729 - val_accuracy: 0.6989
+Epoch 6/25
+782/782 [==============================] - 90s 116ms/step - loss: 0.7937 - accuracy: 0.7298 - val_loss: 0.6978 - val_accuracy: 0.7581
+Epoch 7/25
+782/782 [==============================] - 89s 114ms/step - loss: 0.7370 - accuracy: 0.7508 - val_loss: 0.8662 - val_accuracy: 0.7040
+Epoch 8/25
+782/782 [==============================] - 88s 113ms/step - loss: 0.6965 - accuracy: 0.7672 - val_loss: 0.6787 - val_accuracy: 0.7698
+Epoch 9/25
+782/782 [==============================] - 88s 113ms/step - loss: 0.6549 - accuracy: 0.7801 - val_loss: 0.6651 - val_accuracy: 0.7745
+Epoch 10/25
+782/782 [==============================] - 89s 113ms/step - loss: 0.6316 - accuracy: 0.7890 - val_loss: 0.6508 - val_accuracy: 0.7768
+Epoch 11/25
+782/782 [==============================] - 89s 114ms/step - loss: 0.6022 - accuracy: 0.7970 - val_loss: 0.6496 - val_accuracy: 0.7788
+Epoch 12/25
+782/782 [==============================] - 89s 114ms/step - loss: 0.5885 - accuracy: 0.8003 - val_loss: 0.7056 - val_accuracy: 0.7638
+Epoch 13/25
+782/782 [==============================] - 89s 114ms/step - loss: 0.5530 - accuracy: 0.8155 - val_loss: 0.6346 - val_accuracy: 0.7791
+Epoch 14/25
+782/782 [==============================] - 88s 113ms/step - loss: 0.5329 - accuracy: 0.8192 - val_loss: 0.6955 - val_accuracy: 0.7671
+Epoch 15/25
+782/782 [==============================] - 88s 113ms/step - loss: 0.5229 - accuracy: 0.8250 - val_loss: 0.5669 - val_accuracy: 0.8103
+Epoch 16/25
+782/782 [==============================] - 88s 113ms/step - loss: 0.4887 - accuracy: 0.8358 - val_loss: 0.6730 - val_accuracy: 0.7792
+Epoch 17/25
+782/782 [==============================] - 90s 115ms/step - loss: 0.4787 - accuracy: 0.8395 - val_loss: 0.5965 - val_accuracy: 0.8007
+Epoch 18/25
+782/782 [==============================] - 88s 113ms/step - loss: 0.4712 - accuracy: 0.8384 - val_loss: 0.5932 - val_accuracy: 0.8040
+Epoch 19/25
+782/782 [==============================] - 88s 113ms/step - loss: 0.4628 - accuracy: 0.8438 - val_loss: 0.5644 - val_accuracy: 0.8097
+Epoch 20/25
+782/782 [==============================] - 89s 114ms/step - loss: 0.4530 - accuracy: 0.8491 - val_loss: 0.5972 - val_accuracy: 0.8075
+Epoch 21/25
+782/782 [==============================] - 91s 116ms/step - loss: 0.4282 - accuracy: 0.8543 - val_loss: 0.6032 - val_accuracy: 0.8043
+Epoch 22/25
+782/782 [==============================] - 91s 117ms/step - loss: 0.4259 - accuracy: 0.8562 - val_loss: 0.5771 - val_accuracy: 0.8126
+Epoch 23/25
+782/782 [==============================] - 98s 125ms/step - loss: 0.4123 - accuracy: 0.8630 - val_loss: 0.6115 - val_accuracy: 0.8048
+Epoch 24/25
+782/782 [==============================] - 90s 116ms/step - loss: 0.4138 - accuracy: 0.8589 - val_loss: 0.5314 - val_accuracy: 0.8262
+Epoch 25/25
+782/782 [==============================] - 91s 116ms/step - loss: 0.4034 - accuracy: 0.8629 - val_loss: 0.5645 - val_accuracy: 0.8195
+313/313 [==============================] - 3s 11ms/step - loss: 0.5645 - accuracy: 0.8195
+
+TEST ACCURACY: 81.950
