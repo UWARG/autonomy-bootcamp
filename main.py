@@ -22,81 +22,100 @@ import numpy as np
 # Your working code here
 
 # Load in dataset
-(xTrain, yTrain), (xTest, yTest) = tf.keras.datasets.cifar10.load_data()
-# Divide all rgb values by 255 to normalize data
-xTrain = xTrain/255.0
-xTest = xTest/255.0
-# Flatten extra dimension for y data since they are loaded as a (samples, 1) shaped tensor
-print("y_train.shape", yTrain.shape)
-yTrain = yTrain.flatten()
-yTest = yTest.flatten()
+def data_prep():
+
+    (xTrain, yTrain), (xTest, yTest) = tf.keras.datasets.cifar10.load_data()
+    # Divide all rgb values by 255 to normalize data
+    xTrain = xTrain/255.0
+    xTest = xTest/255.0
+    # Flatten extra dimension for y data since they are loaded as a (samples, 1) shaped tensor
+    print("y_train.shape", yTrain.shape)
+    yTrain = yTrain.flatten()
+    yTest = yTest.flatten()
+
+    return xTrain, yTrain, xTest, yTest
 
 # Model input layer
-i = Input(shape = xTrain[0].shape)
+def create_model(shape):
 
-# First convolution layer
-x = Conv2D(32, (3,3), padding='same', activation='relu')(i)
-#  Batch normalization recenters and rescales data to help train faster
-x = BatchNormalization()(x)
-x = Conv2D(32, (3,3), padding='same', activation='relu')(x)
-x = BatchNormalization()(x)
-# Max pool takes max value of each 2v2 square of each feature map to shink features which
-# This helps the model from overfitting by making the model more translationally invariant
-x = MaxPooling2D((2,2))(x)
+    i = Input(shape = shape)
 
-# Second convolution layer
-x = Conv2D(64, (3,3), padding='same', activation='relu')(x)
-x = BatchNormalization()(x)
-x = Conv2D(64, (3,3), padding='same', activation='relu')(x)
-x = BatchNormalization()(x)
-x = MaxPooling2D((2,2))(x)
+    # First convolution layer
+    x = Conv2D(32, (3,3), padding='same', activation='relu')(i)
+    #  Batch normalization recenters and rescales data to help train faster
+    x = BatchNormalization()(x)
+    x = Conv2D(32, (3,3), padding='same', activation='relu')(x)
+    x = BatchNormalization()(x)
+    # Max pool takes max value of each 2v2 square of each feature map to shink features which
+    # This helps the model from overfitting by making the model more translationally invariant
+    x = MaxPooling2D((2,2))(x)
 
-# Third convolution layer
-x = Conv2D(128, (3,3), padding='same', activation='relu')(x)
-x = BatchNormalization()(x)
-x = Conv2D(128, (3,3), padding='same', activation='relu')(x)
-x = BatchNormalization()(x)
-x = MaxPooling2D((2,2))(x)
+    # Second convolution layer
+    x = Conv2D(64, (3,3), padding='same', activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(64, (3,3), padding='same', activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = MaxPooling2D((2,2))(x)
 
-# Dropout layer drops 30% of weights randomly to prevent overfitting
-x = Dropout(0.3)(x)
+    # Third convolution layer
+    x = Conv2D(128, (3,3), padding='same', activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(128, (3,3), padding='same', activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = MaxPooling2D((2,2))(x)
 
-# Global max pool takes max of feature maps for classficiation
-x = GlobalMaxPool2D()(x)
+    # Dropout layer drops 30% of weights randomly to prevent overfitting
+    x = Dropout(0.3)(x)
 
-#Dense layer with softmax activation for classification
-x = Dense(10, activation='softmax')(x)
+    # Global max pool takes max of feature maps for classficiation
+    x = GlobalMaxPool2D()(x)
 
-model = tf.keras.models.Model(i, x)
+    #Dense layer with softmax activation for classification
+    x = Dense(10, activation='softmax')(x)
 
-# Compile model
-model.compile(optimizer = 'adam',
-              loss = 'sparse_categorical_crossentropy',
-              metrics = ['accuracy'])
+    model = tf.keras.models.Model(i, x)
+    
+    return model
 
-# Stops training if it has no improved validation accuracy for 10 epochs
-# Restores weights from epoch with greatest validation accuracy
-callback = tf.keras.callbacks.EarlyStopping(
-    monitor='val_accuracy', patience=10, restore_best_weights=True
-)
+def plot_training_graphs(r):
+    # Plot validation loss
+    plt.plot(r.history['loss'], label='loss')
+    plt.plot(r.history['val_loss'], label='val_loss')
+    plt.legend()
+    plt.show()
 
-# Data generator to randomly shift images to prevent overfitting and teach the model to generalize mroe
-batchSize = 32
-dataGenerator = ImageDataGenerator(width_shift_range= 0.1, rotation_range= 20, height_shift_range= 0.1, horizontal_flip=True)
-trainGenerator = dataGenerator.flow(xTrain, yTrain, batchSize)
-stepsPerEpoch = xTrain.shape[0]//batchSize
+    # Plot validation accuracy
+    plt.plot(r.history['accuracy'], label='acc')
+    plt.plot(r.history['val_accuracy'], label='val_acc')
+    plt.legend()
+    plt.show()
 
-# Train model
-r = model.fit(trainGenerator, validation_data=(xTest, yTest), steps_per_epoch=stepsPerEpoch, epochs= 150, callbacks = [callback])
 
-# Plot validation loss
-plt.plot(r.history['loss'], label='loss')
-plt.plot(r.history['val_loss'], label='val_loss')
-plt.legend()
-plt.show()
+if __name__ == "__main__":
+        
+    xTrain, yTrain, xTest, yTest = data_prep()
 
-# Plot validation accuracy
-plt.plot(r.history['accuracy'], label='acc')
-plt.plot(r.history['val_accuracy'], label='val_acc')
-plt.legend()
-plt.show()
+    model = create_model(xTrain[0].shape)
+
+    # Compile model
+    model.compile(optimizer = 'adam',
+                loss = 'sparse_categorical_crossentropy',
+                metrics = ['accuracy'])
+
+    # Stops training if it has no improved validation accuracy for 10 epochs
+    # Restores weights from epoch with greatest validation accuracy
+    callback = tf.keras.callbacks.EarlyStopping(
+        monitor='val_accuracy', patience=10, restore_best_weights=True
+    )
+
+    # Data generator to randomly shift images to prevent overfitting and teach the model to generalize mroe
+    batchSize = 32
+    dataGenerator = ImageDataGenerator(width_shift_range= 0.1, rotation_range= 20, height_shift_range= 0.1, horizontal_flip=True)
+    trainGenerator = dataGenerator.flow(xTrain, yTrain, batchSize)
+    stepsPerEpoch = xTrain.shape[0]//batchSize
+
+    # Train model
+    r = model.fit(trainGenerator, validation_data=(xTest, yTest), steps_per_epoch=stepsPerEpoch, epochs= 150, callbacks = [callback])
+
+    # Plot graphs
+    plot_training_graphs()
