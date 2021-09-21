@@ -77,25 +77,7 @@ def create_model(shape):
     
     return model
 
-def plot_training_graphs(r):
-    # Plot validation loss
-    plt.plot(r.history['loss'], label='loss')
-    plt.plot(r.history['val_loss'], label='val_loss')
-    plt.legend()
-    plt.show()
-
-    # Plot validation accuracy
-    plt.plot(r.history['accuracy'], label='acc')
-    plt.plot(r.history['val_accuracy'], label='val_acc')
-    plt.legend()
-    plt.show()
-
-
-if __name__ == "__main__":
-        
-    xTrain, yTrain, xTest, yTest = data_prep()
-
-    model = create_model(xTrain[0].shape)
+def train_model(model):
 
     # Compile model
     model.compile(optimizer = 'adam',
@@ -117,5 +99,25 @@ if __name__ == "__main__":
     # Train model
     r = model.fit(trainGenerator, validation_data=(xTest, yTest), steps_per_epoch=stepsPerEpoch, epochs= 150, callbacks = [callback])
 
-    # Plot graphs
-    plot_training_graphs()
+    return r
+
+def plot_training_graphs(r):
+    # Plot validation loss
+    plt.plot(r.history['loss'], label='loss')
+    plt.plot(r.history['val_loss'], label='val_loss')
+    plt.legend()
+    plt.show()
+
+    # Plot validation accuracy
+    plt.plot(r.history['accuracy'], label='acc')
+    plt.plot(r.history['val_accuracy'], label='val_acc')
+    plt.legend()
+    plt.show()
+
+
+if __name__ == "__main__":
+        
+    xTrain, yTrain, xTest, yTest = data_prep()
+    model = create_model(xTrain[0].shape)
+    r = train_model(model)
+    plot_training_graphs(r)
