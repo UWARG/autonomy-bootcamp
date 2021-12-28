@@ -110,7 +110,7 @@ def train_model(model, dataset):
     # Fit the CNN and use the test datasets as the validation data
     history = model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
 
-    # Evaluate the model (comes out to 73.24%)
+    # Evaluate the model (comes out to 73.02%)
     print("\n\nFinal Evaluation on test set:")
     cnn.evaluate(x_test, y_test)
 
