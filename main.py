@@ -3,7 +3,7 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
 
-EPOCHS = 1
+EPOCHS = 20
 IMG_WIDTH = 32
 IMG_HEIGHT = 32
 NUM_CATEGORIES = 10
