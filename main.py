@@ -1,17 +1,24 @@
-"""
-This is a starter file to get you going. You may also include other files if you feel it's necessary.
+import numpy as np  
+import tensorflow as tf 
+import matplotlib.pyplot as plot
 
-Make sure to follow the code convention described here:
-https://github.com/UWARG/computer-vision-python/blob/main/README.md#naming-and-typing-conventions
+# pull the cifar10 dataset since it is a module in keras
+def pull_dataset(): 
+  return tf.keras.datasets.cifar10.load_data()
 
-Hints:
-* The internet is your friend! Don't be afraid to search for tutorials/intros/etc.
-* We suggest using a convolutional neural network.
-* TensorFlow Keras has the CIFAR-10 dataset as a module, so you don't need to manually download and unpack it.
-"""
+# preprocess images for insertion into the network
+def preprocess_data(): 
+    return 0 
 
-# Import whatever libraries/modules you need
+# create the CNN model (initializing layers) 
+def create_model():
+    return 0
+# return array of layers to be sequentially used (remains to be seen whether this needs a whole func, probably not)
+def layer_array(): 
+    return 0
+def main():
+    (x_train, y_train), (x_test, y_test) = pull_dataset()
 
-import numpy as np
 
-# Your working code here
+if __name__ == "__main__":
+    main()
