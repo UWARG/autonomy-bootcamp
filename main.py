@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 
 
 IMAGE_SIZE = 32
-EPOCH_COUNT = 100 #this will take a couple hours, feel free to change for testing
+EPOCH_COUNT = 10
 BATCH_SIZE = 64
 
 def load_prep_dataset():
