@@ -31,11 +31,13 @@ _________________________________________________________________
  max_pooling2d_2 (MaxPooling  (None, 29, 29, 128)      0         
  2D)                                                             
                                                                  
+ dropout_2 (Dropout)         (None, 29, 29, 128)       0         
+                                                                 
  flatten (Flatten)           (None, 107648)            0         
                                                                  
  dense (Dense)               (None, 128)               13779072  
                                                                  
- dropout_2 (Dropout)         (None, 128)               0         
+ dropout_3 (Dropout)         (None, 128)               0         
                                                                  
  dense_1 (Dense)             (None, 10)                1290      
                                                                  
