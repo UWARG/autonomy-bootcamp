@@ -1,0 +1,46 @@
+Model: "model"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ input_1 (InputLayer)        [(None, 32, 32, 3)]       0         
+                                                                 
+ conv2d (Conv2D)             (None, 32, 32, 64)        1792      
+                                                                 
+ conv2d_1 (Conv2D)           (None, 32, 32, 64)        36928     
+                                                                 
+ conv2d_2 (Conv2D)           (None, 32, 32, 64)        36928     
+                                                                 
+ max_pooling2d (MaxPooling2D  (None, 31, 31, 64)       0         
+ )                                                               
+                                                                 
+ dropout (Dropout)           (None, 31, 31, 64)        0         
+                                                                 
+ conv2d_3 (Conv2D)           (None, 31, 31, 64)        36928     
+                                                                 
+ conv2d_4 (Conv2D)           (None, 31, 31, 64)        36928     
+                                                                 
+ max_pooling2d_1 (MaxPooling  (None, 30, 30, 64)       0         
+ 2D)                                                             
+                                                                 
+ dropout_1 (Dropout)         (None, 30, 30, 64)        0         
+                                                                 
+ conv2d_5 (Conv2D)           (None, 30, 30, 128)       73856     
+                                                                 
+ conv2d_6 (Conv2D)           (None, 30, 30, 128)       147584    
+                                                                 
+ max_pooling2d_2 (MaxPooling  (None, 29, 29, 128)      0         
+ 2D)                                                             
+                                                                 
+ flatten (Flatten)           (None, 107648)            0         
+                                                                 
+ dense (Dense)               (None, 128)               13779072  
+                                                                 
+ dropout_2 (Dropout)         (None, 128)               0         
+                                                                 
+ dense_1 (Dense)             (None, 10)                1290      
+                                                                 
+=================================================================
+Total params: 14,151,306
+Trainable params: 14,151,306
+Non-trainable params: 0
+_________________________________________________________________
