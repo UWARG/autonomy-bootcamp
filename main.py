@@ -81,7 +81,7 @@ x_train, y_cat_train, x_test, y_cat_test = load_dataset()
 # define model
 model = def_model()
 # fit model
-model.fit(x_train,y_cat_train,verbose=1,epochs=1)
+model.fit(x_train,y_cat_train,verbose=1,epochs=20)
 #evaluate
 model.evaluate(x_test,y_cat_test)
 # predict
