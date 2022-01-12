@@ -30,7 +30,7 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(10)
 ])
 
-#Normalize inputs
+#Normalize data
 fitData = fitData / 255.0
 valData = valData / 255.0
 
