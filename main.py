@@ -19,54 +19,101 @@ import matplotlib.pyplot as pyplot
 
 # Your working code here
 
-#Load CIFAR-10 Dataset
-(fitData, fitLabels), (valData, valLabels) = tf.keras.datasets.cifar10.load_data()
+def get_data():
+    """
+    Loads and normalizes CIFAR-10 Data
 
-# Create a basic convolutional neural network with a sequential model
-model = tf.keras.Sequential([
-    tf.keras.layers.Conv2D(32, (3, 3), input_shape=(32, 32, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2,2),
-    tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2,2),
-    tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(10)
-])
+    Returns
+    -------
+    tuple<tuple<np.array, np.array>, tuple<np.array, np.array>>
+        Returns CIFAR-10 training and validation normalized from 0-1
+    """
 
-model.compile(optimizer='Adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+    # Load CIFAR-10 Dataset
+    (fitData, fitLabels), (valData, valLabels) = tf.keras.datasets.cifar10.load_data()
 
-# Normalize data
-fitData = fitData / 255.0
-valData = valData / 255.0
+    # Normalize data from 0-1
+    fitData = fitData / 255.0
+    valData = valData / 255.0
 
-# Fit the model with the training data
-model.fit(fitData, fitLabels, epochs=10, validation_data=(valData, valLabels))
+    return (fitData, fitLabels), (valData, valLabels)
 
-# Plot the loss with both fit data and validation data over epochs
-pyplot.figure()
+def cv_model():
+    """
+    Basic Convolutional Neural Network using Sequential Model
 
-pyplot.plot(model.history.history['loss'])
-pyplot.plot(model.history.history['val_loss'])
+    Returns
+    -------
+    tf.keras.Model
+        Returns a keras CNN model
+    """
 
-pyplot.title('Model Loss over Epochs')
+    model = tf.keras.Sequential([
+        tf.keras.layers.Conv2D(32, (3, 3), input_shape=(32, 32, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D(2,2),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D(2,2),
+        tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(10)
+    ])
 
-pyplot.xlabel('Epoch')
-pyplot.ylabel('Loss')
+    model.compile(optimizer='Adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
 
-pyplot.legend(['Training', 'Validation'])
+    return model
 
-#Plot accuracy over epochs
-pyplot.figure()
+def plot_loss_accuracy(model_history):
+    """
+    Plots the accuracy and loss of a model with MatPlotLib
 
-pyplot.plot(model.history.history['accuracy'])
-pyplot.plot(model.history.history['val_accuracy'])
+    Params
+    ------
+    tf.keras.History
+        The history object returned from training a model
+    """
 
-pyplot.title('Accuracy over Epochs')
+    pyplot.figure()
 
-pyplot.xlabel('Epoch')
-pyplot.ylabel('Accuracy')
+    #Plot loss over epochs
+    pyplot.plot(model_history.history['loss'])
+    pyplot.plot(model_history.history['val_loss'])
 
-pyplot.legend(['Training', 'Validation'])
+    pyplot.title('Model Loss over Epochs')
 
-pyplot.show()
+    pyplot.xlabel('Epoch')
+    pyplot.ylabel('Loss')
+
+    pyplot.legend(['Training', 'Validation'])
+
+    #Plot accuracy over epochs
+    pyplot.figure()
+
+    pyplot.plot(model_history.history['accuracy'])
+    pyplot.plot(model_history.history['val_accuracy'])
+
+    pyplot.title('Accuracy over Epochs')
+
+    pyplot.xlabel('Epoch')
+    pyplot.ylabel('Accuracy')
+
+    pyplot.legend(['Training', 'Validation'])
+
+    pyplot.show()   
+
+def main():
+    """
+    Main function to train model and call plot function
+    """
+    # get processed data
+    (fitData, fitLabels), (valData, valLabels) = get_data()
+    model = cv_model()
+
+
+    # Fit the model on training data
+    model.fit(fitData, fitLabels, epochs=10, validation_data=(valData, valLabels))
+
+    #Plot results
+    plot_loss_accuracy(model.history)
+
+main()
