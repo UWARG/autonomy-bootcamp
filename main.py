@@ -15,6 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Your working code here
+# Author - Tanishq Koul
 
 def get_data():
     """
