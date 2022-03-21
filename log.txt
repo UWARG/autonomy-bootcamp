@@ -1,0 +1,28 @@
+eugen@eugen:~/warg/computer-vision-bootcamp$ python -m Main
+2022-03-21 14:58:42.495091: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
+2022-03-21 14:58:42.495139: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+2022-03-21 14:58:45.334368: E tensorflow/stream_executor/cuda/cuda_driver.cc:271] failed call to cuInit: UNKNOWN ERROR (100)
+2022-03-21 14:58:45.334425: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (eugen): /proc/driver/nvidia/version does not exist
+2022-03-21 14:58:45.334690: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2022-03-21 14:58:45.826746: W tensorflow/core/framework/cpu_allocator_impl.cc:82] Allocation of 614400000 exceeds 10% of free system memory.
+Epoch 1/10
+1563/1563 [==============================] - 10s 6ms/step - loss: 1.7934 - accuracy: 0.3587 - val_loss: 1.6186 - val_accuracy: 0.4256
+Epoch 2/10
+1563/1563 [==============================] - 9s 6ms/step - loss: 1.5899 - accuracy: 0.4341 - val_loss: 1.5180 - val_accuracy: 0.4603
+Epoch 3/10
+1563/1563 [==============================] - 9s 6ms/step - loss: 1.4975 - accuracy: 0.4659 - val_loss: 1.4738 - val_accuracy: 0.4806
+Epoch 4/10
+1563/1563 [==============================] - 9s 6ms/step - loss: 1.4412 - accuracy: 0.4857 - val_loss: 1.4461 - val_accuracy: 0.4878
+Epoch 5/10
+1563/1563 [==============================] - 9s 6ms/step - loss: 1.3920 - accuracy: 0.5034 - val_loss: 1.4348 - val_accuracy: 0.4901
+Epoch 6/10
+1563/1563 [==============================] - 9s 6ms/step - loss: 1.3575 - accuracy: 0.5163 - val_loss: 1.4354 - val_accuracy: 0.4919
+Epoch 7/10
+1563/1563 [==============================] - 9s 6ms/step - loss: 1.3270 - accuracy: 0.5236 - val_loss: 1.4022 - val_accuracy: 0.5033
+Epoch 8/10
+1563/1563 [==============================] - 9s 6ms/step - loss: 1.2932 - accuracy: 0.5370 - val_loss: 1.4150 - val_accuracy: 0.5028
+Epoch 9/10
+1563/1563 [==============================] - 10s 7ms/step - loss: 1.2752 - accuracy: 0.5412 - val_loss: 1.4149 - val_accuracy: 0.5005
+Epoch 10/10
+1563/1563 [==============================] - 10s 6ms/step - loss: 1.2409 - accuracy: 0.5534 - val_loss: 1.4284 - val_accuracy: 0.4985
