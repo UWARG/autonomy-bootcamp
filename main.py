@@ -73,14 +73,14 @@ def seq_model():
     # Block 2 of Layers
     model.add(layers.Conv2D(64, kernel_size=(3,3), activation='relu'))
     model.add(layers.MaxPooling2D(2))
+    
+    # Flatten tensor shape to one-dimension with average pooling to avoid overfitting
     model.add(layers.GlobalAveragePooling2D())
+    
     # Process data using Dense operator
     model.add(layers.Dense(128, activation='relu'))
     model.add(layers.Dense(10, activation='softmax'))
 
-    # Flatten tensor shape to one-dimension with average pooling to avoid overfitting
-    #model.add(layers.GlobalAveragePooling2D())
-    
     # Compile model with adam algorithm due to large dataset, and a cross-entropy loss function
     model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     
