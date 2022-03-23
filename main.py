@@ -97,8 +97,7 @@ def plot_model(history):
 
     Returns
     -------
-    plt: Pyplot by Matplotlib
-        Graphs containing loss, validation, and accuracy functions
+    None
     """
     
     # Summarize history for accuracy
@@ -129,7 +128,7 @@ def cnn_main():
 
     Returns
     -------
-    Pyplot by Matplotlib
+    None
     """
     # Call data loading function
     (x_train, y_train), (x_test, y_test) = cifar_load()
