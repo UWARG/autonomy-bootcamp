@@ -19,60 +19,94 @@ import matplotlib.pyplot as plt
 
 # Your working code here
 
-# Load the dataset
-(train_images, train_labels), (test_images, test_labels) = keras.datasets.cifar10.load_data()
+def load_data():
+    # Load the dataset
+    (train_images, train_labels), (test_images, test_labels) = keras.datasets.cifar10.load_data()
 
-# Pre-process training and testing set
-# Scale image pixel values from 0-255 to 0-1
-train_images = train_images/255.0
-test_images = test_images/255.0
+    # Pre-process training and testing set
+    # Scale image pixel values from 0-255 to 0-1
+    train_images = train_images/255.0
+    test_images = test_images/255.0
 
-# To build neural network we need to configure the layers of the model then compile the model
+    return (train_images, train_labels), (test_images, test_labels)
 
-# Setting up layers of the model
-# Sequential model means single input and output so in this case the input is an image and the output is a label
-model = keras.Sequential([
 
-    # Idea behind a convolutional neural network is that we filter the images before training the deep neural network
-    # This makes it so the features of the image are enhanced by the filters and can be used to identify corresponding outputs
-    # After the image is filtered it is pooled, which groups up pixels in the image then filters them down to a subset 
-    # This lowers the resolution of the image but maintains the important features from the filtering 
+def build_model():
+    # To build neural network we need to configure the layers of the model then compile the model
 
-    # The idea is that random filters pass over the image to enhance different features then these features are matched with the image output
-    # Then over time the filters that give us the features that most match the corresponding output is learned
-    # This is called feature extraction
+    # Setting up layers of the model
+    # Sequential model means single input and output so in this case the input is an image and the output is a label
+    model = keras.Sequential([
 
-    # We can stack convolutional layers to break down the image even further and learn from more abstract features
-    # For the first one, it will generate 64 filters and multiply all of them across the images so then each epoch it will figure out which filters gave the best features to best match the image with its corresponding output
-    keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape = (32,32,3)),
-	keras.layers.MaxPooling2D((2, 2)),
+        # Idea behind a convolutional neural network is that we filter the images before training the deep neural network
+        # This makes it so the features of the image are enhanced by the filters and can be used to identify corresponding outputs
+        # After the image is filtered it is pooled, which groups up pixels in the image then filters them down to a subset 
+        # This lowers the resolution of the image but maintains the important features from the filtering 
 
-	keras.layers.Conv2D(64, (3, 3), activation='relu'),
-	keras.layers.MaxPooling2D((2, 2)),
+        # The idea is that random filters pass over the image to enhance different features then these features are matched with the image output
+        # Then over time the filters that give us the features that most match the corresponding output is learned
+        # This is called feature extraction
 
-	keras.layers.Conv2D(128, (3, 3), activation='relu'),
-	keras.layers.MaxPooling2D((2, 2)),
+        # We can stack convolutional layers to break down the image even further and learn from more abstract features
+        # For the first one, it will generate 64 filters and multiply all of them across the images so then each epoch it will figure out which filters gave the best features to best match the image with its corresponding output
+        keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape = (32,32,3)),
+        keras.layers.MaxPooling2D((2, 2)),
 
-    # Flattening turns our array into a 1D array to feed into the dense layers
-    # It is only meant to reformat the data
-	keras.layers.Flatten(),
+        keras.layers.Conv2D(64, (3, 3), activation='relu'),
+        keras.layers.MaxPooling2D((2, 2)),
 
-    # These last layers are what does the actual classification
-	keras.layers.Dense(128, activation='relu'),
-	keras.layers.Dense(10, activation='softmax')
-])
+        keras.layers.Conv2D(128, (3, 3), activation='relu'),
+        keras.layers.MaxPooling2D((2, 2)),
 
-# Compiling the model
-model.compile(optimizer = 'adam', loss = 'sparse_categorical_crossentropy', metrics = ['accuracy'])
+        # Flattening turns our array into a 1D array to feed into the dense layers
+        # It is only meant to reformat the data
+        keras.layers.Flatten(),
 
-# Start the training of the model and store its history in model_history
-model_history = model.fit(train_images, train_labels, epochs = 10, validation_data = (test_images, test_labels))
+        # These last layers are what does the actual classification
+        keras.layers.Dense(128, activation='relu'),
+        keras.layers.Dense(10, activation='softmax')
+    ])
 
-# Plot the training and validation loss over epochs
-plt.plot(model_history.history['loss'])
-plt.plot(model_history.history['val_loss'])
-plt.title('Training and Validation Loss over Epochs')
-plt.ylabel('Loss')
-plt.xlabel('Epochs')
-plt.legend(['Training', 'Validation'], loc = 'upper left')
-plt.show()
+    # Compiling the model
+    model.compile(optimizer = 'adam', loss = 'sparse_categorical_crossentropy', metrics = ['accuracy'])
+
+    return model
+
+
+def plot_model(model_history):
+    # Plot the training and validation loss over epochs
+    plt.plot(model_history.history['loss'])
+    plt.plot(model_history.history['val_loss'])
+    plt.title('Training and Validation Loss over Epochs')
+    plt.ylabel('Loss')
+    plt.xlabel('Epochs')
+    plt.legend(['Training', 'Validation'], loc = 'upper left')
+    plt.show()
+
+
+def main():
+    # Load the data, build the model, train the model, show the plot
+    
+    (train_images, train_labels), (test_images, test_labels) = load_data()
+
+    model = build_model()
+
+    # Start the training of the model and store its history in model_history
+    model_history = model.fit(train_images, train_labels, epochs = 10, validation_data = (test_images, test_labels))
+
+    plot_model(model_history)
+
+main()
+
+
+
+
+
+
+
+
+
+
+
+
+
