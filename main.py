@@ -35,7 +35,7 @@ model = keras.Sequential([
 
     # Idea behind a convolutional neural network is that we filter the images before training the deep neural network
     # This makes it so the features of the image are enhanced by the filters and can be used to identify corresponding outputs
-    # After the image is filtered it is pooled which groups up pixels in the image then filters them down to a subset 
+    # After the image is filtered it is pooled, which groups up pixels in the image then filters them down to a subset 
     # This lowers the resolution of the image but maintains the important features from the filtering 
 
     # The idea is that random filters pass over the image to enhance different features then these features are matched with the image output
@@ -43,7 +43,7 @@ model = keras.Sequential([
     # This is called feature extraction
 
     # We can stack convolutional layers to break down the image even further and learn from more abstract features
-    # For the first one, it will generate 64 filters and multiply all of them across the image so then each epoch it will figure out which filters gave the best features to best match the image with its corresponding output
+    # For the first one, it will generate 64 filters and multiply all of them across the images so then each epoch it will figure out which filters gave the best features to best match the image with its corresponding output
     keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape = (32,32,3)),
 	keras.layers.MaxPooling2D((2, 2)),
 
