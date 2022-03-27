@@ -1,0 +1,28 @@
+2022-03-27 01:09:02.850601: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'cudart64_110.dll'; dlerror: cudart64_110.dll not found
+2022-03-27 01:09:02.850738: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+2022-03-27 01:09:12.441171: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'nvcuda.dll'; dlerror: nvcuda.dll not found
+2022-03-27 01:09:12.441261: W tensorflow/stream_executor/cuda/cuda_driver.cc:269] failed call to cuInit: UNKNOWN ERROR (303)
+2022-03-27 01:09:12.450378: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: DESKTOP-E28DR7C
+2022-03-27 01:09:12.450616: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: DESKTOP-E28DR7C
+2022-03-27 01:09:12.451126: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Epoch 1/10
+1563/1563 [==============================] - 31s 19ms/step - loss: 1.4812 - accuracy: 0.4591 - val_loss: 1.2219 - val_accuracy: 0.5682
+Epoch 2/10
+1563/1563 [==============================] - 36s 23ms/step - loss: 1.1122 - accuracy: 0.6063 - val_loss: 1.0789 - val_accuracy: 0.6188
+Epoch 3/10
+1563/1563 [==============================] - 36s 23ms/step - loss: 0.9553 - accuracy: 0.6667 - val_loss: 0.9330 - val_accuracy: 0.6797
+Epoch 4/10
+1563/1563 [==============================] - 37s 23ms/step - loss: 0.8464 - accuracy: 0.7056 - val_loss: 0.8941 - val_accuracy: 0.6903
+Epoch 5/10
+1563/1563 [==============================] - 37s 24ms/step - loss: 0.7651 - accuracy: 0.7319 - val_loss: 0.9119 - val_accuracy: 0.6915
+Epoch 6/10
+1563/1563 [==============================] - 38s 24ms/step - loss: 0.7007 - accuracy: 0.7523 - val_loss: 0.9064 - val_accuracy: 0.6972
+Epoch 7/10
+1563/1563 [==============================] - 37s 24ms/step - loss: 0.6402 - accuracy: 0.7745 - val_loss: 0.8564 - val_accuracy: 0.7109
+Epoch 8/10
+1563/1563 [==============================] - 37s 24ms/step - loss: 0.5869 - accuracy: 0.7935 - val_loss: 0.8603 - val_accuracy: 0.7101
+Epoch 9/10
+1563/1563 [==============================] - 37s 24ms/step - loss: 0.5419 - accuracy: 0.8084 - val_loss: 0.9460 - val_accuracy: 0.6909
+Epoch 10/10
+1563/1563 [==============================] - 37s 24ms/step - loss: 0.4977 - accuracy: 0.8236 - val_loss: 0.9005 - val_accuracy: 0.7148
