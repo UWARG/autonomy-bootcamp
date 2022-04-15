@@ -27,27 +27,41 @@ def build_model():
     """Build neural network
 
     Returns:
-        tf.keras.Model: Neural Network
+        tf.keras.layers: Neural Network
     """
-    return tf.keras.models.Sequential([tf.keras.layers.Conv2D(3, 5),
-                                       tf.keras.layers.Flatten(input_shape=(32, 32, 3)),
-                                       tf.keras.layers.Dense(64, activation='relu'),
-                                       tf.keras.layers.Dense(32, activation='relu'),
-                                       tf.keras.layers.Dropout(0.2),
-                                       tf.keras.layers.Dense(10)])
+    return tf.keras.models.Sequential([
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform',
+                               padding='same', input_shape=(32, 32, 3)),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform',
+                               padding='same'),
+        tf.keras.layers.MaxPooling2D((2, 2)),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform',
+                               padding='same'),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform',
+                               padding='same'),
+        tf.keras.layers.MaxPooling2D((2, 2)),
+        tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform',
+                               padding='same'),
+        tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform',
+                               padding='same'),
+        tf.keras.layers.MaxPooling2D((2, 2)),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(128, activation='relu', kernel_initializer='he_uniform'),
+        tf.keras.layers.Dense(10, activation='softmax')
+    ])
 
 def compile_model(model):
     """Compile model
 
     Args:
-        model (tf.keras.Model): Uncompiled model
+        model (tf.keras.layers): Uncompiled model
     """
     loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
     model.compile(optimizer='adam', loss=loss_fn, metrics=['accuracy'])
 
 if __name__ == "__main__":
 
-    EPOCH_COUNT = 10
+    EPOCH_COUNT = 20
 
     # prepare data
     cifar10 = tf.keras.datasets.cifar10
