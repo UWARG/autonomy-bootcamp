@@ -15,7 +15,7 @@ import logging
 
 import numpy as np
 from keras.datasets.cifar10 import load_data
-from keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
+from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from keras.models import Sequential
 from keras.utils.np_utils import to_categorical
 import matplotlib.pyplot as plt
@@ -61,17 +61,21 @@ def build_model():
         model used for cifar10 image classification
     """
     model = Sequential()
-    model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same', input_shape=(32, 32, 3)))
-    model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+    model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', input_shape=(32, 32, 3)))
+    model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform'))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
-    model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+    model.add(Dropout(0.2))
+    model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform'))
+    model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform'))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
-    model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+    model.add(Dropout(0.2))
+    model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform'))
+    model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform'))
     model.add(MaxPooling2D((2, 2)))
+    model.add(Dropout(0.2))
     model.add(Flatten())
     model.add(Dense(128, activation='relu', kernel_initializer='he_uniform'))
+    model.add(Dropout(0.2))
     model.add(Dense(10, activation='softmax'))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     logging.log(20, 'Model built successfully')
@@ -108,7 +112,7 @@ def create_plots(history):
 
 xTrain, yTrain, xTest, yTest = load_and_preprocess_data()
 model = build_model()
-history = model.fit(xTrain, yTrain, epochs=100, batch_size=64, validation_data=(xTest, yTest), verbose=1)
+history = model.fit(xTrain, yTrain, epochs=50, batch_size=128, validation_data=(xTest, yTest), verbose=1)
 create_plots(history)
 acc = model.evaluate(xTest, yTest)
 print("The accuracy of the model on testing data is {}".format(round(acc[1], 3)*100))
