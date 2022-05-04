@@ -65,10 +65,6 @@ def build_model():
     model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform'))
     model.add(MaxPooling2D((2, 2)))
     model.add(Dropout(0.2))
-    model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform'))
-    model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform'))
-    model.add(MaxPooling2D((2, 2)))
-    model.add(Dropout(0.2))
     model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform'))
     model.add(Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_uniform'))
     model.add(MaxPooling2D((2, 2)))
@@ -88,7 +84,7 @@ def create_plots(history):
 
     Parameters
     -----------
-    history : callbacks.History
+    history : keras.callbacks.History
 
     """
     # Plot for the loss
@@ -112,7 +108,7 @@ def create_plots(history):
 
 xTrain, yTrain, xTest, yTest = load_and_preprocess_data()
 model = build_model()
-history = model.fit(xTrain, yTrain, epochs=50, batch_size=128, validation_data=(xTest, yTest), verbose=1)
+history = model.fit(xTrain, yTrain, epochs=50, batch_size=64, validation_data=(xTest, yTest), verbose=1)
 create_plots(history)
 acc = model.evaluate(xTest, yTest)
 print("The accuracy of the model on testing data is {}".format(round(acc[1], 3)*100))
