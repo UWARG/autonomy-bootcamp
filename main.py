@@ -127,7 +127,7 @@ model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # Running the model and saving the results in a variable so they can be plotted later
-record = model.fit(xTrain, yTrain, epochs=5,
+record = model.fit(xTrain, yTrain, epochs=15,
                    validation_data=(xTest, yTest), validation_freq=1)
 
 # Plotting the model training data
