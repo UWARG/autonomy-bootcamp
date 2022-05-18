@@ -35,7 +35,7 @@ def load_data():
     return xTrain, xTest, yTrain, yTest
 
 
-def create_model(xTrain, yTest):
+def create_model(xTrain_shape, yTest_shape):
 
     """
     This funtion creates the sequential model for classifying the CIFAR-10 
@@ -48,7 +48,7 @@ def create_model(xTrain, yTest):
 
     Requires
     -------
-    X_train and y_test data
+    X_train and y_test shapes
 
     Returns
     -------
@@ -62,7 +62,7 @@ def create_model(xTrain, yTest):
     classificationModel.add(
         tf.keras.layers.Conv2D(
             32, (3, 3), 
-            input_shape=xTrain.shape[1:], 
+            input_shape=xTrain_shape, 
             padding="same"
         )
     )
@@ -123,7 +123,7 @@ def create_model(xTrain, yTest):
     # Selecting the neuron with the highest probability for classifying
     classificationModel.add(
         tf.keras.layers.Dense(
-            yTest.shape[1], 
+            yTest_shape, 
             activation="softmax"
         )
     )
@@ -178,7 +178,7 @@ def run_model():
     """
 
     xTrain, xTest, yTrain, yTest = load_data()
-    model = create_model(xTrain, yTest)
+    model = create_model(xTrain.shape[1:], yTest.shape[1])
 
     # Training the model and storing its efficiency
     history = model.fit(
@@ -186,7 +186,7 @@ def run_model():
         validation_data=(xTest, yTest), 
         epochs=25, batch_size=64
     )
-    efficiency = model.evaluate(xTest, yTest, verbose=0)
+    efficiency = model.evaluate(xTrain, yTest, verbose=0)
 
     print("Accuracy: %.2f%%" % (efficiency[1]*100))
 
