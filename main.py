@@ -33,10 +33,10 @@ def add_convolutional_to(model):
         Variable size array that represents a neural network
     """
     model.add(tf.keras.layers.Conv2D(filters=32, kernel_size=(
-        3, 3), activation='relu', input_shape=(32, 32, 3)))
+        3, 3), activation=tf.nn.relu, input_shape=(32, 32, 3)))
     model.add(tf.keras.layers.MaxPooling2D((2, 2)))
     model.add(tf.keras.layers.Conv2D(filters=64, kernel_size=(
-        3, 3), activation='relu'))
+        3, 3), activation=tf.nn.relu))
     model.add(tf.keras.layers.MaxPooling2D((2, 2)))
 
 
@@ -90,33 +90,55 @@ def test_model(model):
     entered = 0
     while entered > -1:
         entered = int(input())
+
+        # Conditional for when the user decides to exit out of while loop by entering a negative number
         if entered < 0:
             break
+
+        # Printing the guessed class so the user can compare it with the test image
         print(CLASS_NAMES[np.argmax(predictions[entered])])
         plt.imshow(xTest[entered])
+
+        # Using block=False so the image shown will automatically disappear after 2 seconds
         plt.show(block=False)
         plt.pause(2)
         plt.close('all')
+
     return predictions
 
 
+# Loading CIFAR-10 data and normalizing the values
 cifar10 = tf.keras.datasets.cifar10
 (xTrain, yTrain), (xTest, yTest) = cifar10.load_data()
-xTrain = tf.keras.utils.normalize(xTrain, axis=1)
-xTest = tf.keras.utils.normalize(xTest, axis=1)
+xTrain = xTrain / 255
+xTest = xTest / 255
+
+# Setting up the sequential model
 model = tf.keras.models.Sequential()
+
+# Adding the convolutional layers to the sequential model declared above
 add_convolutional_to(model)
+
+# Adding the fully connected layers as well as the final layer
 add_connected_layer_to(model)
+
+# Setting up the model's evaluation characteristics
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+# Running the model and saving the results in a variable so they can be plotted later
 record = model.fit(xTrain, yTrain, epochs=5,
                    validation_data=(xTest, yTest), validation_freq=1)
-"""
+
+# Plotting the model training data
 plot_model_data(record, 'loss')
 plot_model_data(record, 'val_loss')
-"""
+
+# Running the trained model on test data and saving results to a variable so the results can be plotted later
 predictions = test_model(model)
 usePredictions = [np.argmax(k) for k in predictions]
+
+# Creating a confusion matrix and then plotting it in a visual format with Seaborn
 cm = tf.math.confusion_matrix(labels=yTest, predictions=usePredictions)
 plt.figure(figsize=(10, 7))
 sn.heatmap(cm, annot=True, fmt='d')
