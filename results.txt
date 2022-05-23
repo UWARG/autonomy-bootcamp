@@ -1,0 +1,80 @@
+2022-05-23 21:48:29.807826: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'cusparse64_11.dll'; dlerror: cusparse64_11.dll not found
+2022-05-23 21:48:29.809169: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'cudnn64_8.dll'; dlerror: cudnn64_8.dll not found
+2022-05-23 21:48:29.809510: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1850] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if 
+you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2022-05-23 21:48:29.810869: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Before Flattening: 
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ conv2d (Conv2D)             (None, 30, 30, 32)        896
+
+ max_pooling2d (MaxPooling2D  (None, 15, 15, 32)       0
+ )
+
+ conv2d_1 (Conv2D)           (None, 13, 13, 64)        18496
+
+ max_pooling2d_1 (MaxPooling  (None, 6, 6, 64)         0
+ 2D)
+
+ conv2d_2 (Conv2D)           (None, 4, 4, 64)          36928
+
+=================================================================
+Total params: 56,320
+Trainable params: 56,320
+Non-trainable params: 0
+_________________________________________________________________
+After Flattening: 
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ conv2d (Conv2D)             (None, 30, 30, 32)        896
+
+ max_pooling2d (MaxPooling2D  (None, 15, 15, 32)       0
+ )
+
+ conv2d_1 (Conv2D)           (None, 13, 13, 64)        18496
+
+ max_pooling2d_1 (MaxPooling  (None, 6, 6, 64)         0
+ 2D)
+
+ conv2d_2 (Conv2D)           (None, 4, 4, 64)          36928
+
+ flatten (Flatten)           (None, 1024)              0
+
+ dense (Dense)               (None, 64)                65600
+
+ dense_1 (Dense)             (None, 10)                650
+
+=================================================================
+Total params: 122,570
+Trainable params: 122,570
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/10
+1563/1563 [==============================] - 30s 19ms/step - loss: 1.5307 - accuracy: 0.4416 - val_loss: 1.2612 - val_accuracy: 0.5449
+Epoch 2/10
+1563/1563 [==============================] - 30s 19ms/step - loss: 1.1716 - accuracy: 0.5841 - val_loss: 1.0752 - val_accuracy: 0.6211
+Epoch 3/10
+1563/1563 [==============================] - 28s 18ms/step - loss: 1.0184 - accuracy: 0.6419 - val_loss: 1.0012 - val_accuracy: 0.6478
+Epoch 4/10
+1563/1563 [==============================] - 27s 17ms/step - loss: 0.9206 - accuracy: 0.6761 - val_loss: 0.9653 - val_accuracy: 0.6621
+Epoch 5/10
+1563/1563 [==============================] - 27s 17ms/step - loss: 0.8520 - accuracy: 0.7009 - val_loss: 0.9685 - val_accuracy: 0.6704
+Epoch 6/10
+1563/1563 [==============================] - 27s 17ms/step - loss: 0.8024 - accuracy: 0.7194 - val_loss: 0.8818 - val_accuracy: 0.6994
+Epoch 7/10
+1563/1563 [==============================] - 27s 17ms/step - loss: 0.7539 - accuracy: 0.7353 - val_loss: 0.9055 - val_accuracy: 0.6870
+Epoch 8/10
+1563/1563 [==============================] - 27s 17ms/step - loss: 0.7137 - accuracy: 0.7487 - val_loss: 0.8618 - val_accuracy: 0.7054
+Epoch 9/10
+1563/1563 [==============================] - 27s 17ms/step - loss: 0.6779 - accuracy: 0.7616 - val_loss: 0.9031 - val_accuracy: 0.6908
+Epoch 10/10
+1563/1563 [==============================] - 27s 17ms/step - loss: 0.6463 - accuracy: 0.7732 - val_loss: 0.8951 - val_accuracy: 0.7016
+313/313 - 1s - loss: 0.8951 - accuracy: 0.7016 - 1s/epoch - 4ms/step
+Test Loss:  0.8950753211975098
+Test Accuracy:  0.7016000151634216
