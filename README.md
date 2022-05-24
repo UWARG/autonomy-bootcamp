@@ -1,3 +1,1 @@
-Repo for submitting Computer Vision bootcamps.
-
-For more details see [docs.uwarg.com](https://www.docs.uwarg.com/bootcamp/computer-vision/).
+Completed computer vision and machine learning bootcamp for joining Waterloo's Aerial Robotics Group. Code has been updated to achieve high overall accuracy and plot results using Seaborn for intuitive visual presentations.
