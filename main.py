@@ -51,48 +51,59 @@ def plot_image(i, predictionsArray, trueLabel, img):
                                     100*np.max(predictionsArray),
                                     classNames[trueLabel]),
                                     color=color)
+def create_model():
+    #Creating a Convolutional Neural Network. 
+    global model 
+    model =  models.Sequential()
 
-#Creating a Convolutional Neural Network. 
-model = models.Sequential()
+    #Defining the convulational a stack of COnv2D and MaxPolling2D layers
+    model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
+    model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 
-#Defining the convulational a stack of COnv2D and MaxPolling2D layers
-model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    #Displaying the model architecture
+    print("Before Flattening: ")
+    model.summary()
 
-#Displaying the model architecture
-print("Before Flattening: ")
-model.summary()
+    model.add(layers.Flatten())
+    model.add(layers.Dense(64, activation='relu'))
+    model.add(layers.Dense(10))
 
-model.add(layers.Flatten())
-model.add(layers.Dense(64, activation='relu'))
-model.add(layers.Dense(10))
+    print("After Flattening: ")
+    model.summary()
 
-print("After Flattening: ")
-model.summary()
+    #Compiling and training the model
+    model.compile(optimizer='adam',
+                loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                metrics=['accuracy'])
 
-#Compiling and training the model
-model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=['accuracy'])
+    history = model.fit(trainImages, trainLables, epochs=10, 
+                        validation_data=(testImages, testLables))
+    return history
 
-history = model.fit(trainImages, trainLables, epochs=10, 
-                    validation_data=(testImages, testLables))
+def evaluate(history): 
+    #Evaluating the model using the test dataset and measuring the accuracy
+    plt.plot(history.history['accuracy'], label='accuracy')
+    plt.plot(history.history['val_accuracy'], label = 'val_accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.ylim([0.5, 1])
+    plt.legend(loc='lower right')
 
-#Evaluating the model using the test dataset and measuring the accuracy
-plt.plot(history.history['accuracy'], label='accuracy')
-plt.plot(history.history['val_accuracy'], label = 'val_accuracy')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.ylim([0.5, 1])
-plt.legend(loc='lower right')
+    testLoss, testAccuracy = model.evaluate(testImages,  testLables, verbose=2)
 
-testLoss, testAccuracy = model.evaluate(testImages,  testLables, verbose=2)
+    print("Test Loss: ", testLoss)
+    print("Test Accuracy: ", testAccuracy)
+    plt.show()
+    
 
-print("Test Loss: ", testLoss)
-print("Test Accuracy: ", testAccuracy)
+def main(): 
+    evaluate(create_model())
+
+main()
+
 
 '''  Command line results attatched in results.txt file. 
  Had a lot of fun doing this and learnt alot. Let me know the things I could improve upon.
