@@ -59,14 +59,13 @@ def model_definition():
     )
     """
     model = Sequential()
-    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
-    model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(Conv2D(32, (4, 4), input_shape=(32, 32, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Conv2D(32, (4, 4), input_shape=(32, 32, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
-    model.add(Dense(64, activation='relu'))
-    model.add(Dense(10))
+    model.add(Dense(128, activation='relu'))
+    model.add(Dense(10, activation='softmax'))
     return model
 
 
@@ -98,9 +97,7 @@ def model_training(model, xTrain, yTrain, xVal, yVal, epochs, loss, optimizer):
         tf.keras.callbacks.History
             training history
     """
-    model.compile(optimizer=optimizer,
-                  loss=loss,
-                  metrics=['accuracy'])
+    model.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
 
     history = model.fit(
         x=xTrain,
@@ -122,10 +119,11 @@ def plot_curves(history):
     Returns:
         None
     """
-    plt.plot(history.history['loss'], label='Accuracy', color='blue')
-    plt.plot(history.history['val_loss'], label='Validation Accuracy', color='red')
+    plt.plot(history.history['loss'], label='Training Loss', color='blue')
+    plt.plot(history.history['val_loss'], label='Validation Loss', color='red')
     plt.legend()
     plt.title('Train and Validation Loss Curves')
+    plt.show()
 
 
 if __name__ == '__main__':
@@ -134,7 +132,7 @@ if __name__ == '__main__':
 
     # CONSTANTS
     PIXEL_MAX = 255
-    EPOCHS = 10
+    EPOCHS = 25
     LOSS = 'categorical_crossentropy'
     OPTIMIZER = 'adam'
 
