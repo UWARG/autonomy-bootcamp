@@ -33,6 +33,8 @@ from re import L
 REBUILD_DATA = False
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+x_train = x_train.view(-1, 32, 32)
+
 
 class Net(nn.Module):
     def __init__(self):
@@ -46,12 +48,22 @@ class Net(nn.Module):
         self.fc1 = nn.Linear(self._to_linear, 512)
         self.fc2 = nn.Linear(512, 10)
     def convs(self, x):
-        x = F.max_pool2d(F.relu(self.conv1(x), (2, 2)))
-        x = F.max_pool2d(F.relu(self.conv2(x), (2, 2)))
-        x = F.max_pool2d(F.relu(self.conv3(x), (2, 2)))
+        x = F.max_pool2d(F.relu(self.conv1(x)), (2, 2))
+        x = F.max_pool2d(F.relu(self.conv2(x)), (2, 2))
+        x = F.max_pool2d(F.relu(self.conv3(x)), (2, 2))
         if self._to_linear is None:
             self._to_linear = x[0].shape[0]*x[0].shape[1]*x[0].shape[2]
         return x
     def forward(self, x):
+        x = self.convs(x)
+        x = x.view(-1, self._to_linear)
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        return F.softmax(x, dim = 1)
+
+net = Net()
+print(net)  
+
+
         
 
