@@ -33,8 +33,13 @@ from zmq import device
 
 # Your working code here
 REBUILD_DATA = False
+device = torch.device("cuda:0")
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+x_train = torch.Tensor(x_train).reshape(-1, 32, 32)
+y_train = torch.Tensor(y_train)
+x_test = torch.Tensor(x_test).reshape(-1, 32, 32)
+y_test = torch.Tensor(y_test)
 x_train = x_train.view(-1, 32, 32)
 x_test = x_test.view(-1, 32, 32) #might need to add operation
 
@@ -42,9 +47,8 @@ x_test = x_test.view(-1, 32, 32) #might need to add operation
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(1, 32, 5)
-        self.conv2 = nn.Conv2d(32, 64, 5)
-        self.conv3 = nn.Conv2d(64, 128, 5)
+        self.conv1 = nn.Conv2d(1, 16, 5)
+        self.conv2 = nn.Conv2d(16, 32, 5)
         x = torch.randn(32, 32).view(-1, 1, 32, 32)
         self._to_linear = None
         self.convs(x)
@@ -53,7 +57,6 @@ class Net(nn.Module):
     def convs(self, x):
         x = F.max_pool2d(F.relu(self.conv1(x)), (2, 2))
         x = F.max_pool2d(F.relu(self.conv2(x)), (2, 2))
-        x = F.max_pool2d(F.relu(self.conv3(x)), (2, 2))
         if self._to_linear is None:
             self._to_linear = x[0].shape[0]*x[0].shape[1]*x[0].shape[2]
         return x
@@ -65,7 +68,7 @@ class Net(nn.Module):
         return F.softmax(x, dim = 1)
 
 
-net = Net()
+net = Net().to(device)
 optimizer = optim.Adam(net.parameters(), lr = 0.001)
 loss_function = nn.MSELoss()
 MODEL_NAME = f"model-{int(time.time())}"
