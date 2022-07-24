@@ -36,12 +36,14 @@ REBUILD_DATA = False
 device = torch.device("cuda:0")
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
-x_train = torch.Tensor(x_train).reshape(-1, 32, 32)
+x_train = torch.Tensor(x_train).reshape(-1, 32, 32) #play around with these since loss input n output rnt the same
 y_train = torch.Tensor(y_train)
 x_test = torch.Tensor(x_test).reshape(-1, 32, 32)
 y_test = torch.Tensor(y_test)
 x_train = x_train.view(-1, 32, 32)
-x_test = x_test.view(-1, 32, 32) #might need to add operation
+x_test = x_test.view(-1, 32, 32)
+x_train = x_train/255.0
+x_test = x_test/255.0 
 
 
 class Net(nn.Module):
@@ -78,15 +80,18 @@ EPOCHS = 3
 
 def train(net): 
     with open("model.log", "a") as f: 
-        for i in tqdm(range(0, len(x_train), BATCH_SIZE)): 
-            x_batch = x_train[i:i+BATCH_SIZE].view(-1, 1, 32, 32)
-            y_batch = y_train[i:i+BATCH_SIZE]
-            x_batch, y_batch = x_batch.to(device), y_batch.to(device)
-            acc, loss = fwd_pass(x_batch, y_batch, train = True)
+        for epoch in range(EPOCHS):
+            for i in tqdm(range(0, len(x_train), BATCH_SIZE)): 
+                x_batch = x_train[i:i+BATCH_SIZE].view(-1, 1, 32, 32)
+                y_batch = y_train[i:i+BATCH_SIZE]
+                x_batch, y_batch = x_batch.to(device), y_batch.to(device)
+                acc, loss = fwd_pass(x_batch, y_batch, train = True)
+                if i % 10 == 0:
+                    val_acc, val_loss = test(size = 100)
+                    f.write(f"{MODEL_NAME}, {round(time.time(), 3)}, {round(float(acc), 2)}, {round(float(loss), 4)}, {round(float(val_acc), 2)}, {round(float(val_loss), 4)}\n")
+            print(f"Epoch: {epoch}. Loss: {loss}")
 
 def batch_test(net): 
-    correct = 0 
-    total = 0
     with torch.no_grad():
         x_batch = x_test[:BATCH_SIZE].view(-1, 1, 32, 32)
         y_batch = y_test[:BATCH_SIZE]
@@ -94,7 +99,7 @@ def batch_test(net):
         net.zero_grad()
         outputs = net(x_batch)
         matches = [torch.argmax(i) == torch.argmax(j) for i, j in zip(outputs, y_batch)]
-        acc = matches.count(True)/len(matches)
+        acc = matches.count(True)/len(matches) #add if statement
         print("Test Accuracy: ", round(acc, 3))
 
 def fwd_pass(X, y, train = False):
@@ -102,18 +107,26 @@ def fwd_pass(X, y, train = False):
         net.zero_grad()
     outputs = net(X)
     matches = [torch.argmax(i) == torch.argmax(j) for i, j in zip(outputs, y)]
-    acc = matches.count(True)/len(matches)
+    acc = matches.count(True)/len(matches) #add if statement
     loss = loss_function(outputs, y)
     if train: 
         loss.backward()
         optimizer.step()
     return acc, loss
 
-train(net)
-batch_test(net)
+def test(size = 32):
+    X, y = x_test[:size], y_test[:size]
+    val_acc, val_loss = fwd_pass(X.view(-1, 1, 32, 32).to(device), y.to(device))
+    return val_acc, val_loss
 
-style.use("ggplot")
-model_name = MODEL_NAME
+#train(net)
+#batch_test(net)
+
+#style.use("ggplot")
+#model_name = MODEL_NAME
+
+plt.imshow(x_train[0].view(32, 32))
+plt.show
 
 def create_acc_loss_graph(model_name):
     contents = open("model.log", "r").read().split("/n")
@@ -140,7 +153,7 @@ def create_acc_loss_graph(model_name):
     ax2.plot(times, test_losses, label = "test_loss")
     plt.show() 
 
-create_acc_loss_graph(model_name)
+#create_acc_loss_graph(model_name)
 
 
         
