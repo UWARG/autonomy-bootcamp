@@ -190,21 +190,21 @@ def train(epoch, model, trainloader, device, lossFunction, optimizer):
     loss=lossFunction(outputs,labels)
     
     optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
+    loss.backward()                                 # computes the gradient
+    optimizer.step()                                # use the gradient to tweak the parameters
 
-    running_loss += loss.item()
+    running_loss += loss.item()                     # converts the loss into  a float datatype and adds it to running_loss
     
-    _, predicted = outputs.max(1)
-    total += labels.size(0)
-    correct += predicted.eq(labels).sum().item()
+    _, predicted = outputs.max(1)                   # the class neuron with the highest activation is chosen as the prediction
+    total += labels.size(0)                         # adds to the total samples 
+    correct += predicted.eq(labels).sum().item()    # compares the labels to the predicted, adds the amount to correct and transalates tensor to a number
 
   # Defining training loss
-  train_loss=running_loss/len(trainloader)
+  train_loss=running_loss/len(trainloader)          
   accu=100.*correct/total
 
   # Printing model 
-  train_accu.append(accu)
+  train_accu.append(accu)                           
   train_losses.append(train_loss)
   print('Train Loss: %.3f | Accuracy: %.3f'%(train_loss,accu))
 
@@ -225,34 +225,34 @@ None
 
 """
 # Testing the model
-def test(epoch, model, testloader, device, lossFunction):
-  model.eval()
+def test(model, testloader, device, lossFunction):
+    model.eval()
 
-  running_loss=0
-  correct=0
-  total=0
+    running_loss=0
+    correct=0
+    total=0
 
-  with torch.no_grad():
-    for data in tqdm(testloader):
-      images,labels=data[0].to(device),data[1].to(device)
-      
-      outputs=model(images)
+    with torch.no_grad():
+        for data in tqdm(testloader):
+            images,labels=data[0].to(device),data[1].to(device)
+        
+            outputs=model(images)
 
-      loss= lossFunction(outputs,labels)
-      running_loss+=loss.item()
-      
-      _, predicted = outputs.max(1)
-      total += labels.size(0)
-      correct += predicted.eq(labels).sum().item()
-  
-  test_loss=running_loss/len(testloader)
-  accu=100.*correct/total
+            loss= lossFunction(outputs,labels)
+            running_loss+=loss.item()
+            
+            _, predicted = outputs.max(1)
+            total += labels.size(0)
+            correct += predicted.eq(labels).sum().item()
+    
+    test_loss=running_loss/len(testloader)
+    accu=100.*correct/total
 
-  eval_losses.append(test_loss)
-  eval_accu.append(accu)
+    eval_losses.append(test_loss)                       # assign values back to variable
+    eval_accu.append(accu)
 
-  # Printing model testing progress 
-  print('Test Loss: %.3f | Accuracy: %.3f'%(test_loss,accu))
+    # Printing model testing progress 
+    print('Test Loss: %.3f | Accuracy: %.3f'%(test_loss,accu))
 
 
 """
@@ -270,8 +270,8 @@ None
 def train_model(model, trainloader, device, lossFunction, optimizer):
     epochs=10
     for epoch in range(1,epochs+1): 
-        train(model, trainloader, device, lossFunction, optimizer)
-        test(model, trainloader, device, lossFunction, optimizer)
+        train(epoch, model, trainloader, device, lossFunction, optimizer)
+        test( model, trainloader, device, lossFunction)
 
 
 """
@@ -337,7 +337,7 @@ def main():
 
     # Load data
     trainloader, testloader = load_data()
-
+    
     # Run model
     model = cnn(device)
 
