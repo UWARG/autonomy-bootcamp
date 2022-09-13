@@ -1,0 +1,68 @@
+(base) Matthews-MacBook-Pro:cv-bootcamp matthewkeller$ python main.py
+Files already downloaded and verified
+Files already downloaded and verified
+testLoader Dataset CIFAR10
+    Number of datapoints: 10000
+    Root location: ./data
+    Split: Test
+    StandardTransform
+Transform: Compose(
+               RandomHorizontalFlip(p=0.5)
+               ToTensor()
+               Normalize(mean=[0.49139968, 0.48215841, 0.44653091], std=[0.24703223, 0.24348513, 0.26158784])
+           )
+The model running on cpu device
+
+Epoch : 1
+Testing model on training set
+loader length 5000
+other train loss 6.923250719249248
+Epoch has test accuracy:  60.956
+trainLoss 6.923250719249248
+trainAccuracy 60.956
+Testing model on test set
+loader length 1000
+
+Epoch : 2
+Testing model on training set
+loader length 5000
+other train loss 5.1392274713665245
+Epoch has test accuracy:  69.514
+trainLoss 5.1392274713665245
+trainAccuracy 69.514
+Testing model on test set
+loader length 1000
+
+Epoch : 3
+Testing model on training set
+loader length 5000
+other train loss 4.39613284739852
+Epoch has test accuracy:  74.28
+trainLoss 4.39613284739852
+trainAccuracy 74.28
+Testing model on test set
+loader length 1000
+
+Epoch : 4
+Testing model on training set
+loader length 5000
+other train loss 3.9553440595418214
+Epoch has test accuracy:  76.666
+trainLoss 3.9553440595418214
+trainAccuracy 76.666
+Testing model on test set
+loader length 1000
+
+Epoch : 5
+Testing model on training set
+loader length 5000
+other train loss 3.651916833542287
+Epoch has test accuracy:  78.56
+trainLoss 3.651916833542287
+trainAccuracy 78.56
+Testing model on test set
+loader length 1000
+trainAccVals [60.956, 69.514, 74.28, 76.666, 78.56]
+testAccVals [59.84, 67.09, 70.09, 72.88, 73.64]
+trainLossVals [6.923250719249248, 5.1392274713665245, 4.39613284739852, 3.9553440595418214, 3.651916833542287]
+testLossVals [1.1223536200374364, 0.9288927584290504, 0.8384277695715427, 0.788790491655469, 0.7632447232306003]

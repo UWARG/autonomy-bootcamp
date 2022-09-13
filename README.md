@@ -1,3 +1,3 @@
-Repo for submitting Computer Vision bootcamps.
+# Image Classification Model for CIFAR-10 Dataset
 
-For more details see [CV Bootcamp on Confluence](https://uwarg-docs.atlassian.net/wiki/spaces/BOOT/pages/1544290340/Computer-Vision+Bootcamp).
+This is a simple image classification model for the CIFAR-10 dataset. The model is a simple CNN which yields a 73.64% accuracy.
