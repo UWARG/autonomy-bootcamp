@@ -52,6 +52,8 @@ if __name__ == '__main__':
     x = np.arange(1, NUM_EPOCHS+1)
     trainLossArray = np.array([])
     valLossArray = np.array([])
+    trainAccArray = np.array([])
+    valAccArray = np.array([])
 
     # functions to show an image
     def imshow(img):
@@ -107,6 +109,8 @@ if __name__ == '__main__':
         runningLoss = 0.0
         epochLoss = 0.0
         numBatches = 0
+        correct = 0.0
+        total = 0 
         for i, data in enumerate(trainloader, 0):
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
@@ -120,6 +124,12 @@ if __name__ == '__main__':
             loss.backward()
             optimizer.step()
             epochLoss += loss.item()
+
+            # the class with the highest energy is what we choose as prediction
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
             # print statistics
             runningLoss += loss.item()
             if i % 2000 == 1999:    # print every 2000 mini-batches
@@ -127,7 +137,7 @@ if __name__ == '__main__':
                 runningLoss = 0.0
         print("Training Epoch Loss: " + str(epochLoss/numBatches))
         trainLossArray = np.append(trainLossArray, epochLoss/numBatches) #adding training epoch loss to array
-
+        trainAccArray = np.append(trainAccArray, 100 * correct / total)
         dataiter = iter(testloader)
         images, labels = dataiter.next()
         
@@ -145,7 +155,7 @@ if __name__ == '__main__':
                               for j in range(4)))
         '''
         #calculating the accuracy of the model on the dataset and logging the validation epoch losses
-        correct = 0
+        correct = 0.0
         total = 0 
         numBatches = 0
         epochLoss = 0.0
@@ -170,7 +180,8 @@ if __name__ == '__main__':
 
         print("Validation Epoch Loss: " + str(epochLoss/numBatches))
         valLossArray = np.append(valLossArray, epochLoss/numBatches) #adding validation epoch loss to array
-        print(f'Accuracy of the network on the 10000 test images: {100 * correct // total} %')
+        print(f'Accuracy of the network on the 10000 test images: {100 * correct / total} %')
+        valAccArray = np.append(valAccArray, 100 * correct / total)
     
     
     
@@ -183,6 +194,15 @@ if __name__ == '__main__':
     plt.ylabel("Loss")
     plt.plot(x, trainLossArray,  label = "Training Losses", color ="green")
     plt.plot(x, valLossArray, label = "Validation Losses", color ="blue")
+    plt.legend(loc="upper right")
+    plt.show()
+
+    #plotting accuracy
+    plt.title("Accuracy over Epochs")
+    plt.xlabel("Epoch")
+    plt.ylabel("Accuracy")
+    plt.plot(x, trainAccArray,  label = "Training Accuracy", color ="green")
+    plt.plot(x, valAccArray, label = "Validation Accuracy", color ="blue")
     plt.legend(loc="upper right")
     plt.show()
     """
