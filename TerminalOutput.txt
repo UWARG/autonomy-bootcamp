@@ -4,13 +4,13 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[1,  2000] loss: 2.219
-[1,  4000] loss: 1.840
-[1,  6000] loss: 1.662
-[1,  8000] loss: 1.613
-[1, 10000] loss: 1.515
-[1, 12000] loss: 1.486
-Training Epoch Loss: 1.7103612379217148
+[1,  2000] loss: 2.300
+[1,  4000] loss: 2.145
+[1,  6000] loss: 1.907
+[1,  8000] loss: 1.742
+[1, 10000] loss: 1.641
+[1, 12000] loss: 1.529
+Training Epoch Loss: 1.8621756102228164
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -19,19 +19,19 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.408091031742096
-Accuracy of the network on the 10000 test images: 48.87 %
+Validation Epoch Loss: 1.4240176829576492
+Accuracy of the network on the 10000 test images: 47.69 %
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[2,  2000] loss: 1.408
-[2,  4000] loss: 1.377
-[2,  6000] loss: 1.347
-[2,  8000] loss: 1.344
-[2, 10000] loss: 1.307
-[2, 12000] loss: 1.293
-Training Epoch Loss: 1.3434784573838114
+[2,  2000] loss: 1.436
+[2,  4000] loss: 1.380
+[2,  6000] loss: 1.346
+[2,  8000] loss: 1.301
+[2, 10000] loss: 1.259
+[2, 12000] loss: 1.236
+Training Epoch Loss: 1.3216937512463331
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -40,19 +40,19 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.304470285844803
-Accuracy of the network on the 10000 test images: 53.42 %
+Validation Epoch Loss: 1.1954629395216703
+Accuracy of the network on the 10000 test images: 57.42 %
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[3,  2000] loss: 1.212
-[3,  4000] loss: 1.213
-[3,  6000] loss: 1.229
-[3,  8000] loss: 1.209
-[3, 10000] loss: 1.185
-[3, 12000] loss: 1.177
-Training Epoch Loss: 1.2044326618519425
+[3,  2000] loss: 1.152
+[3,  4000] loss: 1.160
+[3,  6000] loss: 1.140
+[3,  8000] loss: 1.103
+[3, 10000] loss: 1.063
+[3, 12000] loss: 1.071
+Training Epoch Loss: 1.1117301600450278
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -61,19 +61,19 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.237652148000896
-Accuracy of the network on the 10000 test images: 56.27 %
+Validation Epoch Loss: 1.134970811123401
+Accuracy of the network on the 10000 test images: 59.83 %
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[4,  2000] loss: 1.131
-[4,  4000] loss: 1.103
-[4,  6000] loss: 1.114
-[4,  8000] loss: 1.146
-[4, 10000] loss: 1.117
-[4, 12000] loss: 1.108
-Training Epoch Loss: 1.1191451715244354
+[4,  2000] loss: 0.983
+[4,  4000] loss: 1.013
+[4,  6000] loss: 1.012
+[4,  8000] loss: 0.987
+[4, 10000] loss: 0.976
+[4, 12000] loss: 0.956
+Training Epoch Loss: 0.9866294275227748
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -82,19 +82,19 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.152274758890271
-Accuracy of the network on the 10000 test images: 59.93 %
+Validation Epoch Loss: 0.9900332789351233
+Accuracy of the network on the 10000 test images: 65.38 %
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[5,  2000] loss: 1.046
-[5,  4000] loss: 1.036
-[5,  6000] loss: 1.053
-[5,  8000] loss: 1.059
-[5, 10000] loss: 1.051
-[5, 12000] loss: 1.056
-Training Epoch Loss: 1.051304787721187
+[5,  2000] loss: 0.895
+[5,  4000] loss: 0.896
+[5,  6000] loss: 0.884
+[5,  8000] loss: 0.884
+[5, 10000] loss: 0.893
+[5, 12000] loss: 0.904
+Training Epoch Loss: 0.8932613028454781
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -103,19 +103,19 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.1358923133518546
-Accuracy of the network on the 10000 test images: 60.99 %
+Validation Epoch Loss: 0.9353212618023157
+Accuracy of the network on the 10000 test images: 67.67 %
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[6,  2000] loss: 0.979
-[6,  4000] loss: 0.979
-[6,  6000] loss: 1.000
-[6,  8000] loss: 1.003
-[6, 10000] loss: 0.988
-[6, 12000] loss: 1.007
-Training Epoch Loss: 0.9944117254466937
+[6,  2000] loss: 0.804
+[6,  4000] loss: 0.820
+[6,  6000] loss: 0.829
+[6,  8000] loss: 0.828
+[6, 10000] loss: 0.829
+[6, 12000] loss: 0.837
+Training Epoch Loss: 0.8218563442493603
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -124,19 +124,19 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.1436520062178372
-Accuracy of the network on the 10000 test images: 60.73 %
+Validation Epoch Loss: 0.8810715961756185
+Accuracy of the network on the 10000 test images: 70.23 %
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[7,  2000] loss: 0.925
-[7,  4000] loss: 0.945
-[7,  6000] loss: 0.932
-[7,  8000] loss: 0.950
-[7, 10000] loss: 0.976
-[7, 12000] loss: 0.965
-Training Epoch Loss: 0.9495405695296079
+[7,  2000] loss: 0.723
+[7,  4000] loss: 0.754
+[7,  6000] loss: 0.769
+[7,  8000] loss: 0.775
+[7, 10000] loss: 0.775
+[7, 12000] loss: 0.795
+Training Epoch Loss: 0.7641117288072977
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -145,19 +145,19 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.137983585704863
-Accuracy of the network on the 10000 test images: 61.66 %
+Validation Epoch Loss: 0.8784063956094905
+Accuracy of the network on the 10000 test images: 70.4 %
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[8,  2000] loss: 0.862
-[8,  4000] loss: 0.893
-[8,  6000] loss: 0.915
-[8,  8000] loss: 0.921
-[8, 10000] loss: 0.924
-[8, 12000] loss: 0.943
-Training Epoch Loss: 0.9105441610130854
+[8,  2000] loss: 0.683
+[8,  4000] loss: 0.713
+[8,  6000] loss: 0.733
+[8,  8000] loss: 0.708
+[8, 10000] loss: 0.742
+[8, 12000] loss: 0.732
+Training Epoch Loss: 0.7200450520790089
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -166,19 +166,19 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.1340754189092666
-Accuracy of the network on the 10000 test images: 62.34 %
+Validation Epoch Loss: 0.8722385049397126
+Accuracy of the network on the 10000 test images: 71.35 %
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[9,  2000] loss: 0.817
-[9,  4000] loss: 0.882
-[9,  6000] loss: 0.888
-[9,  8000] loss: 0.876
-[9, 10000] loss: 0.911
-[9, 12000] loss: 0.918
-Training Epoch Loss: 0.8824607728089765
+[9,  2000] loss: 0.636
+[9,  4000] loss: 0.661
+[9,  6000] loss: 0.666
+[9,  8000] loss: 0.682
+[9, 10000] loss: 0.695
+[9, 12000] loss: 0.692
+Training Epoch Loss: 0.6744429426102666
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -187,19 +187,19 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.1750735591156407
-Accuracy of the network on the 10000 test images: 61.02 %
+Validation Epoch Loss: 0.8676091856343672
+Accuracy of the network on the 10000 test images: 71.49 %
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-[10,  2000] loss: 0.829
-[10,  4000] loss: 0.821
-[10,  6000] loss: 0.822
-[10,  8000] loss: 0.865
-[10, 10000] loss: 0.876
-[10, 12000] loss: 0.874
-Training Epoch Loss: 0.8489179730271827
+[10,  2000] loss: 0.599
+[10,  4000] loss: 0.656
+[10,  6000] loss: 0.653
+[10,  8000] loss: 0.650
+[10, 10000] loss: 0.655
+[10, 12000] loss: 0.665
+Training Epoch Loss: 0.6462211746731098
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
@@ -208,48 +208,6 @@ Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
 Files already downloaded and verified
-Validation Epoch Loss: 1.1383287416495382
-Accuracy of the network on the 10000 test images: 62.71 %
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-[11,  2000] loss: 0.768
-[11,  4000] loss: 0.801
-[11,  6000] loss: 0.820
-[11,  8000] loss: 0.822
-[11, 10000] loss: 0.842
-[11, 12000] loss: 0.865
-Training Epoch Loss: 0.8219801418258529
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Validation Epoch Loss: 1.186229996287264
-Accuracy of the network on the 10000 test images: 62.42 %
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-[12,  2000] loss: 0.746
-[12,  4000] loss: 0.772
-[12,  6000] loss: 0.816
-[12,  8000] loss: 0.791
-[12, 10000] loss: 0.817
-[12, 12000] loss: 0.847
-Training Epoch Loss: 0.799048070035039
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Files already downloaded and verified
-Validation Epoch Loss: 1.2816065990501084
-Accuracy of the network on the 10000 test images: 60.44 %
+Validation Epoch Loss: 0.893959939845209
+Accuracy of the network on the 10000 test images: 70.91 %
 Finished Training

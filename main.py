@@ -48,7 +48,7 @@ classes = ('plane', 'car', 'bird', 'cat',
 
 if __name__ == '__main__':  
     # initializing np arrays to store training and validation losses and setting number of epochs
-    NUM_EPOCHS = 12
+    NUM_EPOCHS = 10
     x = np.arange(1, NUM_EPOCHS+1)
     trainLossArray = np.array([])
     valLossArray = np.array([])
@@ -78,16 +78,18 @@ if __name__ == '__main__':
     class Net(nn.Module):
         def __init__(self):
             super().__init__()
-            self.conv1 = nn.Conv2d(3, 6, 5)
+            self.conv1 = nn.Conv2d(3, 16, 3)
             self.pool = nn.MaxPool2d(2, 2)
-            self.conv2 = nn.Conv2d(6, 16, 5)
-            self.fc1 = nn.Linear(16 * 5 * 5, 120)
+            self.conv2 = nn.Conv2d(16, 32, 3)
+            self.conv3 = nn.Conv2d(32, 64, 3)
+            self.fc1 = nn.Linear(256, 120)
             self.fc2 = nn.Linear(120, 84)
             self.fc3 = nn.Linear(84, 10)
 
         def forward(self, x):
             x = self.pool(F.relu(self.conv1(x)))
             x = self.pool(F.relu(self.conv2(x)))
+            x = self.pool(F.relu(self.conv3(x)))
             x = torch.flatten(x, 1) # flatten all dimensions except batch
             x = F.relu(self.fc1(x))
             x = F.relu(self.fc2(x))
@@ -189,22 +191,27 @@ if __name__ == '__main__':
     
  
     # plotting epoch losses
-    plt.title("Training and Validation Losses")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.plot(x, trainLossArray,  label = "Training Losses", color ="green")
-    plt.plot(x, valLossArray, label = "Validation Losses", color ="blue")
-    plt.legend(loc="upper right")
-    plt.show()
+    def displaylosses():
+        plt.title("Training and Validation Losses")
+        plt.xlabel("Epoch")
+        plt.ylabel("Loss")
+        plt.plot(x, trainLossArray,  label = "Training Losses", color ="green")
+        plt.plot(x, valLossArray, label = "Validation Losses", color ="blue")
+        plt.legend(loc="upper right")
+        plt.show()
 
     #plotting accuracy
-    plt.title("Accuracy over Epochs")
-    plt.xlabel("Epoch")
-    plt.ylabel("Accuracy")
-    plt.plot(x, trainAccArray,  label = "Training Accuracy", color ="green")
-    plt.plot(x, valAccArray, label = "Validation Accuracy", color ="blue")
-    plt.legend(loc="upper right")
-    plt.show()
+    def displayacc():
+        plt.title("Accuracy over Epochs")
+        plt.xlabel("Epoch")
+        plt.ylabel("Accuracy")
+        plt.plot(x, trainAccArray,  label = "Training Accuracy", color ="green")
+        plt.plot(x, valAccArray, label = "Validation Accuracy", color ="blue")
+        plt.legend(loc="upper right")
+        plt.show()
+
+    displaylosses()
+    displayacc()
     """
     #saving and loading the trained model
     PATH = './cifar_net.pth'
