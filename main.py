@@ -70,33 +70,32 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(network.parameters(), lr = 0.001, momentum = 0.9)
 
 # Train
-
-for epoch in range(2):
-  plt.subplot(131+epoch)
-  trainLoss = []
-  valLoss = []
+trainLoss = []
+valLoss = []
+for epoch in range(3):
+  print('Epoch ' + str(epoch))
   runningLoss = 0.0
   runningValLoss = 0.0
   for i in range(39999):
+    # 39999
     optimizer.zero_grad()
     outputs = network(dataTensor[i])
     loss = criterion(outputs, labelTensor[i])
     loss.backward()
     optimizer.step()
     runningLoss += loss.item()
-    if i % 2000 == 1999 or i == 39999:
-      print(f'[{epoch + 1}, {i + 1:5d}] loss: {runningLoss / 2000:.3f}')
-      trainLoss.append(runningLoss / 2000)
-      runningLoss = 0.0
-  plt.plot(trainLoss, label = "Training Loss")
+  runningLoss = runningLoss/40000
+  trainLoss.append(runningLoss)
   for i in range(9999):
+    # 9999
     valOut = network(dataTensor[i+40000])
     loss = criterion(valOut,labelTensor[i+40000])
     runningValLoss += loss.item()
-    if i % 2000 == 1999 or i == 49999:
-      valLoss.append(runningValLoss / 2000)
-      runningValLoss = 0
-  plt.plot(valLoss, label = "Value Loss")
-
+  runningValLoss = runningValLoss/10000
+  valLoss.append(runningValLoss)
+print(trainLoss)
+print(valLoss)
+plt.plot(trainLoss, label = "Training Loss")
+plt.plot(valLoss, label = "Value Loss")
 plt.legend()
 plt.show()
