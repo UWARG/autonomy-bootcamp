@@ -13,6 +13,8 @@ Hints:
 # Import whatever libraries/modules you need
 
 from cProfile import label
+from cgi import test
+from unittest import result
 import matplotlib.pyplot as plt
 import numpy as np
 import PIL
@@ -72,12 +74,12 @@ optimizer = optim.SGD(network.parameters(), lr = 0.001, momentum = 0.9)
 # Train
 trainLoss = []
 valLoss = []
-for epoch in range(3):
+for epoch in range(11):
   print('Epoch ' + str(epoch))
   runningLoss = 0.0
   runningValLoss = 0.0
-  for i in range(39999):
-    # 39999
+  for i in range(40000):
+    # 40000
     optimizer.zero_grad()
     outputs = network(dataTensor[i])
     loss = criterion(outputs, labelTensor[i])
@@ -86,8 +88,8 @@ for epoch in range(3):
     runningLoss += loss.item()
   runningLoss = runningLoss/40000
   trainLoss.append(runningLoss)
-  for i in range(9999):
-    # 9999
+  for i in range(10000):
+    # 10000
     valOut = network(dataTensor[i+40000])
     loss = criterion(valOut,labelTensor[i+40000])
     runningValLoss += loss.item()
@@ -95,6 +97,16 @@ for epoch in range(3):
   valLoss.append(runningValLoss)
 print(trainLoss)
 print(valLoss)
+
+correct = 0
+for i in range(10000):
+  result = network(dataTensor[i+40000])
+  print(torch.argmax(result).item())
+  print(labelTensor.data[i+40000].item())
+  if(torch.argmax(result).item() == labelTensor.data[i+40000].item()):
+    correct += 1
+
+print('Correct: ' + str(correct) + ' (' + str(correct/100.0) + '%) out of 10000')
 plt.plot(trainLoss, label = "Training Loss")
 plt.plot(valLoss, label = "Value Loss")
 plt.legend()
