@@ -55,16 +55,40 @@ dataTensor = torch.div(dataTensor,255)
 class NeuralNetwork(nn.Module):
   def __init__(self):
     super(NeuralNetwork, self).__init__()
-    self.flatten = nn.Flatten()
+    self.conv1 = nn.Conv2d(3, 1, 3)
+    self.Flatten = nn.Flatten()
+    self.pool = nn.MaxPool2d(2, 1)
+    self.conv2 = nn.Conv2d(1, 1, 3)
     self.linearReLUStack = nn.Sequential(
-      nn.Linear(3*32*32,512),
+      nn.Flatten(),
+      nn.Linear(28*28,512),
+      nn.ReLU(),
+      nn.Linear(512,512),
+      nn.ReLU(),
+      nn.Linear(512,512),
       nn.ReLU(),
       nn.Linear(512,512),
       nn.ReLU(),
       nn.Linear(512,10),
     )
+      # nn.Unflatten(32*32*3,(32,32,3)),
+      # nn.Conv1d(3, 1, 2),
+      # nn.Flatten(),
+      # nn.Linear(32*32,512),
+      # nn.ReLU(),
+      # nn.Linear(512,512),
+      # nn.ReLU(),
+      # nn.Linear(512,10),
   def forward(self,x):
-    logits = self.linearReLUStack(x)
+    logits = torch.reshape(x, (32,32,3))
+    logits = logits.permute(2,0,1)
+    logits = self.conv1(logits)
+    logits = self.conv2(logits)
+    # print(logits.size())
+    logits = self.linearReLUStack(logits)
+    logits = torch.squeeze(logits)
+    # print(logits.size())
+    # print(logits)
     return logits
 network = NeuralNetwork()
 loss_fn = torch.nn.CrossEntropyLoss()
@@ -74,7 +98,7 @@ optimizer = optim.SGD(network.parameters(), lr = 0.001, momentum = 0.9)
 # Train
 trainLoss = []
 valLoss = []
-for epoch in range(11):
+for epoch in range(6):
   print('Epoch ' + str(epoch))
   runningLoss = 0.0
   runningValLoss = 0.0
@@ -82,10 +106,13 @@ for epoch in range(11):
     # 40000
     optimizer.zero_grad()
     outputs = network(dataTensor[i])
+    # print(outputs.size())
     loss = criterion(outputs, labelTensor[i])
     loss.backward()
     optimizer.step()
     runningLoss += loss.item()
+    if(i%2000 == 1999):
+      print("Running loss: " + str(runningLoss/(i+1)))
   runningLoss = runningLoss/40000
   trainLoss.append(runningLoss)
   for i in range(10000):
