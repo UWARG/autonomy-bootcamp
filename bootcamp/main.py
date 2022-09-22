@@ -19,3 +19,6 @@ import torchvision
 import torchvision.transforms as transforms
 
 # Your working code here
+
+if __name__ == "__main__":
+    print(f"Using {'cuda' if torch.cuda.is_available() else 'cpu'} device")
