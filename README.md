@@ -18,8 +18,12 @@ NeuralNetwork:
 Runner:
  - Handles the training and testing of the neural network, based on if the `train` or `test` argument was passed.
 
+Accuracy and Loss graph as expected during training:
 ![plot](plot.png)
 
+Logs during training phase:
 ![plot](training_log.png)
+(You can see why I stopped after ~75% accuracy)
 
+Logs during testing phase:
 ![plot](testing_log.png)
