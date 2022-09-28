@@ -4,7 +4,7 @@
 from functools import wraps
 import logging
 from time import perf_counter
-from typing import Optional
+from typing import Dict, List, Optional
 import numpy as np
 
 import torch
@@ -28,7 +28,7 @@ def timing(f):
         ts = perf_counter()
         ret = f(*args, **kwargs)
         te = perf_counter()
-        LOG.debug("Function %s: execution time=%s", f.__name__, te-ts)
+        LOG.info("Function %s: execution time=%s", f.__name__, te-ts)
         return ret
     return wrap
 
@@ -37,7 +37,6 @@ class Runner():
     def __init__(self, cmd: str, file: Optional[str] = None) -> None:
 
         self._cmd: str = cmd
-        self._file: Optional[str] = file
 
         # Managers
         self.data_manager = DataManager()
@@ -46,11 +45,12 @@ class Runner():
         # Training functions
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.SGD(self.network.parameters(),
-                                   lr=0.004,
-                                   momentum=0.95
+                                   lr=0.001,
+                                   momentum=0.85
                                    )
 
-        self.path = "models/bootcamp_nets.pth"
+        self._path = file if file else "./models/bootcamp_nets.pth"
+        self._training_metadata: Dict[str, List[float]] = {"loss": [], "accuracy": []}
 
     def run(self) -> None:
         LOG.info("Using %s device", "cuda" if torch.cuda.is_available() else "cpu")
@@ -110,10 +110,25 @@ class Runner():
                     LOG.debug('Epoch: %d, Batch: %5d, loss: %.3f', epoch + 1, i + 1, running_loss / 2000)
                     running_loss = 0.0
 
-            LOG.info("Epoch %d took %s seconds [Acc: %.3f%%, Loss: %.3f]", epoch + 1, perf_counter() - start_time,
-                     correct_predictions * 100 / total_predictions, epoch_loss / len(self.data_manager.training_loader))
+            self._training_metadata["loss"].append(epoch_loss / len(self.data_manager.training_loader))
+            self._training_metadata["accuracy"].append(correct_predictions * 100 / total_predictions)
 
-        torch.save(self.network.state_dict(), self.path)
+            LOG.info("Epoch %d took %.3f seconds [Acc: %.3f%%, Loss: %.3f]", epoch + 1, perf_counter() - start_time,
+                     self._training_metadata["accuracy"][epoch], self._training_metadata["loss"][epoch])
+
+
+        torch.save(self.network.state_dict(), self._path)
+
+        # Plot results
+        _, (loss_plt, accuracy_plt) = plt.subplots(2)
+
+        loss_plt.plot(self._training_metadata["loss"])
+        loss_plt.set_title("Loss")
+        accuracy_plt.plot(self._training_metadata["accuracy"])
+        accuracy_plt.set_title("Accuracy")
+        plt.tight_layout()
+
+        plt.show()
 
         LOG.debug("Training complete")
 
@@ -125,24 +140,16 @@ class Runner():
 
         classes = self.data_manager.get_labels()
 
-        def imshow(img):
-            img = img / 2 + 0.5     # unnormalize
-            npimg = img.numpy()
-            plt.imshow(np.transpose(npimg, (1, 2, 0)))
-            plt.show()
-
-        # print images
-        imshow(torchvision.utils.make_grid(images))
-        LOG.info("Ground Truth: %s", ' '.join(f'{classes[labels[j]]:5s}' for j in range(4)))
+        LOG.info("Ground Truth: %s", ' '.join(f'{classes[labels[j]]:5s}' for j in range(self.data_manager.batch_size)))
 
         network = NeuralNetwork()
-        network.load_state_dict(torch.load(self.path))
+        network.load_state_dict(torch.load(self._path))
 
         outputs = network(images)
 
         _, predicted = torch.max(outputs, 1)
 
-        LOG.info("Predicted: %s", ' '.join(f'{classes[predicted[j]]:5s}' for j in range(4)))
+        LOG.info("Predicted: %s", ' '.join(f'{classes[predicted[j]]:5s}' for j in range(self.data_manager.batch_size)))
 
         correct = 0
         total = 0
@@ -153,8 +160,8 @@ class Runner():
                 # calculate outputs by running images through the network
                 outputs = network(images)
                 # the class with the highest energy is what we choose as prediction
-                _, predicted = torch.max(outputs.data, 1)
+                predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
 
-        LOG.info("Accuracy of the network on the 10000 test images: %d %%", 100 * correct / total)
+        LOG.info("Overall accuracy: %d %%", 100 * correct / total)
