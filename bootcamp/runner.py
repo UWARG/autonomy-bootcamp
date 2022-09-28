@@ -2,6 +2,7 @@
 
 
 from functools import wraps
+import logging
 from time import perf_counter
 from typing import Optional
 import numpy as np
@@ -14,9 +15,11 @@ import torchvision
 
 import matplotlib.pyplot as plt
 
-
 from bootcamp.data_manager import DataManager
 from bootcamp.neural_network import NeuralNetwork
+
+
+LOG = logging.getLogger(__name__)
 
 # Function timer decorator
 def timing(f):
@@ -25,7 +28,7 @@ def timing(f):
         ts = perf_counter()
         ret = f(*args, **kwargs)
         te = perf_counter()
-        print(f"Function {f.__name__} execution time: {te-ts}s")
+        LOG.debug("Function %s: execution time=%s", f.__name__, te-ts)
         return ret
     return wrap
 
@@ -37,20 +40,20 @@ class Runner():
         self._file: Optional[str] = file
 
         # Managers
-        self.dataset = DataManager()
+        self.data_manager = DataManager()
         self.network = NeuralNetwork()
 
         # Training functions
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.SGD(self.network.parameters(),
-                                   lr=0.001,
-                                   momentum=0.9
+                                   lr=0.004,
+                                   momentum=0.95
                                    )
 
-        self.path = "./bootcamp_nets.pth"
+        self.path = "models/bootcamp_nets.pth"
 
     def run(self) -> None:
-        print(f"Using {'cuda' if torch.cuda.is_available() else 'cpu'} device")
+        LOG.info("Using %s device", "cuda" if torch.cuda.is_available() else "cpu")
 
         # figure = plt.figure(figsize=(8, 8))
         # cols, rows = 3, 3
@@ -63,15 +66,27 @@ class Runner():
         #     plt.imshow(img.permute(1, 2, 0).squeeze(), cmap="gray")
         # plt.show()
 
-        self.__train()
-        self.__test()
+        if self._cmd == "train":
+            self.__train()
+        elif self._cmd == "test":
+            self.__test()
+        else:
+            LOG.error("Invalid command: %s", self._cmd)
 
     @timing
     def __train(self) -> None:
-        for epoch in range(2):
+        LOG.debug("Beginning training")
+
+        for epoch in range(20):
+            start_time = perf_counter()
 
             running_loss: float = 0.0
-            for i, data in enumerate(self.dataset.training_loader, 0):
+            epoch_loss: float = 0.0
+
+            correct_predictions: int = 0
+            total_predictions: int = 0
+
+            for i, data in enumerate(self.data_manager.training_loader, 0):
                 # Get the inputs and labels from the data
                 inputs, labels = data
 
@@ -79,25 +94,36 @@ class Runner():
                 self.optimizer.zero_grad()
 
                 outputs = self.network(inputs)
+
+                predictions: torch.Tensor = torch.argmax(outputs, dim=1)  # Run predictions
+                correct_predictions += (predictions == labels).sum().item()  # Count correct predictions
+                total_predictions += labels.size(0)  # Count total predictions
+
                 loss = self.criterion(outputs, labels)
                 loss.backward()
                 self.optimizer.step()
 
                 # Stats
                 running_loss += loss.item()
-                if i % 2000 == 1999:    # print every 2000 mini-batches
-                    print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
+                epoch_loss += loss.item()
+                if i % 2000 == 0:
+                    LOG.debug('Epoch: %d, Batch: %5d, loss: %.3f', epoch + 1, i + 1, running_loss / 2000)
                     running_loss = 0.0
+
+            LOG.info("Epoch %d took %s seconds [Acc: %.3f%%, Loss: %.3f]", epoch + 1, perf_counter() - start_time,
+                     correct_predictions * 100 / total_predictions, epoch_loss / len(self.data_manager.training_loader))
 
         torch.save(self.network.state_dict(), self.path)
 
-        print('Training Done')
+        LOG.debug("Training complete")
 
     def __test(self) -> None:
-        dataiter = iter(self.dataset.test_loader)
+        LOG.debug("Beginning testing")
+
+        dataiter = iter(self.data_manager.test_loader)
         images, labels = dataiter.next()
 
-        classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+        classes = self.data_manager.get_labels()
 
         def imshow(img):
             img = img / 2 + 0.5     # unnormalize
@@ -107,7 +133,7 @@ class Runner():
 
         # print images
         imshow(torchvision.utils.make_grid(images))
-        print('GroundTruth: ', ' '.join(f'{classes[labels[j]]:5s}' for j in range(4)))
+        LOG.info("Ground Truth: %s", ' '.join(f'{classes[labels[j]]:5s}' for j in range(4)))
 
         network = NeuralNetwork()
         network.load_state_dict(torch.load(self.path))
@@ -116,14 +142,13 @@ class Runner():
 
         _, predicted = torch.max(outputs, 1)
 
-        print('Predicted: ', ' '.join(f'{classes[predicted[j]]:5s}'
-                                    for j in range(4)))
+        LOG.info("Predicted: %s", ' '.join(f'{classes[predicted[j]]:5s}' for j in range(4)))
 
         correct = 0
         total = 0
         # since we're not training, we don't need to calculate the gradients for our outputs
         with torch.no_grad():
-            for data in self.dataset.test_loader:
+            for data in self.data_manager.test_loader:
                 images, labels = data
                 # calculate outputs by running images through the network
                 outputs = network(images)
@@ -132,4 +157,4 @@ class Runner():
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
 
-        print(f'Accuracy of the network on the 10000 test images: {100 * correct // total} %')
+        LOG.info("Accuracy of the network on the 10000 test images: %d %%", 100 * correct / total)

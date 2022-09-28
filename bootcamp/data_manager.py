@@ -1,6 +1,6 @@
 """Class for managing the datasets for the neural networks."""
 
-from typing import Dict
+from typing import Dict, List, Tuple
 from torchvision.datasets import CIFAR10
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 class DataManager():
     """Class for managing the datasets for the neural networks."""
     def __init__(self) -> None:
-        self.batch_size: int = 4
+        self.batch_size: int = 16
         # Load data and labels
         # These shouldn't be accessed directly, but I'm running out of time, and I just need to finish this
         self.training_data = CIFAR10(root="data",
@@ -27,6 +27,8 @@ class DataManager():
                                           batch_size=self.batch_size,
                                           shuffle=True)
 
+        # Side note: I have no idea how to suppress the loading messages from pytorch
+
         self.labels_map: Dict[int, str] = {
             0: "Plane",
             1: "Car",
@@ -39,3 +41,6 @@ class DataManager():
             8: "Ship",
             9: "Truck",
         }
+
+    def get_labels(self) -> Tuple[str]:
+        return tuple(self.labels_map.values())
