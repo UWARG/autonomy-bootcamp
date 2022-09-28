@@ -12,9 +12,10 @@ Hints:
 
 # Import whatever libraries/modules you need
 
+import argparse
 from functools import wraps
 from time import perf_counter
-from typing import Dict
+from typing import Dict, Optional
 import numpy as np
 
 import torch
@@ -108,7 +109,11 @@ class DataManager():
 
 class Runner():
     """Class for running training and/or testing on neural networks."""
-    def __init__(self) -> None:
+    def __init__(self, cmd: str, file: Optional[str] = None) -> None:
+
+        self._cmd: str = cmd
+        self._file: Optional[str] = file
+
         # Managers
         self.dataset = DataManager()
         self.network = NeuralNetwork()
@@ -209,7 +214,18 @@ class Runner():
         print(f'Accuracy of the network on the 10000 test images: {100 * correct // total} %')
 
 
-# Excecute the main entry point
 if __name__ == "__main__":
-    runner = Runner()
-    runner.run()
+    """Starts the bootcamp program and parses the arguments."""
+
+    parser = argparse.ArgumentParser()
+    cmd_help_str: str = """Command to run. 'train' will train a new neural network and store it in a new file, test will
+                        load a neural network from the latest file."""
+
+    parser.add_argument("command", help=cmd_help_str, choices=["train", "test"])
+
+    parser.add_argument("-f", "--file", help="File to load or save the neural network to/from.", type=str)
+
+    args = parser.parse_args()
+    runnner = Runner(args.command, args.file)
+
+
