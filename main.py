@@ -50,55 +50,42 @@ for i in range(5):
 labelTensor = torch.tensor(dataFrame['labels'].values, dtype = torch.uint8) 
 dataTensor = torch.tensor(dataFrame['data'].values, dtype = torch.uint8)
 dataTensor = torch.div(dataTensor,255)
+print(dataTensor)
 
 # Construct neural network
 class NeuralNetwork(nn.Module):
   def __init__(self):
     super(NeuralNetwork, self).__init__()
-    self.conv1 = nn.Conv2d(3, 1, 3)
+    self.conv1 = nn.Conv2d(3, 3, 3)
     self.Flatten = nn.Flatten()
     self.pool = nn.MaxPool2d(2, 1)
-    self.conv2 = nn.Conv2d(1, 1, 3)
+    self.conv2 = nn.Conv2d(3, 1, 3)
     self.linearReLUStack = nn.Sequential(
       nn.Flatten(),
-      nn.Linear(28*28,512),
+      nn.Linear(22*22,512),
       nn.ReLU(),
-      nn.Linear(512,512),
-      nn.ReLU(),
-      nn.Linear(512,512),
-      nn.ReLU(),
-      nn.Linear(512,512),
-      nn.ReLU(),
-      nn.Linear(512,10),
     )
-      # nn.Unflatten(32*32*3,(32,32,3)),
-      # nn.Conv1d(3, 1, 2),
-      # nn.Flatten(),
-      # nn.Linear(32*32,512),
-      # nn.ReLU(),
-      # nn.Linear(512,512),
-      # nn.ReLU(),
-      # nn.Linear(512,10),
   def forward(self,x):
     logits = torch.reshape(x, (32,32,3))
     logits = logits.permute(2,0,1)
     logits = self.conv1(logits)
+    logits = self.conv1(logits)
+    logits = self.pool(logits)
+    logits = self.conv1(logits)
     logits = self.conv2(logits)
-    # print(logits.size())
+    logits = self.pool(logits)
     logits = self.linearReLUStack(logits)
     logits = torch.squeeze(logits)
-    # print(logits.size())
-    # print(logits)
     return logits
 network = NeuralNetwork()
 loss_fn = torch.nn.CrossEntropyLoss()
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(network.parameters(), lr = 0.001, momentum = 0.9)
+optimizer = optim.SGD(network.parameters(), lr = 0.0001, momentum = 0.9)
 
 # Train
 trainLoss = []
 valLoss = []
-for epoch in range(6):
+for epoch in range(16):
   print('Epoch ' + str(epoch))
   runningLoss = 0.0
   runningValLoss = 0.0
