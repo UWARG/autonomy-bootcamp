@@ -11,7 +11,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-import torchvision
+from torchsummary import summary
 
 import matplotlib.pyplot as plt
 
@@ -46,7 +46,7 @@ class Runner():
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.SGD(self.network.parameters(),
                                    lr=0.001,
-                                   momentum=0.85
+                                   momentum=0.9
                                    )
 
         self._path = file if file else "./models/bootcamp_nets.pth"
@@ -70,6 +70,8 @@ class Runner():
             self.__train()
         elif self._cmd == "test":
             self.__test()
+        elif self._cmd == "summary":
+            summary(self.network, (3, 32, 32))
         else:
             LOG.error("Invalid command: %s", self._cmd)
 
@@ -77,7 +79,7 @@ class Runner():
     def __train(self) -> None:
         LOG.debug("Beginning training")
 
-        for epoch in range(20):
+        for epoch in range(9):
             start_time = perf_counter()
 
             running_loss: float = 0.0
@@ -160,7 +162,7 @@ class Runner():
                 # calculate outputs by running images through the network
                 outputs = network(images)
                 # the class with the highest energy is what we choose as prediction
-                predicted = torch.max(outputs.data, 1)
+                _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
 

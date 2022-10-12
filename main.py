@@ -32,10 +32,11 @@ if __name__ == "__main__":
     """Starts the bootcamp program and parses the arguments."""
 
     parser = argparse.ArgumentParser()
-    cmd_help_str: str = """Command to run. 'train' will train a new neural network and store it in a new file, test will
-                        load a neural network from the latest file."""
+    cmd_help_str: str = """Command to run. 'train' will train a new neural network and store it in a new file, 'test'
+                        will load a neural network from the latest file, 'summary' will print the summary of the
+                        network."""
 
-    parser.add_argument("command", help=cmd_help_str, choices=["train", "test"])
+    parser.add_argument("command", help=cmd_help_str, choices=["train", "test", "summary"])
 
     parser.add_argument("-f", "--file", help="File to load or save the neural network to/from.", type=str)
 

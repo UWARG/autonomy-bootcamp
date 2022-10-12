@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 class DataManager():
     """Class for managing the datasets for the neural networks."""
     def __init__(self) -> None:
-        self.batch_size: int = 4  # 4 seems to work best after testing between 4, 8, and 16
+        self.batch_size: int = 32  # 32 seems to work best after testing between 4, 8, 16, and 32
         # Load data and labels
         # These shouldn't be accessed directly, but I'm running out of time, and I just need to finish this
         self.training_data = CIFAR10(root="data",
