@@ -1,82 +1,110 @@
 """Class for running training and/or testing on neural networks."""
 
 
-from functools import wraps
 import logging
+from functools import wraps
 from time import perf_counter
-from typing import Dict, List, Optional
-import numpy as np
+from typing import Dict, List
 
+import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
 from torchsummary import summary
-
-import matplotlib.pyplot as plt
 
 from bootcamp.data_manager import DataManager
 from bootcamp.neural_network import NeuralNetwork
 
-
 LOG = logging.getLogger(__name__)
 
 # Function timer decorator
-def timing(f):
-    @wraps(f)
+def timing(func):
+    @wraps(func)
     def wrap(*args, **kwargs):
-        ts = perf_counter()
-        ret = f(*args, **kwargs)
-        te = perf_counter()
-        LOG.info("Function %s: execution time=%s", f.__name__, te-ts)
+        time_start = perf_counter()
+        ret = func(*args, **kwargs)
+        time_end = perf_counter()
+        LOG.info("Function %s: execution time=%s", func.__name__, time_end-time_start)
         return ret
     return wrap
 
 class Runner():
-    """Class for running training and/or testing on neural networks."""
-    def __init__(self, cmd: str, file: Optional[str] = None) -> None:
+    """
+    Holds information about a line in 2D space and functions that can be performed on it.
 
-        self._cmd: str = cmd
+    Attributes
+    ----------
+    data_manager: DataManager
+    network: NeuralNetwork
+    criterion: nn.CrossEntropyLoss
+    optimizer: optim.SGD
+
+    __path: str
+    __training_metadata: Dict[str, List[float]]
+
+    Methods
+    -------
+    __init__(cmd: str, file: Optional[str] = None)
+        Initial setup for the data manager and neural network, and executes the command.
+    run()
+        Runs a command loaded from the command line.
+    __train()
+        Trains a neural network on the CIFAR-10 dataset and logs diagnostics.
+    __test()
+        Tests a neural network on the CIFAR-10 dataset and logs diagnostics.
+    """
+
+    def __init__(self, cmd: str, file: str = "./models/bootcamp_nets.pth"):
+        """
+        Initial setup for the data manager and neural network, and executes the command.
+
+        Parameters
+        ----------
+        cmd : str
+            The command to be executed, either "train", "test", or "summary"
+        file : str, optional
+            Path to a file to be written to or loaded from
+
+        Returns
+        -------
+        Runner
+        """
+        self.__cmd: str = cmd
 
         # Managers
-        self.data_manager = DataManager()
-        self.network = NeuralNetwork()
+        self.data_manager: DataManager = DataManager()
+        self.network: NeuralNetwork = NeuralNetwork()
 
         # Training functions
-        self.criterion = nn.CrossEntropyLoss()
-        self.optimizer = optim.SGD(self.network.parameters(),
-                                   lr=0.001,
-                                   momentum=0.9
-                                   )
+        self.criterion: nn.CrossEntropyLoss = nn.CrossEntropyLoss()
+        self.optimizer: optim.SGD = optim.SGD(self.network.parameters(),
+                                              lr=0.001,
+                                              momentum=0.9
+                                              )
 
-        self._path = file if file else "./models/bootcamp_nets.pth"
-        self._training_metadata: Dict[str, List[float]] = {"loss": [], "accuracy": []}
+        self.__path: str = file
+        self.__training_metadata: Dict[str, List[float]] = {"loss": [], "accuracy": []}
 
     def run(self) -> None:
+        """
+        Runs a command loaded from the command line.
+        """
         LOG.info("Using %s device", "cuda" if torch.cuda.is_available() else "cpu")
 
-        # figure = plt.figure(figsize=(8, 8))
-        # cols, rows = 3, 3
-        # for i in range(1, cols * rows + 1):
-        #     sample_idx = torch.randint(len(self.dataset.training_data), size=(1,)).item()
-        #     img, label = self.dataset.training_data[sample_idx]
-        #     figure.add_subplot(rows, cols, i)
-        #     plt.title(self.dataset.labels_map[label])
-        #     plt.axis("off")
-        #     plt.imshow(img.permute(1, 2, 0).squeeze(), cmap="gray")
-        # plt.show()
-
-        if self._cmd == "train":
+        if self.__cmd == "train":
             self.__train()
-        elif self._cmd == "test":
+        elif self.__cmd == "test":
             self.__test()
-        elif self._cmd == "summary":
+        elif self.__cmd == "summary":
             summary(self.network, (3, 32, 32))
         else:
-            LOG.error("Invalid command: %s", self._cmd)
+            LOG.error("Invalid command: %s", self.__cmd)
 
     @timing
     def __train(self) -> None:
+        """
+        Trains a neural network on the CIFAR-10 dataset and logs diagnostics.
+        """
         LOG.debug("Beginning training")
 
         for epoch in range(9):
@@ -112,21 +140,21 @@ class Runner():
                     LOG.debug('Epoch: %d, Batch: %5d, loss: %.3f', epoch + 1, i + 1, running_loss / 2000)
                     running_loss = 0.0
 
-            self._training_metadata["loss"].append(epoch_loss / len(self.data_manager.training_loader))
-            self._training_metadata["accuracy"].append(correct_predictions * 100 / total_predictions)
+            self.__training_metadata["loss"].append(epoch_loss / len(self.data_manager.training_loader))
+            self.__training_metadata["accuracy"].append(correct_predictions * 100 / total_predictions)
 
             LOG.info("Epoch %d took %.3f seconds [Acc: %.3f%%, Loss: %.3f]", epoch + 1, perf_counter() - start_time,
-                     self._training_metadata["accuracy"][epoch], self._training_metadata["loss"][epoch])
+                     self.__training_metadata["accuracy"][epoch], self.__training_metadata["loss"][epoch])
 
 
-        torch.save(self.network.state_dict(), self._path)
+        torch.save(self.network.state_dict(), self.__path)
 
         # Plot results
         _, (loss_plt, accuracy_plt) = plt.subplots(2)
 
-        loss_plt.plot(self._training_metadata["loss"])
+        loss_plt.plot(self.__training_metadata["loss"])
         loss_plt.set_title("Loss")
-        accuracy_plt.plot(self._training_metadata["accuracy"])
+        accuracy_plt.plot(self.__training_metadata["accuracy"])
         accuracy_plt.set_title("Accuracy")
         plt.tight_layout()
 
@@ -135,6 +163,9 @@ class Runner():
         LOG.debug("Training complete")
 
     def __test(self) -> None:
+        """
+        Tests a neural network on the CIFAR-10 dataset and logs diagnostics.
+        """
         LOG.debug("Beginning testing")
 
         dataiter = iter(self.data_manager.test_loader)
@@ -145,7 +176,7 @@ class Runner():
         LOG.info("Ground Truth: %s", ' '.join(f'{classes[labels[j]]:5s}' for j in range(self.data_manager.batch_size)))
 
         network = NeuralNetwork()
-        network.load_state_dict(torch.load(self._path))
+        network.load_state_dict(torch.load(self.__path))
 
         outputs = network(images)
 

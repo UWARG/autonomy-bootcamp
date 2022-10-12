@@ -1,9 +1,11 @@
 """Class for managing the datasets for the neural networks."""
 
-from typing import Dict, List, Tuple
-from torchvision.datasets import CIFAR10
+from typing import Dict, Tuple
+
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
+from torchvision.datasets import CIFAR10
+
 
 class DataManager():
     """Class for managing the datasets for the neural networks."""
