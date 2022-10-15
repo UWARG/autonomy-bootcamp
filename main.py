@@ -57,7 +57,7 @@ dataAugmention = keras.Sequential([
 
 def prepare_data(dataset, batchSize=32, training=False, numAugmentations=0, shuffleBufferSize=1000):
 
-  # rescale all datasets
+  # rescale and resize all datasets
   dataset = dataset.map(lambda x, y: (dataResizingRescaling(x) , y),
                         num_parallel_calls=tf.data.AUTOTUNE) # AUTOTUNE means dynamically tuned based on available CPU
   
@@ -85,7 +85,7 @@ def prepare_data(dataset, batchSize=32, training=False, numAugmentations=0, shuf
 
 
 # Will run augmentation seperate to model creation for efficiency
-datasetTrain = prepare_data(datasetTrain, training=True, numAugmentations=1)
+datasetTrain = prepare_data(datasetTrain, training=True, numAugmentations=0)
 datasetValidate = prepare_data(datasetValidate)
 datasetTest = prepare_data(datasetTest)
 
@@ -97,26 +97,30 @@ model = keras.Sequential([
     # Convolutional base
     layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
     layers.MaxPooling2D(),
-    layers.Conv2D(32, 3, padding='same', activation='relu'),
+    layers.Conv2D(32, 3, padding='valid', activation='relu'),
     layers.MaxPooling2D(),
-    layers.Conv2D(64, 3, padding='same', activation='relu'),
+    layers.Conv2D(64, 3, padding='valid', activation='relu'),
     layers.MaxPooling2D(),
     
     # Dense Layers
     layers.Flatten(),
     layers.Dense(64, activation='relu'),
-    layers.Dense(NUM_CLASSES, activation='relu')
+    layers.Dense(NUM_CLASSES, activation='softmax')
 
 ])
 
+model.summary()
+
 model.compile(optimizer='adam',
-              loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              #loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), # can't use softmax in last layer when from_logits=True
+              loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False), # from_logits=False -> data is a probability distribution 
               metrics=['accuracy']) #note to self: research different types of Keras metrics
+
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Training the model
 
-NUM_EPOCHS = 4
+NUM_EPOCHS = 10
 history = model.fit(datasetTrain,
                     validation_data=datasetValidate,
                     epochs=NUM_EPOCHS
