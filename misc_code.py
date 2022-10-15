@@ -13,15 +13,15 @@
 
 
 #-------------------------------------------------------------------------------------------
-#Viewing augmented images
+# Viewing augmented images
 
 # image, label = next(iter(datasetTrain))
-# _ = label = datasetInfo.features['label'].int2str(label)
-# _ = image = dataResizingRescaling(image)
-# _ = imageAugmented = dataAugmention(image)
-# _ = plt.figure(0)
-# _ = plt.imshow(image)
-# _ = plt.title(label)
-# _ = plt.figure(1)
-# _ = plt.imshow(imageAugmented)
-# _ = plt.title(label)
+# label = datasetInfo.features['label'].int2str(label)
+# image = dataResizingRescaling(image)
+# imageAugmented = dataAugmention(image)
+# plt.figure(0)
+# plt.imshow(image)
+# plt.title(label)
+# plt.figure(1)
+# plt.imshow(imageAugmented)
+# plt.title(label)
