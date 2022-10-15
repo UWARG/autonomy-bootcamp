@@ -8,7 +8,7 @@
 #   https://www.youtube.com/watch?v=tPYj3fFJGjk&t=3961s&ab_channel=freeCodeCamp.org
 #   https://github.com/UWARG/computer-vision-python/blob/main/README.md#naming-and-typing-conventions
 
-# --------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Imports
 
@@ -19,43 +19,71 @@ from sklearn import model_selection
 
 import tensorflow as tf
 from tensorflow import keras
-import tensorflow datasets as tfds
+import tensorflow_datasets as tfds
 
 from keras import datasets, layers, models
-from keras.preprocessing.image import ImageDataGenerator # baddd, keras.preprocessing is deprecated
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Loading the dataset
 
-(trainImages, trainLabels), (testImages, testLabels) = keras.datasets.cifar10.load_data()
+# as_supervised=True yeilds (x, y) tuples instead of a dictionary
+(datasetTrain, datasetTest), datasetInfo = tfds.load('cifar10', split = ['train', 'test'], 
+                                                      shuffle_files=True, as_supervised=True, with_info=True)
 
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Data preprocessing and augmentation
 
-trainImages, testImages = trainImages/255, testImages/255 
+dataRescaling = keras.Sequential([layers.Rescaling(1.0/255)]) 
+# no resizing necessary since all images are 32 x 32 pixels
 
-classes = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
-
-(trainX, validationX, trainY, validationY) = model_selection.train_test_split(trainImages, trainLabels, 
-                                                                              test_size = 0.20, 
-                                                                              random_state = 42)
-
+dataAugmention = keras.Sequential([
+  layers.RandomFlip("horizontal_and_vertical"),
+  layers.RandomRotation(0.2)
 
 
-# badddd, keras.preprocessing is deprecated
-trainAugmentedDatagen = ImageDataGenerator(rotation_range=20,
-                                           zoom_range=0.15,
-                                           width_shift_range=0.2,
-                                           height_shift_range=0.2,
-                                           shear_range=0.15,
-                                           horizontal_flip=True,
-                                           fill_mode="nearest")
-
-trainAugmented = trainAugmentedDatagen.flow(trainX, trainY, batch_size=32)
 
 
-#   consider having a train, validation, and test set -> ask: is validation really necessary
-#   use the img transformation thing
-#   think about efficiency when using tf.keras.Model.fit function
-#      should I store the images first??
 
 
+  # **need to add more transformations here
+  # **consider adding custom transformations
+  # **reference https://www.tensorflow.org/tutorials/images/data_augmentation
+])
+
+
+def prepare_data(dataset, batchSize=32, training=False, numAugmentations=1, shuffleBuffer=1000):
+
+  # rescale all datasets
+  dataset = dataset.map(lambda x, y: (dataRescaling(x) , y),
+                        num_parallel_calls=tf.data.AUTOTUNE) # AUTOTUNE means dynamically tuned based on available CPU
+  
+  if (training):
+
+    # desired numAugmentations are made and concatenated to original dataset
+    if (numAugmentations > 0):
+      augmentation = dataset.repeat(count=numAugmentations)
+      augmentation = augmentation.map(lambda x, y: (dataAugmention(x, training=True)),
+                                      num_parallel_calls=tf.data.AUTOTUNE)
+      dataset = dataset.concatenate(augmentation)
+
+    # shuffle and batch dataset
+    dataset = dataset.shuffle(shuffle_buffer=shuffleBuffer)
+    dataset = dataset.batch(batchSize)
+  
+  else:
+
+    # batch dataset
+    dataset = dataset.batch(batchSize)
+
+  # prefetch to overlap dataset preprocessing and model excecution -> faster run time
+  # (not using dataset.cache().prefetch, incase dataset is too large for cache storage) 
+  return dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+
+
+  
+
+
+# Will run augmentation seperate to model creation for efficiency
