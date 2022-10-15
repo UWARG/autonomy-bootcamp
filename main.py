@@ -27,12 +27,9 @@ from keras import datasets, layers, models
 # Loading the dataset
 
 # as_supervised=True yeilds (x, y) tuples instead of a dictionary
-(datasetTrain, datasetTest), datasetInfo = tfds.load('cifar10', split = ['train', 'test'], 
-                                                      shuffle_files=True, as_supervised=True, with_info=True)
-
-
-
-
+(datasetTrain, datasetValidate, datasetTest), datasetInfo = tfds.load('cifar10', split=['train[:80%]','train[80%:]', 'test'], 
+                                                     shuffle_files=True, as_supervised=True, with_info=True)
+                                                     
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Data preprocessing and augmentation
 
