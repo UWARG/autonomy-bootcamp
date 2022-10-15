@@ -45,16 +45,13 @@ dataResizingRescaling = keras.Sequential([layers.Resizing(IMG_SIZE, IMG_SIZE), #
 
 dataAugmention = keras.Sequential([
   layers.RandomFlip("horizontal_and_vertical"),
-  layers.RandomRotation(0.2)
-
-
-
-
-
+  layers.RandomRotation(0.2),
+  layers.RandomTranslation(0.2, 0.2)
+  #layers.RandomZoom(width_factor=(-0.2,0.2), height_factor=((-0.2,0.2)))
 
   # **need to add more transformations here
   # **consider adding custom transformations
-  # **reference https://www.tensorflow.org/tutorials/images/data_augmentation
+  # **reference https://www.tensorflow.org/tutorials/images/data_augmentation, https://www.tensorflow.org/api_docs/python/tf/keras/layers
 ])
 
 
@@ -87,11 +84,46 @@ def prepare_data(dataset, batchSize=32, training=False, numAugmentations=0, shuf
   return dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
 
 
-
 # Will run augmentation seperate to model creation for efficiency
 datasetTrain = prepare_data(datasetTrain, training=True, numAugmentations=1)
 datasetValidate = prepare_data(datasetValidate)
 datasetTest = prepare_data(datasetTest)
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Creating the model
 
+model = keras.Sequential([
+    
+    # Convolutional base
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
+    layers.MaxPooling2D(),
+    layers.Conv2D(32, 3, padding='same', activation='relu'),
+    layers.MaxPooling2D(),
+    layers.Conv2D(64, 3, padding='same', activation='relu'),
+    layers.MaxPooling2D(),
+    
+    # Dense Layers
+    layers.Flatten(),
+    layers.Dense(64, activation='relu'),
+    layers.Dense(NUM_CLASSES, activation='relu')
 
+])
+
+model.compile(optimizer='adam',
+              loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy']) #note to self: research different types of Keras metrics
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Training the model
+
+NUM_EPOCHS = 4
+history = model.fit(datasetTrain,
+                    validation_data=datasetValidate,
+                    epochs=NUM_EPOCHS
+                    ) 
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Testing the model
+
+loss, accuracy = model.evaluate(datasetTest)
+print(loss, accuracy)
