@@ -29,7 +29,10 @@ from keras import datasets, layers, models
 # as_supervised=True yeilds (x, y) tuples instead of a dictionary
 (datasetTrain, datasetValidate, datasetTest), datasetInfo = tfds.load('cifar10', split=['train[:80%]','train[80%:]', 'test'], 
                                                      shuffle_files=True, as_supervised=True, with_info=True)
-                                                     
+
+NUM_CLASSES = datasetInfo.features['label'].num_classes
+CLASS_NAMES = datasetInfo.features['label'].names
+
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Data preprocessing and augmentation
 
@@ -82,8 +85,11 @@ def prepare_data(dataset, batchSize=32, training=False, numAugmentations=0, shuf
   return dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
 
 
-  
-
-# **need to split off some validation data
 
 # Will run augmentation seperate to model creation for efficiency
+datasetTrain = prepare_data(datasetTrain, training=True, numAugmentations=1)
+datasetValidate = prepare_data(datasetValidate)
+datasetTest = prepare_data(datasetTest)
+
+
+
