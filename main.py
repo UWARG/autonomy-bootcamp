@@ -7,6 +7,8 @@
 # @references:
 #   https://www.youtube.com/watch?v=tPYj3fFJGjk&t=3961s&ab_channel=freeCodeCamp.org
 #   https://github.com/UWARG/computer-vision-python/blob/main/README.md#naming-and-typing-conventions
+#   https://www.tensorflow.org/api_docs/python/tf/keras/layers/Conv2D
+#   https://www.tensorflow.org/tutorials/images/data_augmentation
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 
