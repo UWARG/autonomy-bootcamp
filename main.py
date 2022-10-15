@@ -36,8 +36,10 @@ from keras import datasets, layers, models
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Data preprocessing and augmentation
 
-dataRescaling = keras.Sequential([layers.Rescaling(1.0/255)]) 
-# no resizing necessary since all images are 32 x 32 pixels
+
+IMG_SIZE = 32
+dataResizingRescaling = keras.Sequential([layers.Resizing(IMG_SIZE, IMG_SIZE), # for sanity, ensure images are same size 
+                                         layers.Rescaling(1.0/255)]) 
 
 dataAugmention = keras.Sequential([
   layers.RandomFlip("horizontal_and_vertical"),
@@ -54,10 +56,10 @@ dataAugmention = keras.Sequential([
 ])
 
 
-def prepare_data(dataset, batchSize=32, training=False, numAugmentations=1, shuffleBuffer=1000):
+def prepare_data(dataset, batchSize=32, training=False, numAugmentations=0, shuffleBufferSize=1000):
 
   # rescale all datasets
-  dataset = dataset.map(lambda x, y: (dataRescaling(x) , y),
+  dataset = dataset.map(lambda x, y: (dataResizingRescaling(x) , y),
                         num_parallel_calls=tf.data.AUTOTUNE) # AUTOTUNE means dynamically tuned based on available CPU
   
   if (training):
@@ -65,12 +67,12 @@ def prepare_data(dataset, batchSize=32, training=False, numAugmentations=1, shuf
     # desired numAugmentations are made and concatenated to original dataset
     if (numAugmentations > 0):
       augmentation = dataset.repeat(count=numAugmentations)
-      augmentation = augmentation.map(lambda x, y: (dataAugmention(x, training=True)),
+      augmentation = augmentation.map(lambda x, y: (dataAugmention(x, training=True), y),
                                       num_parallel_calls=tf.data.AUTOTUNE)
       dataset = dataset.concatenate(augmentation)
 
     # shuffle and batch dataset
-    dataset = dataset.shuffle(shuffle_buffer=shuffleBuffer)
+    dataset = dataset.shuffle(buffer_size=shuffleBufferSize)
     dataset = dataset.batch(batchSize)
   
   else:
@@ -85,5 +87,6 @@ def prepare_data(dataset, batchSize=32, training=False, numAugmentations=1, shuf
 
   
 
+# **need to split off some validation data
 
 # Will run augmentation seperate to model creation for efficiency
