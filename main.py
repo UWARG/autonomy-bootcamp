@@ -44,9 +44,9 @@ dataResizingRescaling = keras.Sequential([layers.Resizing(IMG_SIZE, IMG_SIZE), #
                                          layers.Rescaling(1.0/255)]) 
 
 dataAugmention = keras.Sequential([
-  layers.RandomFlip("horizontal_and_vertical"),
-  layers.RandomRotation(0.2),
-  layers.RandomTranslation(0.2, 0.2)
+  layers.RandomFlip("horizontal"),
+  layers.RandomTranslation(0.05, 0.05)
+  #layers.RandomRotation(0.1)
   #layers.RandomZoom(width_factor=(-0.2,0.2), height_factor=((-0.2,0.2)))
 
   # **need to add more transformations here
@@ -85,7 +85,7 @@ def prepare_data(dataset, batchSize=32, training=False, numAugmentations=0, shuf
 
 
 # Will run augmentation seperate to model creation for efficiency
-datasetTrain = prepare_data(datasetTrain, training=True, numAugmentations=0)
+datasetTrain = prepare_data(datasetTrain, training=True, numAugmentations=1)
 datasetValidate = prepare_data(datasetValidate)
 datasetTest = prepare_data(datasetTest)
 
@@ -105,22 +105,20 @@ model = keras.Sequential([
     # Dense Layers
     layers.Flatten(),
     layers.Dense(64, activation='relu'),
-    layers.Dense(NUM_CLASSES, activation='softmax')
+    layers.Dense(NUM_CLASSES, activation='softmax') # last layer w/ softmax
 
 ])
 
 model.summary()
 
 model.compile(optimizer='adam',
-              #loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), # can't use softmax in last layer when from_logits=True
-              loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False), # from_logits=False -> data is a probability distribution 
-              metrics=['accuracy']) #note to self: research different types of Keras metrics
-
+              loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False), # from_logits=False -> data is a probability distribution, works with softmax 
+              metrics=['accuracy']) # note to self: research different types of Keras metrics
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Training the model
 
-NUM_EPOCHS = 10
+NUM_EPOCHS = 20
 history = model.fit(datasetTrain,
                     validation_data=datasetValidate,
                     epochs=NUM_EPOCHS
