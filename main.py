@@ -14,7 +14,9 @@
 
 # Imports
 
+from tkinter import E
 import matplotlib.pyplot as plt
+import os
 import numpy as np
 
 from sklearn import model_selection
@@ -133,6 +135,25 @@ def create_model():
 model = create_model()
 
 model.summary()
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Preparing a model save location
+
+MODEL_VERSION = '4'
+model_top_dir = os.path.join('saved_models', 'model_v%d'%(MODEL_VERSION))
+
+if (not os.path.exists(model_top_dir)):
+  
+  modelDir = os.path.join(model_top_dir,'model')
+  modelCheckpointsDir = os.path.join(model_top_dir,'checkpoints')
+  modelStatsDir = os.path.join(model_top_dir,'stats') # stats will be populated manually with training results and model architecture used
+
+  os.makedirs(modelDir)
+  os.makedirs(modelCheckpointsDir)
+  os.makedirs(modelStatsDir)
+
+else:
+  raise Exception('Saved model folders for model version manually specified already exist.')
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Training the model
