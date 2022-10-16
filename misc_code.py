@@ -37,3 +37,15 @@
 # plt.xlabel('epoch')
 # plt.legend(['train', 'validation'], loc='lower right')
 # plt.show()
+
+#-------------------------------------------------------------------------------------------
+# # loading just model weights (from a path) into an untrained model
+# # can only be applied to models of the exact same architecture
+# # checkpoints save every N epochs, so as to not have to wait until training is complete
+
+# random_model = create_model()
+# random_model.load_weights(checkpoint_path)
+
+# # Then we can evaluate to see that the model was loaded
+# loss, accuracy = random_model.evaluate(datasetTest)
+# print(loss, accuracy)
