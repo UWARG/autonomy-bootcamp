@@ -14,6 +14,7 @@
 
 # Imports
 
+from gc import callbacks
 from tkinter import E
 import matplotlib.pyplot as plt
 import os
@@ -159,25 +160,34 @@ else:
   raise Exception('Saved model folders for model version manually specified already exist.')
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Setting up checkpoints callback & training the model
+# Setting up checkpoints/logs callbacks & training the model
 
 checkpointsFilePath = os.path.join(modelCheckpointsDir,'cp.ckpt')
-checkpointsFile = open(checkpointsFilePath, 'w')
-checkpointsFile.close()
+with open(checkpointsFilePath, 'w') as checkpointsFile:
+  pass
 
 checkpointsCallback = keras.callbacks.ModelCheckpoint(filepath=checkpointsFilePath,
                                                  save_weights_only=True,
                                                  verbose=1)
 
-NUM_EPOCHS = 1
+logsCallback = keras.callbacks.TensorBoard(log_dir=modelLogsDir)
+
+
+NUM_EPOCHS = 2
 history = model.fit(datasetTrain,
                     validation_data=datasetValidate,
                     epochs=NUM_EPOCHS,
-                    callbacks=[checkpointsCallback]
+                    callbacks=[checkpointsCallback, logsCallback]
                     ) 
+
+#save final hisory as csv
+historyFilePath = os.path.join(modelStatsDir,'history.csv')
+historyDataFrame = pd.dataFrame(history.history)
+
+with open(historyFilePath, mode='w') as historyFile:
+    historyDataFrame.to_csv(historyFile)
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Testing the model
 
-loss, accuracy = model.evaluate(datasetTest)
+loss, accuracy = model.evaluate(datasetTest, callbacks=[logsCallback])
 print(loss, accuracy)
