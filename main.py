@@ -47,7 +47,7 @@ dataAugmention = keras.Sequential([
   layers.RandomFlip("horizontal"),
   layers.RandomTranslation(0.15, 0.15),
   layers.RandomRotation(0.15),
-  layers.RandomContrast(0.1)
+  layers.RandomContrast(0.15)
   #layers.RandomZoom(width_factor=(-0.2,0.2), height_factor=((-0.2,0.2)))
 
   # **need to add more transformations here
@@ -93,41 +93,47 @@ datasetTest = prepare_data(datasetTest)
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Creating the model
 
-model = keras.Sequential([
-    
-    # Convolutional base
-    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
-    layers.BatchNormalization(axis=-1), 
-    layers.Conv2D(32, 3, padding='same', activation='relu'),
-    layers.BatchNormalization(axis=-1),
-    layers.MaxPooling2D(pool_size=(2,2)),
-    
-    layers.Conv2D(64, 3, padding='same', activation='relu'),
-    layers.BatchNormalization(axis=-1),
-    layers.Conv2D(64, 3, padding='same', activation='relu'), 
-    layers.BatchNormalization(axis=-1),
-    layers.MaxPooling2D(pool_size=(2,2)),
+def create_model():
+  model = keras.Sequential([
+      
+      # Convolutional base
+      layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
+      layers.BatchNormalization(axis=-1), 
+      layers.Conv2D(32, 3, padding='same', activation='relu'),
+      layers.BatchNormalization(axis=-1),
+      layers.MaxPooling2D(pool_size=(2,2)),
+      
+      layers.Conv2D(64, 3, padding='same', activation='relu'),
+      layers.BatchNormalization(axis=-1),
+      layers.Conv2D(64, 3, padding='same', activation='relu'), 
+      layers.BatchNormalization(axis=-1),
+      layers.MaxPooling2D(pool_size=(2,2)),
 
-    layers.Conv2D(128, 3, padding='same', activation='relu'),
-    layers.BatchNormalization(axis=-1), 
-    layers.Conv2D(128, 3, padding='same', activation='relu'),
-    layers.BatchNormalization(axis=-1),
-    layers.MaxPooling2D(pool_size=(2,2)),
-    
-    # Dense Layers
-    layers.Flatten(),
-    layers.Dense(512, activation='relu'),
-    layers.BatchNormalization(axis=-1),
-    layers.Dropout(rate=0.5), # Regularization tool 'Dropout' helps reduce overfitting
-    layers.Dense(NUM_CLASSES, activation='softmax') # last layer w/ softmax
+      layers.Conv2D(128, 3, padding='same', activation='relu'),
+      layers.BatchNormalization(axis=-1), 
+      layers.Conv2D(128, 3, padding='same', activation='relu'),
+      layers.BatchNormalization(axis=-1),
+      layers.MaxPooling2D(pool_size=(2,2)),
+      
+      # Dense Layers
+      layers.Flatten(),
+      layers.Dense(512, activation='relu'),
+      layers.BatchNormalization(axis=-1),
+      layers.Dropout(rate=0.5), # Regularization tool 'Dropout' helps reduce overfitting
+      layers.Dense(NUM_CLASSES, activation='softmax') # last layer w/ softmax
 
-])
+  ])
+
+  model.compile(optimizer='adam',
+                loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False), # from_logits=False -> data is a probability distribution, works with softmax 
+                metrics=['accuracy']) # note to self: research different types of Keras metrics
+
+  return model
+
+model = create_model()
 
 model.summary()
 
-model.compile(optimizer='adam',
-              loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False), # from_logits=False -> data is a probability distribution, works with softmax 
-              metrics=['accuracy']) # note to self: research different types of Keras metrics
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Training the model
 
