@@ -18,6 +18,7 @@ from tkinter import E
 import matplotlib.pyplot as plt
 import os
 import numpy as np
+import pandas as pd
 
 from sklearn import model_selection
 
@@ -145,10 +146,12 @@ modelTopDir = os.path.join('saved_models', 'model_v%s'%(MODEL_VERSION))
 if (not os.path.exists(modelTopDir)):
   
   modelDir = os.path.join(modelTopDir,'model')
+  modelLogsDir = os.path.join(modelTopDir,'logs')
   modelCheckpointsDir = os.path.join(modelTopDir,'checkpoints')
-  modelStatsDir = os.path.join(modelTopDir,'stats') # stats will be populated manually with training results and model architecture used
+  modelStatsDir = os.path.join(modelTopDir,'stats') # some stats will be populated manually with training results and model architecture used
 
   os.makedirs(modelDir)
+  os.makedirs(modelLogsDir)
   os.makedirs(modelCheckpointsDir)
   os.makedirs(modelStatsDir)
 
