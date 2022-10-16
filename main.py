@@ -45,11 +45,9 @@ dataResizingRescaling = keras.Sequential([layers.Resizing(IMG_SIZE, IMG_SIZE), #
 
 dataAugmention = keras.Sequential([
   layers.RandomFlip("horizontal"),
-  layers.RandomTranslation(0.1, 0.1),
-  layers.RandomRotation(0.1)
-  
-  #layers.RandomBrightness((-0.1,0.1), value_range=(0.0,1.0))
-  #layers.RandomContrast(0.1)
+  layers.RandomTranslation(0.15, 0.15),
+  layers.RandomRotation(0.15),
+  layers.RandomContrast(0.1)
   #layers.RandomZoom(width_factor=(-0.2,0.2), height_factor=((-0.2,0.2)))
 
   # **need to add more transformations here
@@ -88,7 +86,7 @@ def prepare_data(dataset, batchSize=32, training=False, numAugmentations=0, shuf
 
 
 # Will run augmentation seperate to model creation for efficiency
-datasetTrain = prepare_data(datasetTrain, training=True, numAugmentations=1)
+datasetTrain = prepare_data(datasetTrain, training=True, numAugmentations=2)
 datasetValidate = prepare_data(datasetValidate)
 datasetTest = prepare_data(datasetTest)
 
