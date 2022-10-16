@@ -182,12 +182,12 @@ history = model.fit(datasetTrain,
 
 #save final hisory as csv
 historyFilePath = os.path.join(modelStatsDir,'history.csv')
-historyDataFrame = pd.dataFrame(history.history)
+historyDataFrame = pd.DataFrame(history.history)
 
 with open(historyFilePath, mode='w') as historyFile:
     historyDataFrame.to_csv(historyFile)
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Testing the model
 
-loss, accuracy = model.evaluate(datasetTest, callbacks=[logsCallback])
+loss, accuracy = model.evaluate(datasetTest)
 print(loss, accuracy)
