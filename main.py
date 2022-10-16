@@ -140,13 +140,13 @@ model.summary()
 # Preparing a model save location
 
 MODEL_VERSION = '4'
-model_top_dir = os.path.join('saved_models', 'model_v%d'%(MODEL_VERSION))
+modelTopDir = os.path.join('saved_models', 'model_v%s'%(MODEL_VERSION))
 
-if (not os.path.exists(model_top_dir)):
+if (not os.path.exists(modelTopDir)):
   
-  modelDir = os.path.join(model_top_dir,'model')
-  modelCheckpointsDir = os.path.join(model_top_dir,'checkpoints')
-  modelStatsDir = os.path.join(model_top_dir,'stats') # stats will be populated manually with training results and model architecture used
+  modelDir = os.path.join(modelTopDir,'model')
+  modelCheckpointsDir = os.path.join(modelTopDir,'checkpoints')
+  modelStatsDir = os.path.join(modelTopDir,'stats') # stats will be populated manually with training results and model architecture used
 
   os.makedirs(modelDir)
   os.makedirs(modelCheckpointsDir)
@@ -156,14 +156,23 @@ else:
   raise Exception('Saved model folders for model version manually specified already exist.')
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Training the model
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Setting up checkpoints callback & training the model
 
-NUM_EPOCHS = 30
+checkpointsFilePath = os.path.join(modelCheckpointsDir,'cp.ckpt')
+checkpointsFile = open(checkpointsFilePath, 'w')
+checkpointsFile.close()
+
+checkpointsCallback = keras.callbacks.ModelCheckpoint(filepath=checkpointsFilePath,
+                                                 save_weights_only=True,
+                                                 verbose=1)
+
+NUM_EPOCHS = 1
 history = model.fit(datasetTrain,
                     validation_data=datasetValidate,
-                    epochs=NUM_EPOCHS
+                    epochs=NUM_EPOCHS,
+                    callbacks=[checkpointsCallback]
                     ) 
-
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Testing the model
 

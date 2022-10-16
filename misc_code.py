@@ -1,5 +1,5 @@
-# https://www.tensorflow.org/datasets/overview
-# iterating over a dataset
+# # https://www.tensorflow.org/datasets/overview
+# # iterating over a dataset
 
 # ds = datasetTrain.take(1)
 
@@ -8,12 +8,11 @@
 #   plt.imshow(image)
 #   plt.title(datasetInfo.features['label'].int2str(label))
 
-
 # print(datasetInfo)
 
 
 #-------------------------------------------------------------------------------------------
-# Viewing augmented images
+# # Viewing augmented images
 
 # image, label = next(iter(datasetTrain)) # only works before dataset is batched
 # label = datasetInfo.features['label'].int2str(label)
