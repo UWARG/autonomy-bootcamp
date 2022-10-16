@@ -121,7 +121,6 @@ def create_model():
       layers.Flatten(),
       layers.Dense(512, activation='relu'),
       layers.BatchNormalization(axis=-1),
-      layers.Dropout(rate=0.5), # Regularization tool 'Dropout' helps reduce overfitting
       layers.Dense(NUM_CLASSES, activation='softmax') # last layer w/ softmax
 
   ])
