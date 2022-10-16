@@ -180,7 +180,10 @@ history = model.fit(datasetTrain,
                     callbacks=[checkpointsCallback, logsCallback]
                     ) 
 
-#save final hisory as csv
+# Immediately save the model
+model.save(modelDir)
+
+# save final hisory as csv
 historyFilePath = os.path.join(modelStatsDir,'history.csv')
 historyDataFrame = pd.DataFrame(history.history)
 
