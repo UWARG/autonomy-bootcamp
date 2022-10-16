@@ -14,8 +14,6 @@
 
 # Imports
 
-from gc import callbacks
-from tkinter import E
 import matplotlib.pyplot as plt
 import os
 import numpy as np
