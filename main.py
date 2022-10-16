@@ -45,8 +45,11 @@ dataResizingRescaling = keras.Sequential([layers.Resizing(IMG_SIZE, IMG_SIZE), #
 
 dataAugmention = keras.Sequential([
   layers.RandomFlip("horizontal"),
-  layers.RandomTranslation(0.05, 0.05)
-  #layers.RandomRotation(0.1)
+  layers.RandomTranslation(0.1, 0.1),
+  layers.RandomRotation(0.1)
+  
+  #layers.RandomBrightness((-0.1,0.1), value_range=(0.0,1.0))
+  #layers.RandomContrast(0.1)
   #layers.RandomZoom(width_factor=(-0.2,0.2), height_factor=((-0.2,0.2)))
 
   # **need to add more transformations here
@@ -90,21 +93,35 @@ datasetValidate = prepare_data(datasetValidate)
 datasetTest = prepare_data(datasetTest)
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Creating the model
 
 model = keras.Sequential([
     
     # Convolutional base
     layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
-    layers.MaxPooling2D(),
-    layers.Conv2D(32, 3, padding='valid', activation='relu'),
-    layers.MaxPooling2D(),
-    layers.Conv2D(64, 3, padding='valid', activation='relu'),
-    layers.MaxPooling2D(),
+    layers.BatchNormalization(axis=-1), 
+    layers.Conv2D(32, 3, padding='same', activation='relu'),
+    layers.BatchNormalization(axis=-1),
+    layers.MaxPooling2D(pool_size=(2,2)),
+    
+    layers.Conv2D(64, 3, padding='same', activation='relu'),
+    layers.BatchNormalization(axis=-1),
+    layers.Conv2D(64, 3, padding='same', activation='relu'), 
+    layers.BatchNormalization(axis=-1),
+    layers.MaxPooling2D(pool_size=(2,2)),
+
+    layers.Conv2D(128, 3, padding='same', activation='relu'),
+    layers.BatchNormalization(axis=-1), 
+    layers.Conv2D(128, 3, padding='same', activation='relu'),
+    layers.BatchNormalization(axis=-1),
+    layers.MaxPooling2D(pool_size=(2,2)),
     
     # Dense Layers
     layers.Flatten(),
-    layers.Dense(64, activation='relu'),
+    layers.Dense(512, activation='relu'),
+    layers.BatchNormalization(axis=-1),
+    layers.Dropout(rate=0.5), # Regularization tool 'Dropout' helps reduce overfitting
     layers.Dense(NUM_CLASSES, activation='softmax') # last layer w/ softmax
 
 ])
@@ -114,7 +131,6 @@ model.summary()
 model.compile(optimizer='adam',
               loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False), # from_logits=False -> data is a probability distribution, works with softmax 
               metrics=['accuracy']) # note to self: research different types of Keras metrics
-
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Training the model
 
