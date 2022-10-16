@@ -1,0 +1,29 @@
+keras.Sequential([
+    
+    # Convolutional base
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
+    layers.BatchNormalization(axis=-1), 
+    layers.Conv2D(32, 3, padding='same', activation='relu'),
+    layers.BatchNormalization(axis=-1),
+    layers.MaxPooling2D(pool_size=(2,2)),
+    
+    layers.Conv2D(64, 3, padding='same', activation='relu'),
+    layers.BatchNormalization(axis=-1),
+    layers.Conv2D(64, 3, padding='same', activation='relu'), 
+    layers.BatchNormalization(axis=-1),
+    layers.MaxPooling2D(pool_size=(2,2)),
+
+    layers.Conv2D(128, 3, padding='same', activation='relu'),
+    layers.BatchNormalization(axis=-1), 
+    layers.Conv2D(128, 3, padding='same', activation='relu'),
+    layers.BatchNormalization(axis=-1),
+    layers.MaxPooling2D(pool_size=(2,2)),
+    
+    # Dense Layers
+    layers.Flatten(),
+    layers.Dense(512, activation='relu'),
+    layers.BatchNormalization(axis=-1),
+    layers.Dropout(rate=0.5), # Regularization tool 'Dropout' helps reduce overfitting
+    layers.Dense(NUM_CLASSES, activation='softmax') # last layer w/ softmax
+
+])
