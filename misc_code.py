@@ -15,7 +15,7 @@
 #-------------------------------------------------------------------------------------------
 # Viewing augmented images
 
-# image, label = next(iter(datasetTrain))
+# image, label = next(iter(datasetTrain)) # only works before dataset is batched
 # label = datasetInfo.features['label'].int2str(label)
 # image = dataResizingRescaling(image)
 # imageAugmented = dataAugmention(image)
@@ -25,3 +25,15 @@
 # plt.figure(1)
 # plt.imshow(imageAugmented)
 # plt.title(label)
+
+#-------------------------------------------------------------------------------------------
+
+# # plotting history after training
+
+# plt.plot(history.history['accuracy'])
+# plt.plot(history.history['val_accuracy'])
+# plt.title('model accuracy')
+# plt.ylabel('accuracy')
+# plt.xlabel('epoch')
+# plt.legend(['train', 'validation'], loc='lower right')
+# plt.show()

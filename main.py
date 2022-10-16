@@ -118,7 +118,7 @@ model.compile(optimizer='adam',
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Training the model
 
-NUM_EPOCHS = 20
+NUM_EPOCHS = 30
 history = model.fit(datasetTrain,
                     validation_data=datasetValidate,
                     epochs=NUM_EPOCHS
