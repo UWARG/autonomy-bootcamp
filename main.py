@@ -189,6 +189,17 @@ historyDataFrame = pd.DataFrame(history.history)
 
 with open(historyFilePath, mode='w') as historyFile:
     historyDataFrame.to_csv(historyFile)
+
+# Save a png of model accuracy vs. epochs plot
+plotFilePath = os.path.join(modelStatsDir, 'plot.png')
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('Model Accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Validation'], loc='lower right')
+plt.savefig(plotFilePath)
+
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Testing the model
 
