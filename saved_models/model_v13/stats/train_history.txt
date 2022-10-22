@@ -1,0 +1,168 @@
+Epoch: 0
+------------------Train loss: 1.28217, Train accuracy: 0.54165%,
+Test loss: 0.98197, Test accuracy: 0.64890%
+Train time: 16.55289 sec
+Epoch: 1
+------------------Train loss: 0.88608, Train accuracy: 0.69012%,
+Test loss: 0.83788, Test accuracy: 0.70580%
+Train time: 15.92988 sec
+Epoch: 2
+------------------Train loss: 0.75579, Train accuracy: 0.73800%,
+Test loss: 0.67948, Test accuracy: 0.76210%
+Train time: 17.09673 sec
+Epoch: 3
+------------------Train loss: 0.67905, Train accuracy: 0.76633%,
+Test loss: 0.62733, Test accuracy: 0.78720%
+Train time: 16.09048 sec
+Epoch: 4
+------------------Train loss: 0.62753, Train accuracy: 0.78412%,
+Test loss: 0.61206, Test accuracy: 0.78760%
+Train time: 15.76464 sec
+Epoch: 5
+------------------Train loss: 0.58431, Train accuracy: 0.80070%,
+Test loss: 0.56868, Test accuracy: 0.80140%
+Train time: 15.65289 sec
+Epoch: 6
+------------------Train loss: 0.55116, Train accuracy: 0.81253%,
+Test loss: 0.55684, Test accuracy: 0.80820%
+Train time: 15.95363 sec
+Epoch: 7
+------------------Train loss: 0.52607, Train accuracy: 0.81900%,
+Test loss: 0.53077, Test accuracy: 0.81650%
+Train time: 15.84284 sec
+Epoch: 8
+------------------Train loss: 0.50628, Train accuracy: 0.82793%,
+Test loss: 0.51947, Test accuracy: 0.82040%
+Train time: 16.09412 sec
+Epoch: 9
+------------------Train loss: 0.49313, Train accuracy: 0.83278%,
+Test loss: 0.52272, Test accuracy: 0.82140%
+Train time: 16.71330 sec
+Epoch: 10
+------------------Train loss: 0.47882, Train accuracy: 0.83790%,
+Test loss: 0.50683, Test accuracy: 0.82140%
+Train time: 15.78970 sec
+Epoch: 11
+------------------Train loss: 0.46322, Train accuracy: 0.84357%,
+Test loss: 0.48736, Test accuracy: 0.83590%
+Train time: 16.10282 sec
+Epoch: 12
+------------------Train loss: 0.45218, Train accuracy: 0.84565%,
+Test loss: 0.50144, Test accuracy: 0.82900%
+Train time: 16.32582 sec
+Epoch: 13
+------------------Train loss: 0.44258, Train accuracy: 0.84988%,
+Test loss: 0.51512, Test accuracy: 0.82490%
+Train time: 16.32776 sec
+Epoch: 14
+------------------Train loss: 0.43688, Train accuracy: 0.85093%,
+Test loss: 0.46912, Test accuracy: 0.84150%
+Train time: 15.99967 sec
+Epoch: 15
+------------------Train loss: 0.42592, Train accuracy: 0.85530%,
+Test loss: 0.50097, Test accuracy: 0.82830%
+Train time: 16.86576 sec
+Epoch: 16
+------------------Train loss: 0.42032, Train accuracy: 0.85860%,
+Test loss: 0.48881, Test accuracy: 0.83470%
+Train time: 15.92523 sec
+Epoch: 17
+------------------Train loss: 0.40610, Train accuracy: 0.86290%,
+Test loss: 0.49809, Test accuracy: 0.82820%
+Train time: 15.93405 sec
+Epoch: 18
+------------------Train loss: 0.40322, Train accuracy: 0.86340%,
+Test loss: 0.47554, Test accuracy: 0.83780%
+Train time: 16.08701 sec
+Epoch: 19
+------------------Train loss: 0.39315, Train accuracy: 0.86715%,
+Test loss: 0.47627, Test accuracy: 0.83680%
+Train time: 15.89281 sec
+Epoch: 20
+------------------Train loss: 0.39302, Train accuracy: 0.86740%,
+Test loss: 0.48417, Test accuracy: 0.83120%
+Train time: 16.05099 sec
+Epoch: 21
+------------------Train loss: 0.38991, Train accuracy: 0.86808%,
+Test loss: 0.48237, Test accuracy: 0.83690%
+Train time: 15.82771 sec
+Epoch: 22
+------------------Train loss: 0.38212, Train accuracy: 0.87028%,
+Test loss: 0.47229, Test accuracy: 0.83950%
+Train time: 16.87420 sec
+Epoch: 23
+------------------Train loss: 0.38240, Train accuracy: 0.87050%,
+Test loss: 0.48044, Test accuracy: 0.83580%
+Train time: 15.87220 sec
+Epoch: 24
+------------------Train loss: 0.37910, Train accuracy: 0.87200%,
+Test loss: 0.49457, Test accuracy: 0.83120%
+Train time: 15.86488 sec
+Epoch: 25
+------------------Train loss: 0.37349, Train accuracy: 0.87180%,
+Test loss: 0.45562, Test accuracy: 0.84750%
+Train time: 15.77301 sec
+Epoch: 26
+------------------Train loss: 0.37126, Train accuracy: 0.87285%,
+Test loss: 0.43887, Test accuracy: 0.84940%
+Train time: 15.71287 sec
+Epoch: 27
+------------------Train loss: 0.36403, Train accuracy: 0.87520%,
+Test loss: 0.47418, Test accuracy: 0.83970%
+Train time: 15.82345 sec
+Epoch: 28
+------------------Train loss: 0.37072, Train accuracy: 0.87487%,
+Test loss: 0.48503, Test accuracy: 0.83550%
+Train time: 15.87993 sec
+Epoch: 29
+------------------Train loss: 0.36540, Train accuracy: 0.87560%,
+Test loss: 0.46770, Test accuracy: 0.84220%
+Train time: 16.91861 sec
+Epoch: 30
+------------------Train loss: 0.35863, Train accuracy: 0.87823%,
+Test loss: 0.47991, Test accuracy: 0.83840%
+Train time: 15.81150 sec
+Epoch: 31
+------------------Train loss: 0.36373, Train accuracy: 0.87675%,
+Test loss: 0.47466, Test accuracy: 0.84170%
+Train time: 15.88765 sec
+Epoch: 32
+------------------Train loss: 0.35616, Train accuracy: 0.87965%,
+Test loss: 0.45830, Test accuracy: 0.84540%
+Train time: 16.05875 sec
+Epoch: 33
+------------------Train loss: 0.35278, Train accuracy: 0.88002%,
+Test loss: 0.47116, Test accuracy: 0.84310%
+Train time: 16.55943 sec
+Epoch: 34
+------------------Train loss: 0.35702, Train accuracy: 0.88053%,
+Test loss: 0.49060, Test accuracy: 0.83280%
+Train time: 16.40236 sec
+Epoch: 35
+------------------Train loss: 0.35157, Train accuracy: 0.88160%,
+Test loss: 0.44987, Test accuracy: 0.84800%
+Train time: 16.10996 sec
+Epoch: 36
+------------------Train loss: 0.34767, Train accuracy: 0.88090%,
+Test loss: 0.46020, Test accuracy: 0.84070%
+Train time: 16.92758 sec
+Epoch: 37
+------------------Train loss: 0.34724, Train accuracy: 0.88223%,
+Test loss: 0.44118, Test accuracy: 0.85280%
+Train time: 15.81332 sec
+Epoch: 38
+------------------Train loss: 0.34544, Train accuracy: 0.88348%,
+Test loss: 0.44304, Test accuracy: 0.85180%
+Train time: 15.75769 sec
+Epoch: 39
+------------------Train loss: 0.34859, Train accuracy: 0.88285%,
+Test loss: 0.47306, Test accuracy: 0.83790%
+Train time: 15.51493 sec
+Epoch: 40
+------------------Train loss: 0.34292, Train accuracy: 0.88413%,
+Test loss: 0.46522, Test accuracy: 0.84280%
+Train time: 15.39891 sec
+Epoch: 41
+------------------Train loss: 0.34437, Train accuracy: 0.88190%,
+Test loss: 0.47561, Test accuracy: 0.83830%
+Train time: 16.46269 sec
