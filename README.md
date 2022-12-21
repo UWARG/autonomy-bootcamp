@@ -1,4 +1,5 @@
 ## Mckale Chung WARG Bootcamp Submission
+### Model Accuracy of 75%
 
 ### First show_img() Call
 ![image](https://user-images.githubusercontent.com/71574223/208806133-f3305281-b9d4-49cf-bbb9-bbdeafa9a0d4.png)
