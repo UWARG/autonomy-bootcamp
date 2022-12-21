@@ -461,3 +461,4 @@ y_true = []
 
 test_model(net, test_loader, y_pred, y_true)
 heatmap(y_pred, y_true)
+#accuracy of 75 %
