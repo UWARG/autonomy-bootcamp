@@ -3,4 +3,4 @@
 
 ## Plot of Losses
 ![](/Plot%20of%20Losses.png)
-### Training loss is clearly lower than validation loss, signaling underfitting. However, my computer can't handle any more processing.
+#### Training loss is clearly lower than validation loss which is a sign of overfitting. However, accuracy is decently high so I left it.

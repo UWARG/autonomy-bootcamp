@@ -34,7 +34,7 @@ class CIFAR10(nn.Module):
   def __init__(self):
     super().__init__()
     self.neural_net = nn.Sequential(
-        # 2d CNN layers, with batch normalization
+        # 2d CNN layers
         nn.Conv2d(3,32, kernel_size=3, stride=1, padding=1), nn.BatchNorm2d(32), nn.ReLU(),
         nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1), nn.BatchNorm2d(64), nn.ReLU(),
         nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1), nn.BatchNorm2d(128), nn.ReLU(),
@@ -66,6 +66,7 @@ scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr= MAX_LR, steps_per_e
 training_loss = []
 validation_loss = []
 
+# Training Loop
 for epoch in range(EPOCH_NUM):
 
     # Training loop
@@ -108,21 +109,21 @@ for epoch in range(EPOCH_NUM):
     print(f'Accuracy: {round((100 * correct / total),2)} % ')
 
 
-# Last pass
+# Final pass for 
 correct = 0
 total = 0
-# since we're not training, no gradiant calculation needed
+# no gradiant calculation needed for validation
 with torch.no_grad():
     for data in test_loader:
         images, labels = data[0].to(device), data[1].to(device)
-        # calculate outputs by running images through the network
+        # calculate outputs by running images through the model
         outputs = model(images)
         i, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
 
+# Output to terminal results
 print(f'Final Accuracy: {round((100 * correct / total),2)} %')
-
 print("Training loss: ",training_loss)
 print("Validation loss: ",validation_loss)
 
