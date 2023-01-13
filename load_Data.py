@@ -1,9 +1,6 @@
 import torch
 import torchvision
 import torchvision.transforms as transforms
-import numpy as pd
-import matplotlib.pyplot as plt
-
 
 tensor_transform = transforms.Compose([transforms.ToTensor()])
 # this represents the data that the module with be trained on
