@@ -15,7 +15,7 @@ import torchvision.transforms as T
 
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
 NUM_EPOCHS = 20
-BATCH_SIZE = 256
+BATCH_SIZE = 1024
 
 
 class VGG11(nn.Module):
@@ -86,7 +86,8 @@ if __name__ == "__main__":
     model = VGG11()
     model.to(DEVICE)
 
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    # optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, betas=(0.9, 0.999), weight_decay=1e-4)
 
     loss_func = nn.CrossEntropyLoss()
 
@@ -134,7 +135,6 @@ if __name__ == "__main__":
 
             # Store loss
             batch_loss += loss.item()
-            print(f"{time()-t:.2f}s")
 
         # Loss should be averaged over batches in an epoch
         loss = batch_loss / len(train_loader)
