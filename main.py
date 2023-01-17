@@ -87,7 +87,9 @@ if __name__ == "__main__":
     model.to(DEVICE)
 
     # optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, betas=(0.9, 0.999), weight_decay=1e-4)
+    optimizer = torch.optim.AdamW(
+        model.parameters(), lr=0.001, betas=(0.9, 0.999), weight_decay=1e-4
+    )
 
     loss_func = nn.CrossEntropyLoss()
 
