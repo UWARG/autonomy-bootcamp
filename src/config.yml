@@ -1,0 +1,25 @@
+data:
+  train_split: "train"
+  val_split: "test"
+  shuffle: 1000
+  batch_size: 32
+  random_flip: horizontal_and_vertical
+  random_rotation: 0.2
+
+model:
+  # at least 1
+  num_cnn_layers: 4
+  num_cnn_filters: 512
+  cnn_kernel_size: 3
+
+  # at least 1
+  num_dense_layers: 4
+  dense_layer_width: 4096
+
+  dropout: 0.5
+
+epochs: 50
+
+train:
+  optimizer: adam
+  metrics: ["accuracy"]
