@@ -1,0 +1,23 @@
+data:
+  batch_size: 256
+  random_flip: horizontal_and_vertical
+  random_rotation: 0.5
+  random_zoom: 0.5
+  repeat: 5
+  shuffle: 1000
+  train_split: train
+  val_split: test
+epochs: 25
+exp_name: 256batch5repeat
+model:
+  cnn_kernel_size: 3
+  dense_layer_width: 4096
+  dropout: 0.2
+  num_cnn_filters: 512
+  num_cnn_layers: 4
+  num_dense_layers: 4
+out_dir: output
+train:
+  metrics:
+  - accuracy
+  optimizer: adam

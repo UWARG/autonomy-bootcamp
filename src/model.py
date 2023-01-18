@@ -1,10 +1,26 @@
+"""
+Supplies MyCNN, a customizable CNN
+"""
+
+from typing import List, Union
+
 import tensorflow as tf
-from tensorflow.keras import layers, Model
-from typing import Union, List
+from tensorflow.keras import Model, layers
+
 
 class MyCNN(Model):
-    def __init__(self, 
-            num_cnn_layers: int, 
+    """
+    A customizable CNN
+    Supports:
+        - Variable number of Conv2D layers
+        - Variable number of Conv2D filters
+        - Variable kernel size
+        - Variable number of Dense layers
+        - Variable width of Dense layers
+        - Variable dropout
+    """
+    def __init__(self,
+            num_cnn_layers: int,
             num_cnn_filters: int,
             cnn_kernel_size: Union[int, List[int]],
             num_dense_layers: int,
@@ -14,13 +30,12 @@ class MyCNN(Model):
         ):
         super(MyCNN, self).__init__()
         self.num_cnn_layers = num_cnn_layers
-        self.num_cnn_filters = num_cnn_filters
-        self.cnn_kernel_size = cnn_kernel_size
         self.num_dense_layers = num_dense_layers
-        self.dense_layer_width = dense_layer_width
-        self.dropout = layers.Dropout(dropout)
 
-        conv_params = {"filters": num_cnn_filters, "kernel_size": cnn_kernel_size, "padding": "same"}
+        conv_params = {
+                "filters": num_cnn_filters,
+                "kernel_size": cnn_kernel_size,
+                "padding": "same"}
 
         self.conv1 = layers.Conv2D(**conv_params)
         self.bn1 = layers.BatchNormalization()
@@ -32,13 +47,17 @@ class MyCNN(Model):
         self.pool2 = layers.MaxPooling2D((2,2))
         self.flatten = layers.Flatten()
 
-        self.fc_layers = [layers.Dense(self.dense_layer_width) for _ in range(num_dense_layers-1)]
+        self.fc_layers = [layers.Dense(dense_layer_width) for _ in range(num_dense_layers-1)]
         self.fc_bn_layers = [layers.BatchNormalization() for _ in range(num_dense_layers-1)]
         self.dropout_layers = [layers.Dropout(dropout) for _ in range(num_dense_layers-1)]
 
         self.fc_out = layers.Dense(out_size)
 
-    def call(self, inputs):
+    def call(self, inputs: tf.Tensor) -> tf.Tensor:
+        """
+        Computes the result of applying this CNN on `inputs`
+        """
+        # pylint: disable=[invalid-name]
         x = self.conv1(inputs)
         x = self.bn1(x)
         x = tf.nn.relu(x)
@@ -55,6 +74,5 @@ class MyCNN(Model):
             x = tf.nn.relu(x)
             x = self.dropout_layers[i](x)
         x = self.fc_out(x)
+        # pylint: enable=[invalid-name]
         return x
-
-
