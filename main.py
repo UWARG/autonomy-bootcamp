@@ -15,6 +15,7 @@ Hints:
 import numpy as np
 import torch
 from torch import nn
+from torch.nn import functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor
@@ -40,10 +41,11 @@ test_data = datasets.CIFAR10(
     transform=ToTensor(),
 )
 
-batch_size = 64
+batch_size = 32
 
 # Create data loaders
-train_dataloader = DataLoader(training_data, batch_size=batch_size)
+# trainset = torch.utils.data.Subset(training_data, [x for x in range(1562)])
+train_dataloader = DataLoader(training_data, batch_size=batch_size,shuffle=True)
 test_dataloader = DataLoader(test_data, batch_size=batch_size)
 
 
@@ -54,31 +56,37 @@ for X, y in test_dataloader:
     print(f"Shape of y: {y.shape} {y.dtype}")
     break
 
-
 device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 print(f"Using {device} device")
 
-# Define a basic convolutional neural network model with one hidden layer
 class NeuralNetwork(nn.Module):
     def __init__(self):
-        super().__init__()
-        self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(3*32*32,256), #Images are 3x32x32 (3 RGB channels; 32x32 dimensions)
-            nn.ReLU(),
-            nn.Linear(256, 128),
-            nn.ReLU(),
-            nn.Linear(128, 10)
-        )
+        super(NeuralNetwork, self).__init__()
+        self.conv1 = nn.Conv2d(3, 64, 5)
+        self.pool = nn.MaxPool2d(2,2)
+        self.conv2 = nn.Conv2d(64, 128, 5)
+        # self.conv3 = nn.Conv2d(16, 16, 5)
+        self.dropout = nn.Dropout2d(p=0.05)
+        self.fc1 = nn.Linear(128*5*5, 512)
+        self.fc2 = nn.Linear(512, 128)
+        self.fc3 = nn.Linear(128, 10)
 
     def forward(self, x):
-        x = self.flatten(x)
-        logits = self.linear_relu_stack(x)
-        return logits
+        x = self.pool(F.relu(self.conv1(x)))
+        # x = self.dropout(x)
+        x = self.pool(F.relu(self.conv2(x)))
+        # x = F.relu(self.conv2(x))
+        # print(x.shape)
+        # x = F.relu(self.conv3(x))
+        x = self.dropout(x)
+        x = x.view(-1, 128*5*5)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        # x = F.relu(self.fc3(x))
+        x = self.fc3(x)
+        return x
 
-model = NeuralNetwork().to(device)
-#We will try three different optimizers: SGD, AdamW, and Adam
-optimizers = [('SGD', torch.optim.SGD(model.parameters(), lr=1e-3)), ('AdamW', torch.optim.AdamW(model.parameters(), lr=1e-3)), ('Adam', torch.optim.Adam(model.parameters(), lr=1e-3))]
+# optimizers = [('Adam', torch.optim.Adam(model.parameters(), lr=1e-3))]
 
 #Initialize lists for accuracies and losses per epoch so we can plot them later
 accuracies = []
@@ -91,6 +99,7 @@ def train(dataloader, model, loss_fn, optimizer):
     size = len(dataloader.dataset)
     model.train()
     for batch, (X,y) in enumerate(dataloader):
+
         X, y = X.to(device), y.to(device)
 
         # Compute prediction error
@@ -115,7 +124,7 @@ def test(dataloader, model, loss_fn):
         for X, y in dataloader:
             X, y = X.to(device), y.to(device) #Send images (X) and labels (y) to neural network "device"
             pred = model(X) #Retrieve model predictions
-            print(pred)
+            # print(pred)
             test_loss += loss_fn(pred, y).item() #Add epoch loss to the total
             correct += (pred.argmax(1) == y).type(torch.float).sum().item() #Counts the number of correct predictions (consistent with the label, y) and adds that number to the total
     test_loss /= num_batches #Get average loss by dividing the total loss by the number of batches
@@ -126,7 +135,13 @@ def test(dataloader, model, loss_fn):
 
 epochs = 10
 
-for optname, optimizer in optimizers: #Iterate over optimizers (SGD, AdamW, Adam)
+model = NeuralNetwork().to(device)
+model2 = NeuralNetwork().to(device)
+model3 = NeuralNetwork().to(device)
+#We will try three different optimizers: SGD, AdamW, and Adam
+optimizers = [('AdamW', torch.optim.AdamW(model.parameters(), lr=1e-3), model), ('SGD', torch.optim.SGD(model2.parameters(), lr=0.01, momentum=0.9), model2), ('Adam', torch.optim.Adam(model3.parameters(), lr=1e-3), model3)]
+
+for optname, optimizer, model in optimizers: #Iterate over optimizers (SGD, AdamW, Adam)
     accuracies = [] #Empty lists for accuracies and losses with each optimizer since they each have their own line in the plot
     loss = []
     for t in range(epochs):
