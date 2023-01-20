@@ -58,8 +58,11 @@ class ImageClassifier(nn.Module):
     def __init__(self):
         super(ImageClassifier, self).__init__()
         self.network = nn.Sequential(
+            # first layer input size of 3 output size of 32
             nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            # relu used as avtivation function
             nn.ReLU(),
+            #second layer with input size of 32(same as output size of first layer) and an out put size of 64
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2, 2), # output: 64 x 16 x 16
@@ -84,60 +87,7 @@ class ImageClassifier(nn.Module):
             nn.Linear(1024, 512),
             nn.ReLU(),
             nn.Linear(512, 10))
-
-                 
-    def forward(self, xb):
-        return self.network(xb)
-               # first convolution layer
-    #     self.conv1 = nn.Conv2d(3, 32, 3)
-    #     self.relu = nn.ReLU(),
-    #     # second convolution layer
-    #     self.conv2 =  nn.Conv2d(32, 64, 3)     
-    #     self.relu = nn.ReLU()  
-    #     # third convolution layer
-    #     self.conv3 = nn.Conv2d(16, 32, 5)
-    #     self.pool = nn.MaxPool2d(2, 2)
-    #     self.fc1 = nn.Linear(32 * 5 * 5, 120)
-    #     self.fc2 = nn.Linear(120, 84)
-    #     self.fc3 = nn.Linear(84, 10)
-
-    # def forward(self, x):
-    #     x = self.pool(F.relu(self.conv1(x)))
-    #     x = self.pool(F.relu(self.conv2(x)))
-    #     # added the third convolution layer here
-    #     x = self.pool(F.relu(self.conv3(x)))
-    #     x = x.view(-1, 32*5*5)
-    #     # x = torch.flatten(x,1)
-    #     x = F.relu(self.fc1(x))
-    #     x = F.relu(self.fc2(x))
-    #     x = self.fc3(x)
-
-    #     return x
-    #     # this represent the first convolution layer
-    #     # 3 is the input size, 6 is the output size and the kernel size is 5 
-    #     self.conv1 = nn.Conv2d(3, 6, 5)
-    #     # this represents the pooling layer 
-    #     #kernel size of 2 and stride of 2 
-    #     self.pool = nn.AvgPool2d(2, 2)
-    #     #second convolution later
-    #     # hence the input should be equalt to the size of the output of the first layer 
-    #     self.conv2 =  nn.Conv2d(6, 16, 5)
-    #     self.fc1 = nn.Linear(16 * 5 * 5, 120)
-    #     self.fc2 = nn.Linear(120, 84)
-    #     self.fc3 = nn.Linear(84, 10)
-
-    # def forward(self, x):
-    #     x = self.pool(F.relu(self.conv1(x)))
-    #     x = self.pool(F.relu(self.conv2(x)))
-    #     x = x.view(-1, 16*5*5)
-    #     x = torch.flatten(x,1)
-    #     x = F.relu(self.fc1(x))
-    #     x = F.relu(self.fc2(x))
-    #     x = self.fc3(x)
-
-    #     return x
-
-
+  
 model = ImageClassifier().to(device)
 # soft max is included here 
 criterion = nn.CrossEntropyLoss()
@@ -171,7 +121,6 @@ for epoch in range(num_epochs):
 
 print('Finished Training')
 
-
 with torch.no_grad():
     n_correct = 0
     n_samples = 0
@@ -187,23 +136,11 @@ with torch.no_grad():
         # max returns (value, index)
         _, predicted = torch.max(output, 1)
 
-
         n_samples += labels.size(0)
-        n_correct += (predicted == labels).sum().item()
-
-        # for i in range(batch_size):
-        #     label = labels[i]
-        #     pred = predicted[i]
-
-        #     if (label == pred):
-        #         n_class_correct[label] += 1
-        #     n_class_samples[label] += 1
+        n_correct += (predicted == labels).sum().item()   
 
     accuracy1 = 100 * (n_correct / n_samples)
     print(f'Accuracy of the network: {accuracy1}%')
-
-
-   
 
 total_iterations = len(loss_values)
 iterations_per_epoch = len(training_dataloader)
