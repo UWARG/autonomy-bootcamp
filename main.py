@@ -22,11 +22,12 @@ import matplotlib.pyplot as plt
 
 
 #device configuration
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 #hyper-parameters
-num_epochs = 15
-batch_size = 5
+num_epochs = 4
+batch_size = 2
 learning_rate = 0.001
 
 
@@ -56,28 +57,85 @@ different_objects_in_data = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog
 class ImageClassifier(nn.Module):
     def __init__(self):
         super(ImageClassifier, self).__init__()
-        # this represent the first convolution layer
-        # 3 is the input size, 6 is the output size and the kernel size is 5 
-        self.conv1 = nn.Conv2d(3, 6, 5)
-        # this represents the pooling layer 
-        #kernel size of 2 and stride of 2 
-        self.pool = nn.MaxPool2d(2, 2)
-        #second convolution later
-        # hence the input should be equalt to the size of the output of the first layer 
-        self.conv2 =  nn.Conv2d(6, 16, 5)
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10)
-    def forward(self, x):
-        x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
-        x = x.view(-1, 16*5*5)
-        #x = torch.flatten(x,1)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
+        self.network = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2), # output: 64 x 16 x 16
+            nn.BatchNorm2d(64),
 
-        return x
+            nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2), # output: 128 x 8 x 8
+            nn.BatchNorm2d(128),
+            nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2), # output: 256 x 4 x 4
+            nn.BatchNorm2d(256),
+
+            nn.Flatten(), 
+            nn.Linear(256*4*4, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, 512),
+            nn.ReLU(),
+            nn.Linear(512, 10))
+
+                 
+    def forward(self, xb):
+        return self.network(xb)
+               # first convolution layer
+    #     self.conv1 = nn.Conv2d(3, 32, 3)
+    #     self.relu = nn.ReLU(),
+    #     # second convolution layer
+    #     self.conv2 =  nn.Conv2d(32, 64, 3)     
+    #     self.relu = nn.ReLU()  
+    #     # third convolution layer
+    #     self.conv3 = nn.Conv2d(16, 32, 5)
+    #     self.pool = nn.MaxPool2d(2, 2)
+    #     self.fc1 = nn.Linear(32 * 5 * 5, 120)
+    #     self.fc2 = nn.Linear(120, 84)
+    #     self.fc3 = nn.Linear(84, 10)
+
+    # def forward(self, x):
+    #     x = self.pool(F.relu(self.conv1(x)))
+    #     x = self.pool(F.relu(self.conv2(x)))
+    #     # added the third convolution layer here
+    #     x = self.pool(F.relu(self.conv3(x)))
+    #     x = x.view(-1, 32*5*5)
+    #     # x = torch.flatten(x,1)
+    #     x = F.relu(self.fc1(x))
+    #     x = F.relu(self.fc2(x))
+    #     x = self.fc3(x)
+
+    #     return x
+    #     # this represent the first convolution layer
+    #     # 3 is the input size, 6 is the output size and the kernel size is 5 
+    #     self.conv1 = nn.Conv2d(3, 6, 5)
+    #     # this represents the pooling layer 
+    #     #kernel size of 2 and stride of 2 
+    #     self.pool = nn.AvgPool2d(2, 2)
+    #     #second convolution later
+    #     # hence the input should be equalt to the size of the output of the first layer 
+    #     self.conv2 =  nn.Conv2d(6, 16, 5)
+    #     self.fc1 = nn.Linear(16 * 5 * 5, 120)
+    #     self.fc2 = nn.Linear(120, 84)
+    #     self.fc3 = nn.Linear(84, 10)
+
+    # def forward(self, x):
+    #     x = self.pool(F.relu(self.conv1(x)))
+    #     x = self.pool(F.relu(self.conv2(x)))
+    #     x = x.view(-1, 16*5*5)
+    #     x = torch.flatten(x,1)
+    #     x = F.relu(self.fc1(x))
+    #     x = F.relu(self.fc2(x))
+    #     x = self.fc3(x)
+
+    #     return x
 
 
 model = ImageClassifier().to(device)
@@ -123,31 +181,34 @@ with torch.no_grad():
         images = images.to(device)
         labels = labels.to(device)
         output = model(images)
-
-        #max returns (value, index)
         _, predicted = torch.max(output, 1)
+        accuracy = torch.tensor(torch.sum(predicted == labels).item() / len(predicted))
+
+        # max returns (value, index)
+        _, predicted = torch.max(output, 1)
+
+
         n_samples += labels.size(0)
         n_correct += (predicted == labels).sum().item()
 
-        for i in range(batch_size):
-            label = labels[i]
-            pred = predicted[i]
+        # for i in range(batch_size):
+        #     label = labels[i]
+        #     pred = predicted[i]
 
-            if (label == pred):
-                n_class_correct[label] += 1
-            n_class_samples[label] += 1
+        #     if (label == pred):
+        #         n_class_correct[label] += 1
+        #     n_class_samples[label] += 1
 
-    accuracy = 100 * (n_correct / n_samples)
+    accuracy1 = 100 * (n_correct / n_samples)
+    print(f'Accuracy of the network: {accuracy1}%')
 
-    print(f'Accuracy of the network: {accuracy}%')
-    for i in range(10):
-        accuracy = 100* n_class_correct[i] / n_class_samples[i]
-        print(f'Accuracy of {different_objects_in_data[i]} : {accuracy}%')
+
+   
 
 total_iterations = len(loss_values)
 iterations_per_epoch = len(training_dataloader)
 num_epochs = total_iterations / iterations_per_epoch
-plt.plot(loss_values, '-')
+plt.plot(loss_values, '-rx')
 plt.xlabel("Epoch")
 plt.ylabel("Loss")
 plt.show()
