@@ -14,42 +14,41 @@ Hints:
 
 import os
 import torch
-import torchvision
 import tarfile
 from torchvision.datasets.utils import download_url
 from torch.utils.data import random_split
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import ToTensor
-import matplotlib
 import matplotlib.pyplot as plt
 from torch.utils.data.dataloader import DataLoader
-from torchvision.utils import make_grid
 import torch.nn as nn
 import torch.nn.functional as F
-from time import sleep
 from tqdm import tqdm
 
-if __name__ == "__main__": # Here
+#needed to use on Mac
+if __name__ == "__main__":
 
+    #importing dataset
     dataset_url = "https://s3.amazonaws.com/fast-ai-imageclas/cifar10.tgz"
     download_url(dataset_url, '.')
 
+    #extracting data from dataset
     with tarfile.open('./cifar10.tgz', 'r:gz') as tar:
         tar.extractall(path='./data')
 
+    #defining the directory with data
     data_dir = './data/cifar10'
 
-    classes = os.listdir(data_dir + "/train")
-
     dataset = ImageFolder(data_dir+'/train', transform=ToTensor())
-
-    img, label = dataset[0]
-    img
-
-    matplotlib.rcParams['figure.facecolor'] = '#ffffff'
-
-    random_seed = 42
-    torch.manual_seed(random_seed)
+    
+    #defining number of epochs and learning rate
+    num_epochs = 10
+    batch_size = 4
+    opt_func = torch.optim.Adam
+    learning_rate = 0.001
+    
+    #choosing device to use (gpu/cpu)
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') 
 
     val_size = 5000
     train_size = len(dataset) - val_size
@@ -57,54 +56,38 @@ if __name__ == "__main__": # Here
     train_ds, val_ds = random_split(dataset, [train_size, val_size])
     len(train_ds), len(val_ds)
 
-    batch_size=128
-
     train_dl = DataLoader(train_ds, batch_size, shuffle=True, num_workers=4, pin_memory=True)
     val_dl = DataLoader(val_ds, batch_size*2, num_workers=4, pin_memory=True)
 
-    def show_batch(dl):
-        for images, labels in dl:
-            fig, ax = plt.subplots(figsize=(12, 6))
-            ax.set_xticks([]); ax.set_yticks([])
-            ax.imshow(make_grid(images, nrow=16).permute(1, 2, 0))
-            break
+    print("Implementing CNN")
 
-    def apply_kernel(image, kernel):
-        ri, ci = image.shape       # image dimensions
-        rk, ck = kernel.shape      # kernel dimensions
-        ro, co = ri-rk+1, ci-ck+1  # output dimensions
-        output = torch.zeros([ro, co])
-        for i in range(ro): 
-            for j in range(co):
-                output[i,j] = torch.sum(image[i:i+rk,j:j+ck] * kernel)
-        return output
-
-    simple_model = nn.Sequential(
-        nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1),
-        nn.MaxPool2d(2, 2)
-    )
-
-    print("before imageclassification")
-    
+    #convolutional neural network (CNN) implementation 
     class ImageClassificationBase(nn.Module):
         def training_step(self, batch):
             images, labels = batch 
-            out = self(images)                  # Generate predictions
-            loss = F.cross_entropy(out, labels) # Calculate loss
+            #generate predictions
+            out = self(images)      
+            #calculate loss
+            loss = F.cross_entropy(out, labels)
             return loss
         
         def validation_step(self, batch):
             images, labels = batch 
-            out = self(images)                    # Generate predictions
-            loss = F.cross_entropy(out, labels)   # Calculate loss
-            acc = accuracy(out, labels)           # Calculate accuracy
+            #generate predictions
+            out = self(images)              
+            #calculate loss
+            loss = F.cross_entropy(out, labels)  
+            #calculate accuracy
+            acc = accuracy(out, labels)        
             return {'val_loss': loss.detach(), 'val_acc': acc}
             
         def validation_epoch_end(self, outputs):
             batch_losses = [x['val_loss'] for x in outputs]
-            epoch_loss = torch.stack(batch_losses).mean()   # Combine losses
+            #combine losses
+            epoch_loss = torch.stack(batch_losses).mean()  
             batch_accs = [x['val_acc'] for x in outputs]
-            epoch_acc = torch.stack(batch_accs).mean()      # Combine accuracies
+            #combine accuracies
+            epoch_acc = torch.stack(batch_accs).mean()   
             return {'val_loss': epoch_loss.item(), 'val_acc': epoch_acc.item()}
         
         def epoch_end(self, epoch, result):
@@ -114,8 +97,6 @@ if __name__ == "__main__": # Here
     def accuracy(outputs, labels):
         _, preds = torch.max(outputs, dim=1)
         return torch.tensor(torch.sum(preds == labels).item() / len(preds))
-
-    print("before cifar")
 
     class Cifar10CnnModel(ImageClassificationBase):
         def __init__(self):
@@ -150,48 +131,16 @@ if __name__ == "__main__": # Here
             return self.network(xb)
 
     model = Cifar10CnnModel()
-    model
 
-    print("get default device")
+    #using Cross Entropy Loss as loss metric
+    criterion = nn.CrossEntropyLoss()
+    #stochastic gradient descend 
+    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)  
 
-    def get_default_device():
-        """Pick GPU if available, else CPU"""
-        if torch.cuda.is_available():
-            return torch.device('cuda')
-        else:
-            return torch.device('cpu')
-        
-    def to_device(data, device):
-        """Move tensor(s) to chosen device"""
-        if isinstance(data, (list,tuple)):
-            return [to_device(x, device) for x in data]
-        return data.to(device, non_blocking=True)
+    print("Beginning Training")
 
-    print("device data loader")
-
-    class DeviceDataLoader():
-        """Wrap a dataloader to move data to a device"""
-        def __init__(self, dl, device):
-            self.dl = dl
-            self.device = device
-            
-        def __iter__(self):
-            """Yield a batch of data after moving it to device"""
-            for b in self.dl: 
-                yield to_device(b, self.device)
-
-        def __len__(self):
-            """Number of batches"""
-            return len(self.dl)
-
-    device = get_default_device()
-    device
-
-    train_dl = DeviceDataLoader(train_dl, device)
-    val_dl = DeviceDataLoader(val_dl, device)
-    to_device(model, device)
-
-    print("start evaluate")
+    #running CNN on training data and validation data and recording values for axis 
+    n_total_steps = len(train_dl)
 
     @torch.no_grad()
     def evaluate(model, val_loader):
@@ -200,8 +149,6 @@ if __name__ == "__main__": # Here
         return model.validation_epoch_end(outputs)
 
     def fit(epochs, lr, model, train_loader, val_loader, opt_func=torch.optim.SGD):
-        for i in tqdm(range(10)):
-            sleep(3)
         history = []
         optimizer = opt_func(model.parameters(), lr)
         for epoch in range(epochs):
@@ -221,74 +168,44 @@ if __name__ == "__main__": # Here
             history.append(result)
         return history
 
-    model = to_device(Cifar10CnnModel(), device)
+    history = fit(num_epochs, learning_rate, model, train_dl, val_dl, opt_func)    
 
-    evaluate(model, val_dl)
+    print('Finished Training')
 
-    num_epochs = 10
-    opt_func = torch.optim.Adam
-    lr = 0.001
-
-    print("start history")
-
-    history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
-
-    def plot_accuracies(history):
-        accuracies = [x['val_acc'] for x in history]
-        plt.plot(accuracies, '-x')
-        plt.xlabel('epoch')
-        plt.ylabel('accuracy')
-        plt.title('Accuracy vs. No. of epochs')
-
-    plot_accuracies(history)
-
+    #plotting loss vs. no. of epochs on matplot (saving to folder)
     def plot_losses(history):
         train_losses = [x.get('train_loss') for x in history]
         val_losses = [x['val_loss'] for x in history]
         plt.plot(train_losses, '-bx')
         plt.plot(val_losses, '-rx')
-        plt.xlabel('epoch')
-        plt.ylabel('loss')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
         plt.legend(['Training', 'Validation'])
         plt.title('Loss vs. No. of epochs')
-
+        plt.savefig("/users/jeessh/computer-vision-bootcamp/plot.png")
+        
     plot_losses(history)
 
-    test_dataset = ImageFolder(data_dir+'/test', transform=ToTensor())
-
-    def predict_image(img, model):
-        # Convert to a batch of 1
-        xb = to_device(img.unsqueeze(0), device)
-        # Get predictions from model
-        yb = model(xb)
-        # Pick index with highest probability
-        _, preds  = torch.max(yb, dim=1)
-        # Retrieve the class label
-        return dataset.classes[preds[0].item()]
-
-    correct = 0
-    total = 0
-    # since we're not training, we don't need to calculate the gradients for our outputs
+    #calculating accuracy by testing against validation set
     with torch.no_grad():
-        for data in val_dl:
-            images, labels = data
-            # calculate outputs by running images through the network
-            outputs = Cifar10CnnModel(images)
-            # the class with the highest energy is what we choose as prediction
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
+        n_correct = 0
+        n_samples = 0
+        n_class_correct = [0 for i in range(10)]
+        n_class_samples = [0 for i in range(10)]
+        for images, labels in val_dl:
+            images = images.to(device)
+            labels = labels.to(device)
+            outputs = model(images)
+            _, predicted = torch.max(outputs, 1)
+            n_samples += labels.size(0)
+            n_correct += (predicted == labels).sum().item()
+            
+            for i in range(batch_size):
+                label = labels[i]
+                pred = predicted[i]
+                if (label == pred):
+                    n_class_correct[label] += 1
+                n_class_samples[label] += 1
 
-    print(f'Accuracy of the network on the 10000 test images: {100 * correct // total} %')
-
-    test_loader = DeviceDataLoader(DataLoader(test_dataset, batch_size*2), device)
-    result = evaluate(model, test_loader)
-    result
-
-    torch.save(model.state_dict(), 'cifar10-cnn.pth')
-
-    model2 = to_device(Cifar10CnnModel(), device)
-
-    model2.load_state_dict(torch.load('cifar10-cnn.pth'))
-
-    evaluate(model2, test_loader)
+        acc = 100.0*n_correct/n_samples
+        print(f'Accuracy of the network: {acc} %')
