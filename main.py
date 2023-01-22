@@ -13,7 +13,9 @@ Hints:
 # Import whatever libraries/modules you need
 
 import torch
+import numpy as np
 import tarfile
+
 from torchvision.datasets.utils import download_url
 from torch.utils.data import random_split
 from torchvision.datasets import ImageFolder
@@ -44,7 +46,7 @@ if __name__ == "__main__":
     opt_func = torch.optim.Adam
     learning_rate = 0.001
 
-    #defining the device to be used (CPU/GPU)
+    #determines whether to use GPU or CPU
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') 
 
     #setting training and validation sets
@@ -108,19 +110,19 @@ if __name__ == "__main__":
                 nn.ReLU(),
                 nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
                 nn.ReLU(),
-                nn.MaxPool2d(2, 2), # output: 64 x 16 x 16
+                nn.MaxPool2d(2, 2),  # output: 64 x 16 x 16
 
                 nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
                 nn.ReLU(),
                 nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
                 nn.ReLU(),
-                nn.MaxPool2d(2, 2), # output: 128 x 8 x 8
+                nn.MaxPool2d(2, 2),  # output: 128 x 8 x 8
 
                 nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
                 nn.ReLU(),
                 nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
                 nn.ReLU(),
-                nn.MaxPool2d(2, 2), # output: 256 x 4 x 4
+                nn.MaxPool2d(2, 2),  # output: 256 x 4 x 4
 
                 nn.Flatten(), 
                 nn.Linear(256*4*4, 1024),
@@ -136,7 +138,7 @@ if __name__ == "__main__":
 
     print("Beginning Training")
 
-    #running CNN on training data and validation data and recording values for axis 
+    #running CNN on training and validation data
     n_total_steps = len(train_dl)
     @torch.no_grad()
     def evaluate(model, val_loader):
@@ -206,10 +208,6 @@ if __name__ == "__main__":
             output = model(images)
             _, predicted = torch.max(output, 1)
             accuracy = torch.tensor(torch.sum(predicted == labels).item() / len(predicted))
-
-            # max returns (value, index)
-            _, predicted = torch.max(output, 1)
-
             n_samples += labels.size(0)
             n_correct += (predicted == labels).sum().item()   
 
