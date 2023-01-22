@@ -12,7 +12,6 @@ Hints:
 
 # Import whatever libraries/modules you need
 
-import os
 import torch
 import tarfile
 from torchvision.datasets.utils import download_url
@@ -25,48 +24,48 @@ import torch.nn as nn
 import torch.nn.functional as F
 from tqdm import tqdm
 
-#needed to use on Mac
-if __name__ == "__main__":
+if __name__ == "__main__": 
 
     #importing dataset
     dataset_url = "https://s3.amazonaws.com/fast-ai-imageclas/cifar10.tgz"
     download_url(dataset_url, '.')
-
-    #extracting data from dataset
+    
+    #extracting dataset
     with tarfile.open('./cifar10.tgz', 'r:gz') as tar:
         tar.extractall(path='./data')
 
-    #defining the directory with data
     data_dir = './data/cifar10'
 
     dataset = ImageFolder(data_dir+'/train', transform=ToTensor())
-    
-    #defining number of epochs and learning rate
+
+    #defining epochs, batch size, and learning rate
     num_epochs = 10
-    batch_size = 4
+    batch_size = 64
     opt_func = torch.optim.Adam
     learning_rate = 0.001
-    
-    #choosing device to use (gpu/cpu)
+
+    #defining the device to be used (CPU/GPU)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') 
 
-    val_size = 5000
+    #setting training and validation sets
     train_size = len(dataset) - val_size
+    val_size = 5000
 
     train_ds, val_ds = random_split(dataset, [train_size, val_size])
     len(train_ds), len(val_ds)
 
+    #loading data in batches
     train_dl = DataLoader(train_ds, batch_size, shuffle=True, num_workers=4, pin_memory=True)
     val_dl = DataLoader(val_ds, batch_size*2, num_workers=4, pin_memory=True)
 
     print("Implementing CNN")
 
-    #convolutional neural network (CNN) implementation 
+    #defining steps of cnn implementation
     class ImageClassificationBase(nn.Module):
         def training_step(self, batch):
             images, labels = batch 
             #generate predictions
-            out = self(images)      
+            out = self(images)              
             #calculate loss
             loss = F.cross_entropy(out, labels)
             return loss
@@ -74,23 +73,24 @@ if __name__ == "__main__":
         def validation_step(self, batch):
             images, labels = batch 
             #generate predictions
-            out = self(images)              
+            out = self(images)               
             #calculate loss
-            loss = F.cross_entropy(out, labels)  
+            loss = F.cross_entropy(out, labels)   
             #calculate accuracy
-            acc = accuracy(out, labels)        
+            acc = accuracy(out, labels)           
             return {'val_loss': loss.detach(), 'val_acc': acc}
             
         def validation_epoch_end(self, outputs):
+            #combining losses
             batch_losses = [x['val_loss'] for x in outputs]
-            #combine losses
             epoch_loss = torch.stack(batch_losses).mean()  
+            #combining accuracies
             batch_accs = [x['val_acc'] for x in outputs]
-            #combine accuracies
-            epoch_acc = torch.stack(batch_accs).mean()   
+            epoch_acc = torch.stack(batch_accs).mean()    
             return {'val_loss': epoch_loss.item(), 'val_acc': epoch_acc.item()}
         
         def epoch_end(self, epoch, result):
+            #tracking epoch progress
             print("Epoch [{}], train_loss: {:.4f}, val_loss: {:.4f}, val_acc: {:.4f}".format(
                 epoch, result['train_loss'], result['val_loss'], result['val_acc']))
             
@@ -98,9 +98,11 @@ if __name__ == "__main__":
         _, preds = torch.max(outputs, dim=1)
         return torch.tensor(torch.sum(preds == labels).item() / len(preds))
 
+    #implementation of convolutional neural network 
     class Cifar10CnnModel(ImageClassificationBase):
         def __init__(self):
             super().__init__()
+            #setting up layers for the cnn
             self.network = nn.Sequential(
                 nn.Conv2d(3, 32, kernel_size=3, padding=1),
                 nn.ReLU(),
@@ -132,16 +134,10 @@ if __name__ == "__main__":
 
     model = Cifar10CnnModel()
 
-    #using Cross Entropy Loss as loss metric
-    criterion = nn.CrossEntropyLoss()
-    #stochastic gradient descend 
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)  
-
     print("Beginning Training")
 
     #running CNN on training data and validation data and recording values for axis 
     n_total_steps = len(train_dl)
-
     @torch.no_grad()
     def evaluate(model, val_loader):
         model.eval()
@@ -152,7 +148,7 @@ if __name__ == "__main__":
         history = []
         optimizer = opt_func(model.parameters(), lr)
         for epoch in range(epochs):
-            # Training Phase 
+            #training phase
             model.train()
             train_losses = []
             for batch in tqdm(train_loader):
@@ -161,7 +157,7 @@ if __name__ == "__main__":
                 loss.backward()
                 optimizer.step()
                 optimizer.zero_grad()
-            # Validation phase
+            #validation phase
             result = evaluate(model, val_loader)
             result['train_loss'] = torch.stack(train_losses).mean().item()
             model.epoch_end(epoch, result)
@@ -172,7 +168,19 @@ if __name__ == "__main__":
 
     print('Finished Training')
 
-    #plotting loss vs. no. of epochs on matplot (saving to folder)
+    #plotting validation accuracy
+    def plot_accuracies(history):
+        accuracies = [x['val_acc'] for x in history]
+        plt.plot(accuracies, '-x')
+        plt.xlabel('Epoch')
+        plt.ylabel('Accuracy')
+        plt.title('Accuracy vs. No. of Epochs')
+        plt.savefig("/users/jeessh/computer-vision-bootcamp/accuraciesPlot.png")
+
+    plot_accuracies(history)
+    plt.clf()
+
+    #plotting training and validation losses
     def plot_losses(history):
         train_losses = [x.get('train_loss') for x in history]
         val_losses = [x['val_loss'] for x in history]
@@ -181,31 +189,29 @@ if __name__ == "__main__":
         plt.xlabel('Epoch')
         plt.ylabel('Loss')
         plt.legend(['Training', 'Validation'])
-        plt.title('Loss vs. No. of epochs')
-        plt.savefig("/users/jeessh/computer-vision-bootcamp/plot.png")
-        
+        plt.title('Loss vs. No. of Epochs')
+        plt.savefig("/users/jeessh/computer-vision-bootcamp/lossesPlot.png")
+
     plot_losses(history)
 
-    #calculating accuracy by testing against validation set
+    #determining accuracy of network by comparing with validation sets
     with torch.no_grad():
         n_correct = 0
         n_samples = 0
-        n_class_correct = [0 for i in range(10)]
-        n_class_samples = [0 for i in range(10)]
+        n_class_correct = [0 for i in range (10)]
+        n_class_samples = [0 for i in range (10)]
         for images, labels in val_dl:
             images = images.to(device)
             labels = labels.to(device)
-            outputs = model(images)
-            _, predicted = torch.max(outputs, 1)
-            n_samples += labels.size(0)
-            n_correct += (predicted == labels).sum().item()
-            
-            for i in range(batch_size):
-                label = labels[i]
-                pred = predicted[i]
-                if (label == pred):
-                    n_class_correct[label] += 1
-                n_class_samples[label] += 1
+            output = model(images)
+            _, predicted = torch.max(output, 1)
+            accuracy = torch.tensor(torch.sum(predicted == labels).item() / len(predicted))
 
-        acc = 100.0*n_correct/n_samples
-        print(f'Accuracy of the network: {acc} %')
+            # max returns (value, index)
+            _, predicted = torch.max(output, 1)
+
+            n_samples += labels.size(0)
+            n_correct += (predicted == labels).sum().item()   
+
+        net_accuracy = 100 * (n_correct / n_samples)
+        print(f'Accuracy of the network: {net_accuracy}%')
