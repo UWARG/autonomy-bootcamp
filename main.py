@@ -11,7 +11,12 @@ Hints:
 """
 
 # Import whatever libraries/modules you need
+import tensorflow as tf
+from keras import datasets, layers, models
 
 import numpy as np
 
 # Your working code here
+(x_train, y_train), (x_test, y_test) = datasets.cifar10.load_data()
+
+classes = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
