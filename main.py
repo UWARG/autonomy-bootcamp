@@ -87,16 +87,22 @@ class ImageClassifier(nn.Module):
             nn.Linear(1024, 512),
             nn.ReLU(),
             nn.Linear(512, 10))
+           
+    def forward(self, xb):
+        return self.network(xb)
   
 model = ImageClassifier().to(device)
 # soft max is included here 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
+accuracyList = []
 loss_values = []
 
 n_total_steps = len(training_dataloader)
 for epoch in range(num_epochs):
+    n_correct = 0
+    n_samples = 0
     for i, (images, label) in enumerate(training_dataloader):
         #origin shape: [4,3,32,32] = 4,3, 1024
         #input_layer: 3 input channels, 6 output channels, 5 kernel size
@@ -105,10 +111,11 @@ for epoch in range(num_epochs):
 
         #forward pass
         output = model(images)
+        _, predicted = torch.max(output, 1)
+        n_samples += labels.size(0)
+        n_correct += (predicted == labels).sum().item()
+
         loss = criterion(output, labels)
-
-        loss_values.append(loss.item())
-
 
         #backward and optimize
         optimizer.zero_grad()
@@ -118,6 +125,9 @@ for epoch in range(num_epochs):
 
         if (i+1) % 2000 == 0:
             print(f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/ {n_total_steps}], Loss: {loss.item():.4f}')
+    loss_values.append(loss.item())
+    accuracyPerEpoch = 100*( n_correct/n_samples)
+    accuracyList.append(accuracyPerEpoch)
 
 print('Finished Training')
 
@@ -133,7 +143,6 @@ with torch.no_grad():
         _, predicted = torch.max(output, 1)
         accuracy = torch.tensor(torch.sum(predicted == labels).item() / len(predicted))
 
-        # max returns (value, index)
         _, predicted = torch.max(output, 1)
 
         n_samples += labels.size(0)
@@ -142,13 +151,22 @@ with torch.no_grad():
     accuracy1 = 100 * (n_correct / n_samples)
     print(f'Accuracy of the network: {accuracy1}%')
 
-total_iterations = len(loss_values)
-iterations_per_epoch = len(training_dataloader)
-num_epochs = total_iterations / iterations_per_epoch
-plt.plot(loss_values, '-rx')
+num_epochs = [1,2,3,4]
+
+plt.plot(num_epochs, accuracyList)
+plt.xlabel("Epoch")
+plt.ylabel("Accuracy")
+plt.show()
+    
+plt.plot(num_epochs, loss_values)
 plt.xlabel("Epoch")
 plt.ylabel("Loss")
 plt.show()
+
+
+
+
+
 
 
 
