@@ -27,7 +27,10 @@ class CNN(nn.Module):
         self.batch_norm3 = nn.BatchNorm2d(36)
         self.pool3 = nn.MaxPool2d(2, 2)
 
-        self.fc1 = nn.Linear(36 * 4 * 4, 120)
+        self.max_pool = nn.AdaptiveMaxPool2d(1)
+        self.flatten = nn.Flatten()
+
+        self.fc1 = nn.Linear(36, 120)
         self.fc2 = nn.Linear(120, 60)
         self.fc3 = nn.Linear(60, 10)
 
@@ -61,7 +64,8 @@ class CNN(nn.Module):
         x = self.relu(x)
         x = self.pool3(x)
 
-        x = flatten(x, 1)
+        x = self.max_pool(x)
+        x = self.flatten(x)
 
         x = self.fc1(x)
         x = self.relu(x)
@@ -145,9 +149,6 @@ if __name__ == "__main__":
     train_loader = utils.data.DataLoader(train_set, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
     val_set = datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
     val_loader = utils.data.DataLoader(val_set, batch_size=BATCH_SIZE, shuffle=False, num_workers=2)
-
-    classes = ('plane', 'car', 'bird', 'cat',
-           'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
     DEVICE = device("cuda:0" if torch.cuda.is_available() else "cpu")
     model = CNN().to(DEVICE)
