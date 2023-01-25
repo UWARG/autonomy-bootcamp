@@ -132,7 +132,8 @@ def plot_losses(history):
   plt.plot(losses, '-x')
   plt.xlabel('epoch')
   plt.ylabel('loss')
-  plt.title('Loss vs. No. of epochs');
+  plt.title('Loss vs. No. of epochs')
+  plt.show()
 
 def plot_accuracies(history):
   accuracies = [x['val_accuracy'] for x in history]
@@ -140,6 +141,7 @@ def plot_accuracies(history):
   plt.xlabel('epoch')
   plt.ylabel('accuracy')
   plt.title('Accuracy vs. No. of epochs')
+  plt.show()
 
 #training the model
 input_size = 3*32*32
