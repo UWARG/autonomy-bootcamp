@@ -3,7 +3,7 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 
-from torch import device, flatten, max, nn, no_grad, optim, utils
+from torch import device, nn, no_grad, optim, utils
 from torchvision import transforms, datasets
 
 class CNN(nn.Module):
@@ -133,7 +133,7 @@ def fit(model, device, epochs, train_loader, val_loader, criterion, optimizer):
                 inputs, labels =data
                 inputs, labels =inputs.to(device), labels.to(device)
                 outputs =model(inputs)
-                predicted =max(outputs,dim=1)[1]
+                predicted =torch.max(outputs,dim=1)[1]
 
                 # Get metrics
                 accuracy =(predicted ==labels).sum()
@@ -148,7 +148,7 @@ def fit(model, device, epochs, train_loader, val_loader, criterion, optimizer):
                 inputs, labels = data
                 inputs, labels = inputs.to(device), labels.to(device)
                 outputs =model(inputs)
-                predicted =max(outputs,dim=1)[1]
+                predicted =torch.max(outputs,dim=1)[1]
 
                 # Get metrics
                 accuracy =(predicted ==labels).sum()
