@@ -20,6 +20,8 @@ from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor
 
+from torch.utils.tensorboard import SummaryWriter
+
 # Your working code here
 
 training_data = datasets.CIFAR10(
@@ -76,9 +78,12 @@ print(model)
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
+writer = SummaryWriter()
+
 def train(dataloader, model, loss_fn, optimizer):
     size = len(dataloader.dataset)
     model.train()
+    losses = []
     for batch, (X, y) in enumerate(dataloader):
         X, y = X.to(device), y.to(device)
 
@@ -93,7 +98,9 @@ def train(dataloader, model, loss_fn, optimizer):
 
         if batch % 100 == 0:
             loss, current = loss.item(), batch * len(X)
+            losses.append(loss)
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+    return np.mean(losses)
 
 def test(dataloader, model, loss_fn):
     size = len(dataloader.dataset)
@@ -109,10 +116,17 @@ def test(dataloader, model, loss_fn):
     test_loss /= num_batches
     correct /= size
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    return test_loss
 
 epochs = 5
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
-    train(train_dataloader, model, loss_fn, optimizer)
-    test(test_dataloader, model, loss_fn)
+    training_loss = train(train_dataloader, model, loss_fn, optimizer)
+    testing_loss = test(test_dataloader, model, loss_fn)
+
+    writer.add_scalar("Loss/train", training_loss, t)
+    writer.add_scalar("Loss/test", testing_loss, t)
+
+writer.close () 
+
 print("Done!")
