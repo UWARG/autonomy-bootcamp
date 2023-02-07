@@ -56,7 +56,7 @@ def fit_eval(model, train, test):
     test_X, test_y = test
     history = model.fit(train_X, train_y, epochs=100, batch_size=64, validation_data=(test_X, test_y), verbose=1)
     _, acc = model.evaluate(test_X, test_y, verbose=1)
-    return history, acc
+    return model, history, acc
 
 
 def run_test():
@@ -66,8 +66,7 @@ def run_test():
     train, test = (train_X, train_y), (test_X, test_y)
     model = def_model()
 
-    history, acc = fit_eval(model, train, test)
-    history.to_csv("history.csv")
+    model, history, acc = fit_eval(model, train, test)
 
     model.save('model.h5')
 
