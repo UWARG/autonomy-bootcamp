@@ -181,6 +181,8 @@ for epoch in range(20):
     TRAINING_LOSS.append(TRAINING_LOSS_PER_EPOCH)
     VALIDATION_LOSS.append(VALIDATION_LOSS_PER_EPOCH)
 
+
+#Plotting the losses over epochs
 plt.plot(EPOCH,TRAINING_LOSS,label = "Training Loss") 
 plt.plot(EPOCH,VALIDATION_LOSS,label = "Validation Loss")   
 plt.xlabel("Losses ")
@@ -188,7 +190,7 @@ plt.ylabel("Epochs")
 plt.legend()
 plt.show()
 
-
+#Testing the Neural Network
 dataiter = iter(TEST_LOADER)
 images, labels = next(dataiter)
 
