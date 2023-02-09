@@ -190,15 +190,3 @@ plt.ylabel("Epochs")
 plt.legend()
 plt.show()
 
-#Testing the Neural Network
-dataiter = iter(TEST_LOADER)
-images, labels = next(dataiter)
-
-print('GroundTruth: ', ' '.join('%s' % classes[labels[j]] for j in range(4)))
-
-outputs = NET(images)
-
-_, predicted = torch.max(outputs, 1)
-
-print('Predicted: ', ' '.join('%s' % classes[predicted[j]]
-                              for j in range(4)))
