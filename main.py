@@ -15,7 +15,8 @@ Hints:
 import numpy as np
 
 import torch
-from torch import nn
+import torch.nn as nn
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor
@@ -58,25 +59,27 @@ print(f"Using {device} device")
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super().__init__()
-        self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(3072, 8*8),
-            nn.ReLU(),
-            nn.Linear(8*8, 32),
-            nn.ReLU(),
-            nn.Linear(32, 10)
-        )
+        self.conv1 = nn.Conv2d(3, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
 
     def forward(self, x):
-        x = self.flatten(x)
-        logits = self.linear_relu_stack(x)
-        return logits
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = torch.flatten(x, 1) # flatten all dimensions except batch
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
 
 model = NeuralNetwork().to(device)
 print(model)
 
 loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 writer = SummaryWriter()
 
