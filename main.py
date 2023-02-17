@@ -31,7 +31,8 @@ import torchvision.transforms as transforms
 #2) Normalizing the dataset to get an evenly distributed set   
 
 TRANSFORM = transforms.Compose([
-    transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    transforms.ToTensor(), 
+    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
 ])
 
 #here we are setting the batch size to only process 64 images at a time
@@ -64,27 +65,31 @@ class Net(nn.Module):
         #2D convolution means multiplying a matrix to each individual pixel
         #Feature map is the final matrix when convolution is performed on each pixel
         #in_channels is 3 since our images will have 3 properties ,ie their RGB intensity
-        # out_channels is 6 to produce 6 feature map
-        # kernel_size is 5 to create a 5*5 matrix which moves through out the image 
-        self.conv1 = nn.Conv2d(in_channels = 3, out_channels = 6, kernel_size = 5) 
+        # out_channels is 32 to produce 32 feature map
+        # kernel_size is 3 to create a 3*3 matrix which moves through out the image 
+        self.conv1 = nn.Conv2d(in_channels = 3, out_channels = 32, kernel_size = 3) 
 
         #We add a max pool layer to down-size the image to allow us to better generalize the image
         self.pool = nn.MaxPool2d(2, 2) 
 
         #The second convolutional layer will have the same inputs as the first convolution since the 
         #the output from the first is the input for the 2nd layer
-        self.conv2  = nn.Conv2d(in_channels = 6, out_channels = 16, kernel_size = 5)
+        self.conv2  = nn.Conv2d(in_channels = 32, out_channels = 32, kernel_size = 3)
+
+        #similarly we have two more convolutional layers to increase the efficiency
+        self.conv3  = nn.Conv2d(in_channels = 32, out_channels = 64, kernel_size = 3)
+        self.conv4  = nn.Conv2d(in_channels = 64, out_channels = 64, kernel_size = 3)
 
         #Next we create the fully connected layer in which the neuron are connected to all the 
         #neurons in the previous layer
 
         #The Linear function performs an operation that selects all the good features from the feature
         # map of convolutional layer 
-        #We multiply 16 by 5*5 since the output of conv2 is 16 and our kernel matrix size is 5*5 
-        self.fc1 = nn.Linear(16 * 5 * 5, 120) 
-        self.fc2 = nn.Linear(120, 84) 
-        #The final output is 10 since we can classify an image into 10 categories 
-        self.fc3 = nn.Linear(84, 10)  
+        #We multiply 64 by 5*5 since the output of conv2 is 64 and our kernel matrix size is 5*5 
+        self.fc1 = nn.Linear(64 * 5 *5, 128) 
+        #The final output is 10 since we can classify an image into 10 categories
+        self.fc2 = nn.Linear(128, 10) 
+          
 
         #Next we define the forward function which determines how the image is going to flow
         #in our CNN
@@ -92,21 +97,30 @@ class Net(nn.Module):
         #In our forward function  we use ReLU as our activation function to convert our sum of inputs 
         #into a binary output of 1 and 0
     def forward(self, x):
-        #The image is first put in a convolutional layer and then in a ReLU function and then pooled
-        x = self.pool(F.relu(self.conv1(x))) 
-        x = self.pool(F.relu(self.conv2(x)))
+        #The image is first put in a convolutional layer and then pooled to better generalize the output
+        x = self.conv1(x)
+        x = self.conv2(x)
+
+        x = self.pool(x)
+
+        x = self.conv3(x)
+        x = self.conv4(x)
+
+        x = self.pool(x)
+
+
         
         #The tensor which is outputted is made to change its shape using the view function
-        #The -1 is used to indicate the tensor can be of any size and 16*5*5 is the new
-        #shape of the tensor which is the input of the FC layer
-        x = x.view(-1, 16 * 5 * 5) 
+        #The -1 is used to indicate the tensor can be of any size and then get the new size of the tensor 
+        #to reshape the tensor which will match the input of the FC layer
+        x = x.reshape(x.size(0), -1)
+ 
 
         #Next the image is put into the FC layer and then into a ReLU function to get a final
         #binary output 
         x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
+        x = self.fc2(x)
 
-        x= self.fc3(x)
         return x
 NET = Net()
 print(NET)
@@ -118,7 +132,7 @@ CRITERION = nn.CrossEntropyLoss()
 #Optimizers are used to change the weights of each node to increase the accuracy
 #SGD implements the stochastic gradient descent, while NET.parameters gets the changeable parameter from NET
 #lr is rate at which it implements changes while momentum is used to accelerate in the right direction 
-OPTIMIZER = optim.SGD(NET.parameters(),lr=0.001, momentum=0.9)
+OPTIMIZER = optim.SGD(NET.parameters(),lr=0.001, weight_decay = 0.005, momentum = 0.9)
 
 #Training and validating the neural network 
 
@@ -166,6 +180,7 @@ for epoch in range(20):
     #Setting the neural network to validation mode
     NET.eval()
 
+    TOTAL, CORRECT = 0, 0
     #The steps are identical with the ones for testing data but the weights are not adjusted
     with torch.no_grad():
         for i,data in enumerate(TEST_LOADER,0):
@@ -173,20 +188,41 @@ for epoch in range(20):
             OUTPUTS = NET(INPUTS)
             VAL_LOSS = CRITERION(OUTPUTS,LABELS)
             VALIDATION_LOSS_PER_EPOCH.append(VAL_LOSS.item())
+            # get the predictions
+            __, predicted = torch.max(OUTPUTS.data, 1)
+            # update results
+            TOTAL += LABELS.size(0)
+            CORRECT += (predicted == LABELS).sum().item()
 
     TRAINING_LOSS_PER_EPOCH = np.array(TRAINING_LOSS_PER_EPOCH).mean()
     VALIDATION_LOSS_PER_EPOCH = np.array(VALIDATION_LOSS_PER_EPOCH).mean()
+    
 
-    print(epoch+1,"Training loss:- ",TRAINING_LOSS_PER_EPOCH,"Validation loss:- ", VALIDATION_LOSS_PER_EPOCH )
+    
     TRAINING_LOSS.append(TRAINING_LOSS_PER_EPOCH)
     VALIDATION_LOSS.append(VALIDATION_LOSS_PER_EPOCH)
+
+
+    print(epoch+1,"Training loss:- ",TRAINING_LOSS_PER_EPOCH,"Validation loss:- ", VALIDATION_LOSS_PER_EPOCH ,"Accuracy of the model:-",100 * CORRECT // TOTAL,"%")
 
 
 #Plotting the losses over epochs
 plt.plot(EPOCH,TRAINING_LOSS,label = "Training Loss") 
 plt.plot(EPOCH,VALIDATION_LOSS,label = "Validation Loss")   
-plt.xlabel("Losses ")
-plt.ylabel("Epochs")   
+plt.xlabel(" Epochs ")
+plt.ylabel(" Losses ")   
 plt.legend()
 plt.show()
 
+#Testing the Neural Network
+dataiter = iter(TEST_LOADER)
+images, labels = next(dataiter)
+
+print('GroundTruth: ', ' '.join('%s' % classes[labels[j]] for j in range(4)))
+
+outputs = NET(images)
+
+_, predicted = torch.max(outputs, 1)
+
+print('Predicted: ', ' '.join('%s' % classes[predicted[j]]
+                              for j in range(4)))
