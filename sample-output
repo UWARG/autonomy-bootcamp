@@ -1,1 +1,22 @@
-Accuracy of the network on the 10000 test images: 55 %
+Epoch 1, Training loss: 1.845782995223999,Validation loss: 1.7538946866989136, Validation accuracy: 57.04%
+Epoch 2, Training loss: 1.739134430885315,Validation loss: 1.7146239280700684, Validation accuracy: 63.92%
+Epoch 3, Training loss: 1.7375112771987915,Validation loss: 1.8389952182769775, Validation accuracy: 69.19%
+Epoch 4, Training loss: 1.7979971170425415,Validation loss: 1.7197620868682861, Validation accuracy: 71.45%
+Epoch 5, Training loss: 1.92600679397583,Validation loss: 1.6433930397033691, Validation accuracy: 73.04%
+Epoch 6, Training loss: 1.7075495719909668,Validation loss: 1.7013076543807983, Validation accuracy: 75.18%
+Epoch 7, Training loss: 1.667334794998169,Validation loss: 1.7463788986206055, Validation accuracy: 76.62%
+Epoch 8, Training loss: 1.7124288082122803,Validation loss: 1.7120625972747803, Validation accuracy: 76.61%
+Epoch 9, Training loss: 1.712422251701355,Validation loss: 1.709535837173462, Validation accuracy: 78.33%
+Epoch 10, Training loss: 1.7111358642578125,Validation loss: 1.6750376224517822, Validation accuracy: 79.03%
+Epoch 11, Training loss: 1.726081132888794,Validation loss: 1.759283423423767, Validation accuracy: 78.77%
+Epoch 12, Training loss: 1.7120164632797241,Validation loss: 1.7155556678771973, Validation accuracy: 78.27%
+Epoch 13, Training loss: 1.7084850072860718,Validation loss: 1.7074745893478394, Validation accuracy: 79.26%
+Epoch 14, Training loss: 1.7107923030853271,Validation loss: 1.4705308675765991, Validation accuracy: 80.19%
+Epoch 15, Training loss: 1.4650721549987793,Validation loss: 1.581345558166504, Validation accuracy: 80.27%
+Epoch 16, Training loss: 1.4612455368041992,Validation loss: 1.6692075729370117, Validation accuracy: 80.35%
+Epoch 17, Training loss: 1.7013285160064697,Validation loss: 1.4696649312973022, Validation accuracy: 80.30%
+Epoch 18, Training loss: 1.7302738428115845,Validation loss: 1.6920121908187866, Validation accuracy: 80.95%
+Epoch 19, Training loss: 1.8099684715270996,Validation loss: 1.4839799404144287, Validation accuracy: 81.02%
+Epoch 20, Training loss: 1.502748727798462,Validation loss: 1.5253146886825562, Validation accuracy: 81.14%
+
+Final Validation Accuracy: 81.14%
