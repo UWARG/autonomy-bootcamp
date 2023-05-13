@@ -1,7 +1,8 @@
 CNN Model on the CIFAR-10 dataset
 
 ## Epoch results
-![Screenshot (797)](https://github.com/SankalpUW/Tensorflow_Neural_Network/assets/113000067/5873be05-63ae-45c2-8223-831f9178203f)
+![Screenshot (798)](https://github.com/SankalpUW/Tensorflow_Neural_Network/assets/113000067/8e0a577f-65a2-4649-ae8c-0da627ab1739)
+
 
 
 
