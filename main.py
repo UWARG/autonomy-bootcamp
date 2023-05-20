@@ -98,11 +98,7 @@ class cifar10_model(nn.Module):
         return self.network(X)
     
     def training_step(self, batch, criterion):
-        """ 
-        Calculates training loss for batch
-
-        Returns tensor: loss
-        """
+        # Get batches
         X_train, Y_train = batch
         X_train, Y_train = X_train.to(device), Y_train.to(device)
 
