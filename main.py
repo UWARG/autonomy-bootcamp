@@ -22,7 +22,7 @@ best_loss = 1000
 
 # Constsants for training model and saving data
 BATCH_SIZE = 128
-NUM_EPOCHS = 500
+NUM_EPOCHS = 1000
 
 # Security measure to load C extensions not part of python
 # pylint: disable=[no-member]
@@ -96,12 +96,16 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(50),
             nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2)),
+            # Third CONV > RELU > BATCHNORM layer
+            nn.Conv2d(in_channels=50, out_channels=100, kernel_size=(3, 3)),
+            nn.ReLU(),
+            nn.BatchNorm2d(100),
             # Dropout layer to reduce overfitting
             nn.Dropout(p=0.5, inplace=False),
             # Flatten to transition from convolution layer to fully connected layer
             nn.Flatten(),
             # LINEAR > RELU
-            nn.Linear(in_features=1250, out_features=500),
+            nn.Linear(in_features=900, out_features=500),
             nn.ReLU(),
             # Final classifier
             nn.Linear(in_features=500, out_features=10),
@@ -119,11 +123,8 @@ model = Net()
 model.to(DEVICE)
 
 loss_fn = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
-scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-    optimizer, mode="max", factor=0.1, patience=10, verbose=True
-)
-
+optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=0.0001)
+scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.1)
 
 def save_model():
     """
@@ -267,9 +268,9 @@ def plot_model(epoch):
 
     # Plot and save accuracy staistics
     plt.figure()
-    plt.plot(range(1, epoch + 1), statistics["val_acc"], marker="o", label="val_acc")
+    plt.plot(range(1, epoch + 1), statistics["val_acc"], label="val_acc")
     plt.plot(
-        range(1, epoch + 1), statistics["train_acc"], marker="o", label="train_acc"
+        range(1, epoch + 1), statistics["train_acc"], label="train_acc"
     )
     plt.title("Training and Validation Accuracy on CIFAR-10 Dataset")
     plt.xlabel("Epoch #")
@@ -307,4 +308,4 @@ for e in range(0, NUM_EPOCHS):
     plot_model(e + 1)
 
     # Update learning rate
-    scheduler.step(statistics["val_loss"][-1])
+    scheduler.step()
