@@ -12,7 +12,6 @@
 <p align="center">
   <a href="#model">Model</a> •
   <a href="#training-process">Training Process</a> •
-  <a href="#how-to-use">How To Use</a> 
 </p>
 
 ## Model
@@ -30,7 +29,7 @@ The model architectured used is a simple CNN architecture with the following lay
 ## Training Process
 
 * Data preprocessing: The images are normalized and transformed using data augmentation techniques such as random cropping and horizontal flipping
-* Optimization: Stochastic Gradient Descent (SGD) optimizer is used with a learning rate of 0.01 to minimize the Cross Entropy Loss
+* Optimization: Stochastic Gradient Descent (SGD) optimizer is used with a learning rate of 0.005 and momentum of 0.9 to minimize the Cross Entropy Loss and accelerate learning
 
 ---
 
