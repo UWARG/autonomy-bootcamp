@@ -51,3 +51,9 @@ class Net(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x # returned x represents the predicted output of the neural network
+    
+net = Net() # Create Net Object
+
+# Check if GPU is present, else use CPU for model
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+net.to(device)
