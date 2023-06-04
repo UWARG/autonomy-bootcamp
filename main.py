@@ -107,3 +107,11 @@ with torch.no_grad():
         correct += (predicted == labels).sum().item()
         loss = criterion(outputs, labels)
         validation_losses.append(loss.item())
+
+# Plot and print the test loss
+print('Accuracy: %d %%' % (100 * correct / total))
+plt.plot(validation_losses)
+plt.title('Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.show()
