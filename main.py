@@ -61,3 +61,24 @@ net.to(device)
 # Define a Loss Function and Optimizer
 criterion = nn.CrossEntropyLoss() 
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) # Stochiastic Gradient Descent
+
+# Train the Network
+epoch_losses = []
+net.train() # Puts our model in training mode
+for epoch in range(20):  # Loop over the dataset more than once
+    running_loss = 0.0 # variable to keep track of cumulative loss
+    saved_loss = 0.0
+    for i, data in enumerate(train_loader, 0):
+        inputs, labels = data # Get the inputs, data is a list of [inputs, labels]
+        optimizer.zero_grad() # Zero the parameter gradients
+        # Forward + backward + optimize
+        outputs = net(inputs) # Get output of neural network for each input
+        loss = criterion(outputs, labels) # Calculate loss by comparing accurate label value to output obtained
+        loss.backward() # backpropagation
+        optimizer.step() # updates network
+        running_loss += loss.item() 
+        if i % 2000 == 1999:  # print loss for every 2000 mini-batches
+            print('%d, %5d| loss: %.3f' %(epoch+1, i+1, running_loss/2000))
+            saved_loss = running_loss
+            running_loss = 0.0
+    epoch_losses.append(saved_loss/10000)
