@@ -91,3 +91,19 @@ plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.legend()
 plt.show()
+
+# Test the model
+total = 0
+correct = 0
+validation_losses = []
+net.eval() # Puts our model in evaluation mode
+with torch.no_grad():
+    for data in test_loader:
+        images, labels = data
+        images, labels = images.to(device), labels.to(device)
+        outputs = net(images)
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+        loss = criterion(outputs, labels)
+        validation_losses.append(loss.item())
