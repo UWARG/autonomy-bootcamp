@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="#model">Model</a> •
-  <a href="#training-process">Training Process</a> •
+  <a href="#training-process">Training Process</a>
 </p>
 
 ## Model
