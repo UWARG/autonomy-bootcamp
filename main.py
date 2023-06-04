@@ -82,3 +82,12 @@ for epoch in range(20):  # Loop over the dataset more than once
             saved_loss = running_loss
             running_loss = 0.0
     epoch_losses.append(saved_loss/10000)
+
+# Plot our training loss on a graph
+epochs = range(1,21) 
+plt.plot(epochs, epoch_losses, 'g', label='Training loss')
+plt.title('Training Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.show()
