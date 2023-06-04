@@ -31,3 +31,23 @@ test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuff
 
 # Define Classes for Images in the Dataset
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+
+# Define a Convolutional Neural Network
+class Net(nn.Module):
+    def __init__(self): # models a neural network
+        super().__init__() # calls the init method of parent class nn.Module
+        self.conv1 = nn.Conv2d(3, 6, 5) # represents the first convolutional layer of the neural network
+        self.pool = nn.MaxPool2d(2, 2) # specifies the max pooling layer
+        self.conv2 = nn.Conv2d(6, 16, 5) # represents the second convolutional layer of the neural network
+        self.fc1 = nn.Linear(16 * 5 * 5, 120) # the following 3 lines define fully connected layers
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x))) # applies the first convolutional layer, ReLU activation function and max pooling layer to the input x
+        x = self.pool(F.relu(self.conv2(x))) # same as the line above but with the second convolutional layer
+        x = torch.flatten(x, 1) # flatten all dimensions except batch, required for fully connected layers
+        x = F.relu(self.fc1(x)) # the following 3 lines represent applying the previously defined fully connected layers
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x # returned x represents the predicted output of the neural network
