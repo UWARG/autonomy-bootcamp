@@ -115,3 +115,7 @@ plt.title('Validation Loss')
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.show()
+
+# Save our Model to a Path
+PATH = './cifar_net.pth' 
+torch.save(net.state_dict(), PATH) 
