@@ -116,7 +116,7 @@ if __name__ == '__main__':
 	#   - The optimizer is defined as stochastic gradient descent (SGD)
 	#       - SGD updates the parameters of the model on each mini-batch
 	#          - Introducing randomness into the training process helps the model avoid local minima
-	#       - The learning rate is set to 0.01
+	#       - The learning rate is set to 0.05
 	#          - This refers to how quickly the model learns
 	#       - The momentum is set to 0.9
 	#          - This accelerates the learning process to help the model converge faster
