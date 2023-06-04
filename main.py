@@ -57,3 +57,7 @@ net = Net() # Create Net Object
 # Check if GPU is present, else use CPU for model
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 net.to(device)
+
+# Define a Loss Function and Optimizer
+criterion = nn.CrossEntropyLoss() 
+optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) # Stochiastic Gradient Descent
