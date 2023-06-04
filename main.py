@@ -19,3 +19,12 @@ import matplotlib.pyplot as plt
 import torch.nn as nn # Provides a set of classes and modules for building/training neural networks
 import torch.nn.functional as F # Provides a set of functions that are commonly used in neural network operations such as Sigmoid and Hyperbolic Tangent activation functions
 import torch.optim as optim
+
+# Load and Normalize the CIFAR-10 Dataset
+transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]) # Defines a sequence of transformations
+train_set = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform) # Creates an object train_set that represents the CIFAR-10 dataset with transform applied to it and then stored in the ./data directory.
+test_set = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform) # Creates an object test_set that represents the CIFAR-10 dataset with transform applied to it and then stored in the ./data directory.
+
+batch_size = 4
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=2)
+test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=2)
