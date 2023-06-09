@@ -58,10 +58,6 @@ def imshow(img):
 
 # Creating a CNN
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
 class Net(nn.Module):
     """
     Creates a Convolutional neural network for CIFAR-10 dataset with the following structure:
