@@ -1,0 +1,37 @@
+Files already downloaded and verified
+Files already downloaded and verified
+Training:
+Epoch: 1, Loss: 1.502619, Accuracy: 44.254000%
+Testing... Loss: 1.166915, Accuracy: 58.600000%
+Epoch: 2, Loss: 1.095188, Accuracy: 60.840000%
+Testing... Loss: 0.927961, Accuracy: 67.890000%
+Epoch: 3, Loss: 0.920191, Accuracy: 67.594000%
+Testing... Loss: 0.834993, Accuracy: 71.080000%
+Epoch: 4, Loss: 0.816392, Accuracy: 71.264000%
+Testing... Loss: 0.738748, Accuracy: 74.180000%
+Epoch: 5, Loss: 0.751461, Accuracy: 73.456000%
+Testing... Loss: 0.681353, Accuracy: 76.640000%
+Epoch: 6, Loss: 0.703033, Accuracy: 75.300000%
+Testing... Loss: 0.684364, Accuracy: 76.850000%
+Epoch: 7, Loss: 0.662682, Accuracy: 76.738000%
+Testing... Loss: 0.655744, Accuracy: 77.610000%
+Epoch: 8, Loss: 0.629179, Accuracy: 78.036000%
+Testing... Loss: 0.653440, Accuracy: 77.920000%
+Epoch: 9, Loss: 0.598475, Accuracy: 79.104000%
+Testing... Loss: 0.667257, Accuracy: 77.490000%
+Epoch: 10, Loss: 0.575813, Accuracy: 79.686000%
+Testing... Loss: 0.631554, Accuracy: 78.930000%
+Epoch: 11, Loss: 0.545569, Accuracy: 80.884000%
+Testing... Loss: 0.609281, Accuracy: 79.080000%
+Epoch: 12, Loss: 0.530622, Accuracy: 81.422000%
+Testing... Loss: 0.589508, Accuracy: 80.350000%
+Epoch: 13, Loss: 0.507897, Accuracy: 82.214000%
+Testing... Loss: 0.576577, Accuracy: 80.750000%
+Epoch: 14, Loss: 0.492560, Accuracy: 82.646000%
+Testing... Loss: 0.603685, Accuracy: 80.210000%
+Epoch: 15, Loss: 0.481628, Accuracy: 83.048000%
+Testing... Loss: 0.583901, Accuracy: 80.950000%
+Epoch: 16, Loss: 0.471585, Accuracy: 83.330000%
+Testing... Loss: 0.562481, Accuracy: 81.350000%
+End?(y/n):y
+Finished training

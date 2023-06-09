@@ -12,8 +12,11 @@ Hints:
 
 # Import whatever libraries/modules you need
 
+# Basic libraries
 import numpy as np
 import matplotlib.pyplot as plt
+
+# PyTorch libraries
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -25,7 +28,12 @@ import torch.nn.functional as F
 # #Creating optimizer
 import torch.optim as optim
 
+# For terminating program (useful for stopping before training is complete and seeing entire result)
+import signal
+import sys
+
 # Your working code here
+
 
 def imshow(img):
     """
@@ -44,53 +52,28 @@ def imshow(img):
     npimg = img.numpy()
     plt.imshow(np.transpose(npimg, (1,2,0)))
     plt.show()
+    
 
-# STEP 1: Extracting data from CIFAR-10
+##--------------------------Neural Network Code ----------------------------##
 
-# Convert output of images from torchvision dataset from [0,1] to Tensors of range [-1,1]
-transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-])
+# Creating a CNN
 
-BATCH_SIZE = 4
-
-# These are the images which will be used for training
-trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True,
-                                        transform=transform)
-
-# Provides an iterable for training
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True,
-                                          num_workers=0)
-# num_workers is set to 0 since we want data loading
-# to be performed as the main process
-# without that it gives an error of multiprocessing
-
-# These are the images which will be used for testing
-testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True,
-                                       transform=transform)
-
-# Provides an iterable for testing
-testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE, shuffle=True,
-                                         num_workers=0)
-
-classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-
-
-# STEP 2: Creating a CNN
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
 class Net(nn.Module):
     """
-    Creates a Convolutional neural network with the following structure:
+    Creates a Convolutional neural network for CIFAR-10 dataset with the following structure:
     - First convolutional layer (conv1)
-    - Pooling layer (pool)
     - Second convolutional layer (conv2)
+    - Third convolutional layer (conv3)
     - Three fully connected layers (fc1, fc2, fc3)
     
     Attributes:
         conv1 : nn.Conv2d
-        pool  : nn.MaxPool2d
         conv2 : nn.Conv2d
+        conv3 : nn.Conv2d
         fc1   : nn.Linear
         fc2   : nn.Linear
         fc3   : nn.Linear
@@ -102,38 +85,42 @@ class Net(nn.Module):
             Forward pass of the neural network    
     """
     def __init__(self):
-        super().__init__()
-        # First convolutional layer
-        self.conv1 = nn.Conv2d(3, 6, 5)
-        # Applies convolution by sliding over the input image over 3 channels (RGB)
-        # and produces 6 output channels
-        # Window size is 5x5
-
-        # Max pooling layer
-        self.pool = nn.MaxPool2d(2, 2)
-        # Maxpooling takes the maximum values from each local region and reduces its spatial dimensions
-
-        # Second convolutional layer
-        self.conv2 = nn.Conv2d(6, 16, 5)
-        # Applies convolution by sliding over the input image over 6 channels (output of conv1)
-        # and produces 16 output channels
-        # Window size is 5x5
+        super(Net, self).__init__()
         
-        self.drpt = nn.Dropout(p=0.5)
-
+        # First convolutional layer
+        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+        # Applies convolution by sliding over the input image over 3 channels (RGB)
+        # and produces 32 output channels
+        # Window size is 3x3
+        # Padding is added to maintain input size
+        
+        # Second convolutional layer
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+        # Applies convolution by sliding over the input image over 32 channels (output of conv1)
+        # and produces 64 output channels
+        # Window size is 3x3
+        # Padding is added to maintain input size
+        
+        # Third convolutional layer
+        self.conv3 = nn.Conv2d(64, 128, 3, padding=1)
+        # Applies convolution by sliding over the input image over 64 channels (output of conv2)
+        # and produces 128 output channels
+        # Window size is 3x3
+        # Padding is added to maintain input size
+        
         # First fully connected layer
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        # Input size = 16 * 5 * 5 (images from conv2)
-        # Output size = 120
-
+        self.fc1 = nn.Linear(128 * 4 * 4, 512)
+        # Input size = 128 * 4 * 4 (images from conv3)
+        # Output size = 512
+        
         # Second fully connected layer
-        self.fc2 = nn.Linear(120, 84)
-        # Input size = 120 (from fc1)
-        # Output size = 84
-
+        self.fc2 = nn.Linear(512, 256)
+        # Input size = 512 (from fc1)
+        # Output size = 256
+        
         # Third fully connected layer
-        self.fc3 = nn.Linear(84, 10)
-        # Input size = 84 (from fc2)
+        self.fc3 = nn.Linear(256, 10)
+        # Input size = 256 (from fc2)
         # Output size = 10 (deciding output classes)
 
     def forward(self, x):
@@ -146,46 +133,55 @@ class Net(nn.Module):
         Returns:
             x (torch.Tensor): Output image
         """
-        # Applies conv1 to x, followed by ReLU, followed by maxpooling
-        x = self.pool(F.relu(self.conv1(x)))
-
-        # Applies conv2 to x, followed by ReLU, followed by maxpooling
-        x = self.pool(F.relu(self.conv2(x)))
-
+        # Applies conv1 to x, followed by ReLU and max pooling
+        x = F.relu(self.conv1(x))
+        x = F.max_pool2d(x, 2)
+        
+        # Applies conv2 to x, followed by ReLU and max pooling
+        x = F.relu(self.conv2(x))
+        x = F.max_pool2d(x, 2)
+        
+        # Applies conv3 to x, followed by ReLU and max pooling
+        x = F.relu(self.conv3(x))
+        x = F.max_pool2d(x, 2)
+        
         # Reshapes the tensor x
         x = x.view(x.size(0), -1)
-
+        
         # Applies fc1, fc2, fc3
-        x = F.relu(self.drpt(self.fc1(x)))
+        x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
+        
         return x
 
-#STEP 3: Training the network
 
-def train(net,epochs,trainloader,optimizer,criterion):
-    """Trains the neural network
+#Training the neural network:
+
+def train(net,trainloader,optimizer,criterion):
+    """
+    Trains the neural network
+    It loops keeps repeating the training until the user terminates the program
 
     Args:
         net (Net): The convolutional neural network
-        epochs (int): Number of times we iterate through training data
         trainloader (DataLoader): Stores the training data in iterable form
-        optimizer (torch.optim): Optimizer used for training (SGD in this case)
-        criterion (torch.loss): The loss function (CrossEntropyLoss in this case)
+        optimizer (torch.optim): Optimizer used for training 
+        criterion (torch.loss): The loss function 
     
     Returns:
-        net (Net): The trained convolutional neural network
-        losses_training(list): List of losses for each epoch
-        accuracy_training(list): List of accuracies for each epoch
+        None
     """
+    global losses_training,accuracy_training,losses_testing,accuracy_testing #used for the end
     losses_training=[]
     accuracy_training=[]
     
     losses_testing=[]
     accuracy_testing=[]
-
+        
     print("Training:")
-    for epoch in range(epochs): #loop over dataset multiple times
+    epoch=1
+    while True: #loop over dataset until terminated
         #this is for printing statistics
         running_loss=0.0
         correct = 0
@@ -208,36 +204,29 @@ def train(net,epochs,trainloader,optimizer,criterion):
             #Updating parameters
             optimizer.step()
             
-            #Printing statistics
+            #Getting statistics
             running_loss += loss.item()
             _,predicted = torch.max(outputs.data,1)
             correct += (predicted==labels).sum().item()
         #print(i)
         
-        #Statistics for each epoch
-        print(f'Epoch: {epoch+1}, Loss: {running_loss/12000:.6f}, Accuracy: {100*correct/(50000):.6f}%')
+        # Statistics for each epoch
+        print(f'Epoch: {epoch}, Loss: {running_loss/(50000/BATCH_SIZE):.6f}, Accuracy: {100*correct/(50000):.6f}%')
         losses_training.append(running_loss/12000)
         accuracy_training.append(100*correct/50000)
         correct=0
         running_loss=0.0
         
+        # Statistics for testing data
         cor,los=test(net,testloader,criterion)  
         losses_testing.append(los/(10000/BATCH_SIZE))
         accuracy_testing.append(100*cor/10000)
         
-        #Save trained model
-        PATH = './cifar_net.pth'
-        torch.save(net.state_dict(),PATH)
-                
-
-    print("Finished training")
-    return net,losses_training,accuracy_training,losses_testing,accuracy_testing
+        epoch+=1
 
     
+# Sample tests:
 
-#STEP 4 : Testing the network
-
-#Sample tests:
 def sample_test(net):
     """
     Tests on 4 random images from test data
@@ -259,8 +248,7 @@ def sample_test(net):
         imshow(torchvision.utils.make_grid(images))
             
         
-#Overall dataset test:
-
+# Testing on overall dataset test:
 
 def test(net,testloader,criterion):
     """
@@ -270,6 +258,10 @@ def test(net,testloader,criterion):
         net (Net): The trained conolutional neural network
         epochs (int): Number of times we iterate through testing data
         testloader (DataLoader): Stores the testing data in iterable form
+    
+    Returns:
+        correct (int): Number of correct predictions
+        running_loss(float): Loss of the testing data
     """
     correct=0
     running_loss=0.0
@@ -284,11 +276,11 @@ def test(net,testloader,criterion):
             loss=criterion(outputs,labels)
             running_loss+=loss.item()
 
-    print(f'Testing: Loss: {running_loss/(10000/BATCH_SIZE):.6f}, Accuracy: {100*correct/10000:.6f}%')
+    print(f'Testing... Loss: {running_loss/(10000/BATCH_SIZE):.6f}, Accuracy: {100*correct/10000:.6f}%')
     return correct,running_loss
 
 
-#Plotting
+##-------------------------------------Plotting-------------------------------------##
 
 def accuracy_plots(train_accuracy,test_accuracy):
     """
@@ -322,24 +314,68 @@ def losses_plots(train_loss, test_loss):
     plt.legend()
     plt.show()
 
+##-------------------------------------Main Program-------------------------------------##
+def on_termination(signal,frame):
+    """This function is called when the program is to be terminated"""
+    accuracy_plots(accuracy_training,accuracy_testing)
+    losses_plots(losses_training,losses_testing)
+    if (input("End?(y/n):")=="y"):
+        print("Finished training")
+        sys.exit(0)
 
-## Main program with interface
+signal.signal(signal.SIGINT, on_termination)   # Handles Ctrl+C
+signal.signal(signal.SIGTERM, on_termination)  # Handles termination signal
 
-def main():
-    """
-    Main function
-    """
+
+## Main program
+
+if __name__=="__main__":
+
+    # Extracting data from CIFAR-10
+
+    # Convert output of images from torchvision dataset from [0,1] to Tensors of range [-1,1]
+    # Plus some data augmentation for the training data
+    transform_train = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomCrop(32, padding=4)
+    ])
+    
+    transform_test= transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,0.5,0.5),(0.5,0.5,0.5))
+    ])
+
+    BATCH_SIZE = 16
+
+    # These are the images which will be used for training
+    trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True,
+                                            transform=transform_train)
+
+    # Provides an iterable for training
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True,
+                                            num_workers=0)
+
+    # These are the images which will be used for testing
+    testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True,
+                                        transform=transform_test)
+
+    # Provides an iterable for testing
+    testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE, shuffle=True,
+                                            num_workers=0)
+
+    # Classes of images
+    classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+    
+    # Creating the neural network
     net = Net()
     
     #Loss function and optimizer
-    LEARNING_RATE = 0.001
-    criterion = nn.CrossEntropyLoss() #good loss function for this model
-    optimizer = optim.SGD(net.parameters(),lr=LEARNING_RATE,momentum=0.9)
-    
-    EPOCHS=int(input("How many epochs: "))
-    
-    net,losses_training,accuracy_training, losses_testing,accuracy_testing = train(net,EPOCHS,trainloader,optimizer,criterion)
-    accuracy_plots(accuracy_training,accuracy_testing)
-    losses_plots(losses_training,losses_testing)
+    LEARNING_RATE = 0.0005
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(net.parameters(),lr=LEARNING_RATE)
 
-main()
+    #Training the neural network
+    #Will run indefinitely until terminated by user
+    train(net,trainloader,optimizer,criterion)
