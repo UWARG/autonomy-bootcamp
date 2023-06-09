@@ -212,7 +212,7 @@ def train(net,trainloader,optimizer,criterion):
         
         # Statistics for each epoch
         print(f'Epoch: {epoch}, Loss: {running_loss/(50000/BATCH_SIZE):.6f}, Accuracy: {100*correct/(50000):.6f}%')
-        losses_training.append(running_loss/12000)
+        losses_training.append(running_loss/(50000/BATCH_SIZE))
         accuracy_training.append(100*correct/50000)
         correct=0
         running_loss=0.0
