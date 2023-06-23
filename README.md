@@ -345,7 +345,7 @@ In the MaxPool layer, it is changed to downsample the input representation by ta
 The number of epochs are also adjusted to optimize accuracy. 
 
 <img src="images/accuracy_attempt2.png" width="500"> 
-<img src="images/class_accuracy_attempt2.png" width="500"> 
+<img src="images/class_accuracy_attempt2.png" width="300"> 
 <img src="images/time_attempt2.png" width="500"> 
 <img src="images/loss_attempt2.png" width="500"> 
 
@@ -419,7 +419,7 @@ The revised model above has an increased amount of layers, and added Convolution
 Channel sizes are also adjusted.
 
 <img src="images/accuracy_attempt3.png" width="500"> 
-<img src="images/class_accuracy_attempt3.png" width="500"> 
+<img src="images/class_accuracy_attempt3.png" width="300"> 
 <img src="images/time_attempt3.png" width="500"> 
 <img src="images/loss_attempt3.png" width="500"> 
 
