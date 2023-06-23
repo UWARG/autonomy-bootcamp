@@ -6,8 +6,8 @@ This program uses a _(type)_ (network topology).
 
 ## Training and Test Loss and Accuracy Curves
 
-![loss_curves](loss_curves.png)
-![accuracy_curves](accuracy_curves.png)
+![loss_curves](loss_curves.PNG)
+![accuracy_curves](accuracy_curves.PNG)
 
 ### Final accuracy achieved:
 ![] ()
