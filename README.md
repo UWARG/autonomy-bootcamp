@@ -164,6 +164,7 @@ The batches in the previous models were too small in proportion to our large dat
 
 <img src="images/accuracy_modelcomparison.png" width="500"> 
 <img src="images/time_modelcomparison.png" width="500"> 
+> More plots of each model's performance is provided in the [images](/images) folder.
 
 ### Challenges
 1. __Feature extraction:__ Observe how the class accuracies consistently have lower accuracies for images of cats, dogs, and birds. This is likely because of these images have more colours, which suggests an issue in feature extraction. 
