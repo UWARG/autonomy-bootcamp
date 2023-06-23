@@ -2,16 +2,17 @@
 
 This program uses a _(type)_ (network topology). 
 
-Follow our style guide
+> The PEP 8 and Pylint styles are used to format this code.
 
-## Training and Test Loss and Accuracy Curves:
-![plot1](./loss_curves.png)
+## Training and Test Loss and Accuracy Curves
 
-![plot2](./accuracy_curves.png)
+![loss_curves](loss_curves.png)
+![accuracy_curves](accuracy_curves.png)
 
-Final accuracy achieved:
-
+### Final accuracy achieved:
+![] ()
 
 Actually train
 
 Accuracy should be greater
+
