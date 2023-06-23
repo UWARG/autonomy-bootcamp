@@ -1,6 +1,6 @@
 # Autonomy Bootcamp Submission
 
-This program trains a convolutional neural net on the CIFAR10 dataset.
+Image classifier using CNN in Python and Pytorch. The classifier is trained on the CIFAR10 dataset.
 > The PEP 8 and Pylint styles are used to format this code.
 
 ## Final Training and Test Loss and Accuracy Curves
