@@ -23,8 +23,8 @@ Accuracy should be greater
 When submitting, please include an image of the plots that you produced, as well as a text file of your terminal output (or a screenshot of your final accuracy).
 
 
-![plot](./loss_curves.png)
+![plot1](./loss_curves.png)
 
-![plot](./accuracy_curves.png)
+![plot2](./accuracy_curves.png)
 
 
