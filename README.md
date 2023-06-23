@@ -1,7 +1,6 @@
 # Autonomy Bootcamp Submission
 
-This program uses a _(type)_ (network topology). 
-
+This program trains a convolutional neural net on the CIFAR10 dataset.
 > The PEP 8 and Pylint styles are used to format this code.
 
 ## Training and Test Loss and Accuracy Curves
@@ -17,59 +16,70 @@ Accuracy should be greater
 
 ### Program output
 ```
+CUDA is not available.  Training on CPU ...
+
 Files already downloaded and verified
 Files already downloaded and verified
+
+CUDA is not available.  Training on CPU ...
 
 Start Training
 
 [Epoch: 1]
-Training loss: 1.738
-Train accuracy: 44.758
+Training loss: 1.822
+Train accuracy: 44.146
 ----------
-Test accuracy: 43.46
-Test loss: 1.512
+Test loss: 1.532
+Test accuracy: 43.58
+----------
 
 [Epoch: 2]
-Training loss: 1.362
-Train accuracy: 57.05
+Training loss: 1.409
+Train accuracy: 53.96
 ----------
-Test accuracy: 54.58
-Test loss: 1.270
+Test loss: 1.300
+Test accuracy: 52.91
+----------
 
 [Epoch: 3]
-Training loss: 1.226
-Train accuracy: 59.024
+Training loss: 1.248
+Train accuracy: 56.856
 ----------
-Test accuracy: 55.55
-Test loss: 1.254
+Test loss: 1.256
+Test accuracy: 54.97
+----------
 
 [Epoch: 4]
-Training loss: 1.136
-Train accuracy: 63.65
+Training loss: 1.151
+Train accuracy: 62.828
 ----------
-Test accuracy: 59.23
-Test loss: 1.154
+Test loss: 1.160
+Test accuracy: 59.03
+----------
 
 [Epoch: 5]
-Training loss: 1.065
-Train accuracy: 63.8
+Training loss: 1.075
+Train accuracy: 65.368
 ----------
-Test accuracy: 58.54
-Test loss: 1.188
+Test loss: 1.101
+Test accuracy: 61.2
+----------
 
 [Epoch: 6]
-Training loss: 1.007
-Train accuracy: 65.394
+Training loss: 1.009
+Train accuracy: 67.426
 ----------
-Test accuracy: 59.45
-Test loss: 1.156
+Test loss: 1.071
+Test accuracy: 62.5
+----------
 
 [Epoch: 7]
-Training loss: 0.962
-Train accuracy: 69.654
+Training loss: 0.953
+Train accuracy: 68.922
 ----------
-Test accuracy: 61.62
-Test loss: 1.124
+Test loss: 1.074
+Test accuracy: 62.16
+----------
 
 Finished Training
 
@@ -90,3 +100,8 @@ truck: 62.0 %
 
 Device: cpu
 ```
+
+### Training process
+
+
+### Overall takeaways
