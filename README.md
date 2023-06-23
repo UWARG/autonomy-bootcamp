@@ -306,7 +306,7 @@ class Net(nn.Module):
 <img src="images/accuracy_attempt1.png" width="500"> 
 <img src="images/class_accuracy_attempt1.png" width="500"> 
 <img src="images/time_attempt1.png" width="500"> 
-<img src="images/loss_attempt1.png" width="500"> 
+<img src="./images/loss_attempt1.png" width="500"> 
 
 This model gives an accuracy of 58%. Evidently, there is room for improvement.
 In the next few attempts, the model and the hyperparameters are tweaked to increase the score.
