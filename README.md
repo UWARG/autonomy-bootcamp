@@ -4,12 +4,10 @@ This program trains a convolutional neural net on the CIFAR10 dataset.
 > The PEP 8 and Pylint styles are used to format this code.
 
 ## Final Training and Test Loss and Accuracy Curves
-
-<img src="loss_attempt3.png" width="500"> <img src="accuracyplot_attempt3.png" width="500"> 
+<img src="/images/loss_attempt3.png" width="500"> <img src="/images/accuracyplot_attempt3.png" width="500"> 
 
 ### Final accuracy achieved
-
-<img src="accuracy_attempt3.png" width="500"> 
+<img src="/images/accuracy_attempt3.png" width="500"> 
 
 ### Program output
 ```
@@ -17,7 +15,6 @@ CUDA is not available.  Training on CPU ...
 
 Files already downloaded and verified
 Files already downloaded and verified
-
 
 Start Training
 
@@ -304,7 +301,7 @@ class Net(nn.Module):
         return x
 ```
 <img src="images/accuracy_attempt1.png" width="500"> 
-<img src="images/class_accuracy_attempt1.png" width="500"> 
+<img src="images/class_accuracy_attempt1.png" width="300"> 
 <img src="images/time_attempt1.png" width="500"> 
 <img src="./images/loss_attempt1.png" width="500"> 
 
