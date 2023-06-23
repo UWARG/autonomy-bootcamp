@@ -10,10 +10,6 @@ This program trains a convolutional neural net on the CIFAR10 dataset.
 ### Final accuracy achieved
 ![] ()
 
-Actually train
-
-Accuracy should be greater
-
 ### Program output
 ```
 CUDA is not available.  Training on CPU ...
