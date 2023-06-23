@@ -104,4 +104,6 @@ Device: cpu
 ### Training process
 
 
-### Overall takeaways
+### Model comparison
+
+### Challenges
