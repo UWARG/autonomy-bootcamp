@@ -29,61 +29,94 @@ BATCH_SIZE = 32
 (train_imgs, train_labels), (test_imgs, test_labels) = datasets.cifar10.load_data()
 
 # Define a CNN in PyTorch
-model = Sequential([
-    # Make a convolutional layer of kernel size 2x2 with relu activation and 64 output filters
-    Conv2D(32, (2, 2), activation = 'relu', kernel_initializer = 'he_uniform', input_shape = (32, 32, 3)),
-    # Apply batch normalization for fast convergence
-    BatchNormalization(),
-    Conv2D(64, (2, 2), activation = 'relu'),
-    # Add a Max Pooling layer that takes the maximum of a window of 2x2 kernels - halves the dimension as well
-    MaxPool2D(),
+def get_model():
+  """
+    Returns a simple CNN model for classifying CIFAR-10
+    Images
 
-    Conv2D(64, (2, 2), kernel_initializer = 'he_uniform',activation = 'relu'),
-    BatchNormalization(),
-    Conv2D(64, (2, 2), kernel_initializer = 'he_uniform',activation = 'relu'),
-    Dropout(0.2),
-    MaxPool2D(),
+    Uses 6 Convolutions of 2x2 kernels
+    Activation = Relu
 
-    Conv2D(128, (2, 2), kernel_initializer = 'he_uniform', activation = 'relu'),
-    BatchNormalization(),
-    Conv2D(128, (2, 2), kernel_initializer = 'he_uniform', activation = 'relu'),
-    # Use dropout for preventing overfitting
-    Dropout(0.2),
+    The classifier head is a 3 layer MLP
+    Of output dimensions 512, 256 and 10
 
-    # Convert the image features into a single vector for passing through an MLP
-    Flatten(),
+    This function simply returns this tensorflow model
+  """
+  model = Sequential([
+      # Make a convolutional layer of kernel size 2x2 with relu activation and 64 output filters
+      Conv2D(32, (2, 2), activation = 'relu', kernel_initializer = 'he_uniform', input_shape = (32, 32, 3)),
+      # Apply batch normalization for fast convergence
+      BatchNormalization(),
+      Conv2D(64, (2, 2), activation = 'relu'),
+      # Add a Max Pooling layer that takes the maximum of a window of 2x2 kernels - halves the dimension as well
+      MaxPool2D(),
 
-    # MLP layers
-    Dense(512, 'relu'),
-    Dropout(0.2),
-    Dense(256, 'relu'),
-    Dense(10, 'softmax')
-])
+      Conv2D(64, (2, 2), kernel_initializer = 'he_uniform',activation = 'relu'),
+      BatchNormalization(),
+      Conv2D(64, (2, 2), kernel_initializer = 'he_uniform',activation = 'relu'),
+      Dropout(0.2),
+      MaxPool2D(),
+
+      Conv2D(128, (2, 2), kernel_initializer = 'he_uniform', activation = 'relu'),
+      BatchNormalization(),
+      Conv2D(128, (2, 2), kernel_initializer = 'he_uniform', activation = 'relu'),
+      # Use dropout for preventing overfitting
+      Dropout(0.2),
+
+      # Convert the image features into a single vector for passing through an MLP
+      Flatten(),
+
+      # MLP layers
+      Dense(512, 'relu'),
+      Dropout(0.2),
+      Dense(256, 'relu'),
+      Dense(10, 'softmax')
+  ])
+  return model
+
+model = get_model()
 
 # Just checking the model parameters and structure
 model.summary()
 
 # Compile the model with loss function, and metrics that we shall track during training
-
 model.compile(
     optimizer = 'adam',
     loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = False), # Softmax is already applied so logits = False
     metrics = ['accuracy']
 )
 
-EPOCHS = 25
-# Reduce LR for increasinging val accuracy
-reduce_lr = ReduceLROnPlateau(monitor = 'val_accuracy', factor = 0.3, patience = 0)
+def train_model(model):
+  """
+    Train the model with Adam optimizer, and ReduceLROnPlateau lr callback
+    The model is trained for 25 epochs
 
-# Fit the model on training data, and also use the reduce_lr callback to optimize the val_accuracy
-# We train for 25 epochs
-history = model.fit(train_imgs, train_labels, epochs = EPOCHS,
-          validation_data = (test_imgs, test_labels), callbacks = [reduce_lr])
+    Returns the history which contains the training loss, accuracy and
+    validation loss and accuracy
+  """
+  EPOCHS = 25
+  # Reduce LR for increasinging val accuracy
+  reduce_lr = ReduceLROnPlateau(monitor = 'val_accuracy', factor = 0.3, patience = 0)
 
-plt.plot(history.history['loss'], label = 'Model Training Loss')
-plt.plot(history.history['val_loss'], label = 'Model Validation Loss')
-plt.legend(["Training Loss", "Val Loss"])
+  # Fit the model on training data, and also use the reduce_lr callback to optimize the val_accuracy
+  # We train for 25 epochs
+  history = model.fit(train_imgs, train_labels, epochs = EPOCHS,
+            validation_data = (test_imgs, test_labels), callbacks = [reduce_lr])
+  return history
 
-plt.plot(history.history['accuracy'], label = 'Model Training Accuracy')
-plt.plot(history.history['val_accuracy'], label = 'Model Validation Accuracy')
-plt.legend(["Training Accuracy", "Val Accuracy"])
+history = train_model(model)
+
+def plot_model_training(history):
+  """
+    Plots out the Training and Validation Losses of the model
+    Also plots the training and validation accuracy of the model
+
+    Does not return anything.
+  """
+  plt.plot(history.history['loss'], label = 'Model Training Loss')
+  plt.plot(history.history['val_loss'], label = 'Model Validation Loss')
+  plt.legend(["Training Loss", "Val Loss"])
+
+  plt.plot(history.history['accuracy'], label = 'Model Training Accuracy')
+  plt.plot(history.history['val_accuracy'], label = 'Model Validation Accuracy')
+  plt.legend(["Training Accuracy", "Val Accuracy"])
