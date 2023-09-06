@@ -1,6 +1,6 @@
 # Old Autonomy Bootcamp
 
-**This bootcamp has been replaced. Please see new [instructions](https://uwarg-docs.atlassian.net/l/cp/hxn691Wi).
+**This bootcamp has been replaced. Please see new [instructions](https://uwarg-docs.atlassian.net/l/cp/hxn691Wi)**.
 
 Repo for submitting Autonomy bootcamps.
 
