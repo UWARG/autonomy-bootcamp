@@ -1,0 +1,10 @@
+name = "sitl"
+description = "Pinned ArduCopter SITL image providing flight dynamics for the Part 5 mission."
+
+depends_on = []
+
+[commands]
+build = "docker build -t bootcamp-sitl ."
+
+[ci]
+pr = []

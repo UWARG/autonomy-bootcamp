@@ -1,0 +1,27 @@
+# Bootcamp SITL parameter overrides.
+#
+# Applied at boot on top of ArduPilot's stock SITL copter defaults
+# (Tools/autotest/default_params/copter.parm) via the --defaults chain in
+# the Dockerfile. Keep this file minimal: it exists to make a fully
+# autonomous, RC-less sim mission deterministic, not to tune a vehicle.
+
+# The mission is fully autonomous over MAVLink; no RC transmitter or human
+# pre-flight exists. Skipping pre-arm checks removes the flakiest startup
+# wait. GUIDED mode still refuses to fly without a good EKF position
+# estimate, so this does not let the mission "fly blind".
+ARMING_CHECK      0
+
+# No RC input -> a throttle failsafe would trip immediately.
+FS_THR_ENABLE     0
+
+# MAVROS may briefly drop/reopen the link (healthcheck probes, reconnects);
+# that must not trigger a GCS failsafe mid-mission.
+FS_GCS_ENABLE     0
+
+# Auto-disarm quickly after landing so the mission result is written and
+# the containers exit without idling on the ground.
+DISARM_DELAY      1
+
+# No dataflash logging: nothing reads the logs and the container
+# filesystem stays clean.
+LOG_BACKEND_TYPE  0

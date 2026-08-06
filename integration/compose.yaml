@@ -1,0 +1,57 @@
+# Part 5 stack: ArduCopter SITL + the airside engine.
+#
+# Normally driven by the pytest harness (tests/harness.py), but can be run
+# by hand from integration/:
+#
+#   MISSION_MODE=smoke docker compose up --build \
+#       --abort-on-container-exit --exit-code-from airside
+#
+# The airside engine writes /results/mission_result.json into the shared
+# "results" volume; the harness copies it out of the stopped container
+# after the run.
+
+services:
+  sitl:
+    # Prebuilt, pinned simulator image published by
+    # .github/workflows/publish-sitl-image.yml from sitl/Dockerfile.
+    # TODO(maintainers): pin by digest (ghcr.io/uwarg/bootcamp-sitl@sha256:...)
+    # after the first publish.
+    image: ghcr.io/uwarg/bootcamp-sitl:0.1.0
+    # No registry access, or hacking on the simulator? Comment out `image:`
+    # above and build it locally instead:
+    # build: ../sitl
+    environment:
+      SIM_SPEEDUP: ${SIM_SPEEDUP:-2}
+      # Pinned to airside/src/engine/config/waypoints.yaml's home: the
+      # vehicle must spawn inside the sweep area or FlyToWaypoint times out.
+      SIM_HOME: ${SIM_HOME:-43.4338267,-80.5773236,336,90}
+    # SITL serves MAVLink as a TCP server on 5760 and blocks the simulation
+    # until the first client connects. "Healthy" therefore means "the port
+    # accepts connections", probed with bash's /dev/tcp (no extra tooling in
+    # the image). The first successful probe also unblocks the sim clock.
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/5760"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+      start_period: 10s
+
+  airside:
+    build:
+      # The context must be the repo root: the airside image copies camera/
+      # and utils/ in addition to airside/ (cross-project imports work the
+      # same way they do in the monorepo).
+      context: ..
+      dockerfile: airside/docker/Dockerfile
+    depends_on:
+      sitl:
+        condition: service_healthy
+    environment:
+      FCU_URL: tcp://sitl:5760
+      MISSION_MODE: ${MISSION_MODE:-perception}
+      MISSION_TIMEOUT_S: ${MISSION_TIMEOUT_S:-180}
+    volumes:
+      - results:/results
+
+volumes:
+  results:

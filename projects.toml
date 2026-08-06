@@ -1,0 +1,16 @@
+include_paths = [".github"]
+
+[projects.camera]
+path = "camera"
+
+[projects.utils]
+path = "utils"
+
+[projects.airside]
+path = "airside"
+
+[projects.sitl]
+path = "sitl"
+
+[projects.integration]
+path = "integration"

@@ -1,0 +1,13 @@
+name = "utils"
+description = "Waypoint parsing and ordering utilities (Bootcamp Part 3: testing)."
+
+depends_on = []
+
+[commands]
+setup = "uv sync --extra dev"
+test = "uv run --extra dev pytest"
+lint = "uv run --extra dev ruff check ."
+grade-tests = "uv run --extra dev python grader/grade_bootcamper_tests.py"
+
+[ci]
+pr = ["lint", "grade-tests"]

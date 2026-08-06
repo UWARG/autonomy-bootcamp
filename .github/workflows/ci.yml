@@ -1,0 +1,109 @@
+name: bootcamp-ci
+
+# Five independent autograding gates. Fork-safe by construction: plain
+# pull_request trigger (never pull_request_target), no secrets, and the
+# default GITHUB_TOKEN restricted to read-only.
+#
+# Every gate runs from the repository root via `warg run <project> <command>`,
+# so the commands CI runs are exactly the ones in each project's warg.toml
+# [commands] table, and exactly the ones a bootcamper runs locally.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  intro:
+    name: intro
+    runs-on: ubuntu-latest
+    # Only bootcamper submissions (fork PRs) must carry an intro project;
+    # maintenance PRs from branches on the upstream repo skip this gate.
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check intro project exists
+        run: python3 .github/scripts/check_intro.py
+
+  camera:
+    name: camera
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install warg-cli
+        run: |
+          uv tool install warg-cli
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Sync dependencies
+        run: warg run camera setup
+      - name: Lint
+        run: warg run camera lint
+      - name: Test
+        run: warg run camera test
+
+  utils-test-quality:
+    name: utils-test-quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install warg-cli
+        run: |
+          uv tool install warg-cli
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Sync dependencies
+        run: warg run utils setup
+      - name: Lint
+        run: warg run utils lint
+      - name: Grade bootcamper tests
+        run: warg run utils grade-tests
+
+  airside-unit:
+    name: airside-unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install warg-cli
+        run: |
+          uv tool install warg-cli
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Sync dependencies
+        run: warg run airside setup
+      - name: Lint
+        run: warg run airside lint
+      - name: Test
+        run: warg run airside test
+
+  sitl-perception:
+    name: sitl-perception
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install warg-cli
+        run: |
+          uv tool install warg-cli
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Sync dependencies
+        run: warg run integration setup
+      - name: Lint
+        run: warg run integration lint
+      - name: Run SITL perception mission
+        run: warg run integration test
+      # The harness writes compose-logs.txt before tearing the stack down
+      # whenever the mission fails (tests/harness.py); the stack itself is
+      # gone by the time this step runs.
+      - name: Upload compose logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sitl-compose-logs
+          path: integration/compose-logs.txt
+          if-no-files-found: ignore
+          retention-days: 7

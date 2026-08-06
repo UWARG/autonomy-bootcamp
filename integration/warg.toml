@@ -1,0 +1,13 @@
+name = "integration"
+description = "Part 5 SITL integration mission: compose orchestration and acceptance tests."
+
+depends_on = ["airside", "sitl"]
+
+[commands]
+setup = "uv sync --extra dev"
+lint = "uv run --extra dev ruff check ."
+smoke = "uv run --extra dev pytest tests/test_sitl_smoke.py -x -q"
+test = "uv run --extra dev pytest tests/test_perception_sitl.py -x -q"
+
+[ci]
+pr = ["lint", "test"]
