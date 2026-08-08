@@ -20,9 +20,6 @@ jobs:
   intro:
     name: intro
     runs-on: ubuntu-latest
-    # Only bootcamper submissions (fork PRs) must carry an intro project;
-    # maintenance PRs from branches on the upstream repo skip this gate.
-    if: github.event.pull_request.head.repo.full_name != github.repository
     steps:
       - uses: actions/checkout@v4
       - name: Check intro project exists
