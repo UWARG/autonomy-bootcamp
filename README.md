@@ -9,7 +9,7 @@ Everything you build goes into **one pull request** that you keep adding to acro
 | Part | What you do                                    | Where                          |
 | ---- | ---------------------------------------------- | ------------------------------ |
 | 1    | Bootstrap the repo, create the `intro` project | this README                    |
-| 2    | Write `SimCamera`, copying a finished example  | [`camera/`](camera/)           |
+| 2    | Write `SimCamera`, based on a example          | [`camera/`](camera/)           |
 | 3    | Write tests for our waypoint utilities         | [`utils/`](utils/)             |
 | 4    | Build a perception behavior tree               | [`airside/`](airside/)         |
 | 5    | Fly the mission on SITL                        | [`integration/`](integration/) |

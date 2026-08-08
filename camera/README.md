@@ -19,7 +19,7 @@ warg run camera setup
 | ---------------------------- | ------------------------------------------------------------------- |
 | `src/abstract_camera.py`     | The base class every camera inherits from. **Read this first.**     |
 | `src/frame.py`               | `CameraFrame`, the object you get back from a capture               |
-| `src/fixed.py`               | `FixedCamera`, a finished camera you can copy from                  |
+| `src/fixed.py`               | `FixedCamera`, a finished camera example                            |
 | `tests/test_fixed_camera.py` | The tests for `FixedCamera`                                         |
 | `src/sim.py`                 | `SimCamera`, **your assignment** (empty methods for you to fill in) |
 | `tests/test_sim_camera.py`   | The tests you have to pass. **Do not modify.**                      |
