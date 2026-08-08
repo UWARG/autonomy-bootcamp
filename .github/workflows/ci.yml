@@ -82,7 +82,11 @@ jobs:
   sitl-perception:
     name: sitl-perception
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Most of this job is `integration setup` compiling ArduPilot from
+    # source. There is no published simulator image and a fresh runner has
+    # no docker layer cache, so every run pays for that build; the mission
+    # it then flies takes about a minute.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
@@ -90,7 +94,7 @@ jobs:
         run: |
           uv tool install warg-cli
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-      - name: Sync dependencies
+      - name: Sync dependencies and build images
         run: warg run integration setup
       - name: Lint
         run: warg run integration lint

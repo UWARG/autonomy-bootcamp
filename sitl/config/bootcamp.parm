@@ -18,10 +18,30 @@ FS_THR_ENABLE     0
 # that must not trigger a GCS failsafe mid-mission.
 FS_GCS_ENABLE     0
 
-# Auto-disarm quickly after landing so the mission result is written and
-# the containers exit without idling on the ground.
-DISARM_DELAY      1
+# Auto-disarm after landing so the mission result is written and the
+# containers exit without idling on the ground. This is ArduPilot's stock
+# value, and the countdown runs in *sim* time: the drone also disarms this
+# soon after Arm succeeds, so anything shorter loses the arm again before
+# Takeoff can command it (with SIM_SPEEDUP=2, DISARM_DELAY 1 left about
+# half a wall-clock second, and the tree ticks at 0.5 s).
+DISARM_DELAY     10
 
 # No dataflash logging: nothing reads the logs and the container
 # filesystem stays clean.
 LOG_BACKEND_TYPE  0
+
+# Telemetry stream rates (Hz) for SERIAL0, the port MAVROS connects to.
+#
+# ArduPilot streams nothing beyond the 1 Hz HEARTBEAT until a GCS asks for
+# it, and MAVROS 2 never sends REQUEST_DATA_STREAM (MAVProxy/Mission Planner
+# do, which is why the sim looks fine from those). With these at their 0
+# default, `mavros/state` is the only topic that ever publishes and Takeoff
+# waits forever on `mavros/global_position/rel_alt`. On real hardware the
+# companion-computer port is configured the same way.
+SR0_EXT_STAT      2
+SR0_POSITION      4
+SR0_EXTRA1        4
+SR0_EXTRA2        4
+SR0_EXTRA3        2
+SR0_RAW_SENS      2
+SR0_PARAMS       10

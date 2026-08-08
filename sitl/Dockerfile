@@ -7,9 +7,10 @@
 # never runs here -- the airside container connects to this simulator over
 # MAVLink (TCP port 5760).
 #
-# Built and published as ghcr.io/uwarg/bootcamp-sitl by
-# .github/workflows/publish-sitl-image.yml. Bootcampers normally pull the
-# pinned image and never build this locally.
+# Built locally through integration/compose.yaml (`build:
+# ../sitl`), which `warg run integration setup` triggers. Nothing is
+# published: the pinned ARDUPILOT_TAG below is what makes every bootcamper's
+# simulator identical.
 
 ARG ARDUPILOT_TAG=Copter-4.5.7
 
@@ -22,18 +23,18 @@ ARG ARDUPILOT_TAG
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    g++ \
-    gawk \
-    gcc \
-    git \
-    make \
-    pkg-config \
-    python3 \
-    python3-dev \
-    python3-pip \
-    python3-setuptools \
-    python3-wheel \
+  ca-certificates \
+  g++ \
+  gawk \
+  gcc \
+  git \
+  make \
+  pkg-config \
+  python3 \
+  python3-dev \
+  python3-pip \
+  python3-setuptools \
+  python3-wheel \
   && rm -rf /var/lib/apt/lists/*
 
 # empy is pinned: 4.x is incompatible with ArduPilot's code generators.
@@ -44,7 +45,7 @@ RUN useradd --create-home builder
 USER builder
 
 RUN git clone --depth 1 --branch "${ARDUPILOT_TAG}" \
-      https://github.com/ArduPilot/ardupilot.git /home/builder/ardupilot
+  https://github.com/ArduPilot/ardupilot.git /home/builder/ardupilot
 
 WORKDIR /home/builder/ardupilot
 
@@ -66,7 +67,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # The base image already ships libstdc++/libc; install explicitly anyway so
 # the runtime dependency is visible and survives base-image slimming.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libstdc++6 \
+  libstdc++6 \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /home/builder/ardupilot/build/sitl/bin/arducopter /usr/local/bin/arducopter
@@ -89,7 +90,7 @@ WORKDIR /home/sitl
 #                times out before ever reaching the sweep area. The default
 #                IS that file's home.
 ENV SIM_SPEEDUP=2 \
-    SIM_HOME=43.4338267,-80.5773236,336,90
+  SIM_HOME=43.4338267,-80.5773236,336,90
 
 # MAVLink on serial0, exposed as a TCP server.
 #
@@ -105,9 +106,9 @@ EXPOSE 5760
 # -w wipes the virtual eeprom on every start so the --defaults chain is
 # applied fresh: deterministic parameters on every container run.
 CMD ["/bin/bash", "-c", "exec /usr/local/bin/arducopter \
-      -w \
-      --model quad \
-      --speedup \"${SIM_SPEEDUP}\" \
-      --home \"${SIM_HOME}\" \
-      --defaults /sitl/params/copter.parm,/sitl/params/bootcamp.parm \
-      --serial0 tcp:0:wait"]
+  -w \
+  --model quad \
+  --speedup \"${SIM_SPEEDUP}\" \
+  --home \"${SIM_HOME}\" \
+  --defaults /sitl/params/copter.parm,/sitl/params/bootcamp.parm \
+  --serial0 tcp:0:wait"]

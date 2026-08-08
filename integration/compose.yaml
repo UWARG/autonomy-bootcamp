@@ -12,14 +12,12 @@
 
 services:
   sitl:
-    # Prebuilt, pinned simulator image published by
-    # .github/workflows/publish-sitl-image.yml from sitl/Dockerfile.
-    # TODO(maintainers): pin by digest (ghcr.io/uwarg/bootcamp-sitl@sha256:...)
-    # after the first publish.
-    image: ghcr.io/uwarg/bootcamp-sitl:0.1.0
-    # No registry access, or hacking on the simulator? Comment out `image:`
-    # above and build it locally instead:
-    # build: ../sitl
+    # The simulator is built from sitl/Dockerfile on your machine: there is
+    # no published image, and this compiles ArduPilot from source, so the
+    # first build takes 15-30 minutes and every later one is cached.
+    # `warg run integration setup` does that build up front, which keeps the
+    # compile out of the test harness's wall-clock budget.
+    build: ../sitl
     environment:
       SIM_SPEEDUP: ${SIM_SPEEDUP:-2}
       # Pinned to airside/src/engine/config/waypoints.yaml's home: the
