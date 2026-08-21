@@ -14,12 +14,12 @@ warg run utils setup
 ## What to do
 
 1. **Read the code you're testing.** `src/waypoint_utils.py` has three functions you can call from outside: `east_north_coordinate_offset_m`, `parse_waypoints_file`, and `sort_clockwise_sweep`. It also uses `Coordinate` from `src/types.py` and the numbers in `src/constants.py`.
-2. **Read the example.** `tests/test_coordinate.py` is a finished test file. Copy how it's written: small setup, one thing checked per test, `pytest.approx` when comparing decimals, `pytest.raises` when you expect an error.
-3. **Write `tests/test_waypoint_utils.py`.** The file already exists with a checklist in the comment at the top: files that parse fine, files with bad data, coordinates out of range, distances that are close but not exact, empty files, clockwise ordering, where the lap starts, two waypoints at the same angle, and making sure the functions don't modify their inputs.
+2. **Read the example.** `tests/test_waypoint_utils.py` opens with one finished test, `test_parse_waypoints_file_success`, and the `write_to_tmp_waypoints_file` helper it uses. Copy how it's written: small setup, one thing checked per test, `pytest.approx` when comparing decimals, `pytest.raises` when you expect an error.
+3. **Write the rest of `tests/test_waypoint_utils.py`.** The example covers files that parse fine. The checklist in the comment at the top has the rest: files with bad data, coordinates out of range, distances that are close but not exact, empty files, clockwise ordering, where the lap starts, two waypoints at the same angle, and frozen `Coordinate` objects.
 
 Tips:
 
-- Use pytest's `tmp_path` fixture to write temporary YAML files in your tests instead of adding test files to the repo.
+- Write the YAML for a test with `write_to_tmp_waypoints_file`. It uses pytest's `tmp_path` fixture, a fresh directory per test, so no test files end up in the repo.
 - Distances calculated from latitude and longitude are never exact. Compare them with `pytest.approx(..., abs=...)`, never with `==`.
 
 ## How you are graded
