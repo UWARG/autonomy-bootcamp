@@ -15,9 +15,10 @@ here or in any SimCamera built with the same size, and frames with different
 indexes look different. Fill values, gradients, and
 ``numpy.random.default_rng(index)`` all work.
 """
+import time
 
 import numpy
-import time
+
 from .abstract_camera import AbstractCamera
 from .frame import CameraFrame
 

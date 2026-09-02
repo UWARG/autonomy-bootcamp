@@ -24,6 +24,11 @@ TODO(bootcamper): write the tests for ``src/waypoint_utils.py`` in here.
 Graded by ``warg run utils grade-tests``: pass on the real code, 90% branch
 coverage, and fail on every broken copy in ``grader/mutants/``.
 """
+import dataclasses 
+
+import pytest
+
+from src.types import Coordinate 
 
 from src.waypoint_utils import (
     east_north_coordinate_offset_m,
@@ -31,10 +36,87 @@ from src.waypoint_utils import (
     sort_clockwise_sweep,
 )
 
+def w(tmp_path, text): 
+    path = tmp_path / "waypoint.yaml"
+    path.write_text(text)
+    return path 
 
-def test_placeholder():
-    # TODO(bootcamper): delete this and write real tests. It's only here so
-    # pytest doesn't complain about an empty file before you start.
-    assert callable(east_north_coordinate_offset_m)
-    assert callable(parse_waypoints_file)
-    assert callable(sort_clockwise_sweep)
+
+
+def test_enu():
+    assert east_north_coordinate_offset_m(0, 0, 1, 0) == pytest.approx(
+        (0, 111195.0802335329)
+    )
+    assert east_north_coordinate_offset_m(30, 0, 30, 1) == pytest.approx(
+        (96297.764, 0)
+    )
+
+def test_parse(tmp_path):
+    home, waypoints = parse_waypoints_file(
+        w(
+            tmp_path,
+            """
+            home: {lat: 1, lon: 2, alt: 3}
+            waypoints:
+              - {lat: 4, lon: 5, alt: 6}
+            """,
+        )
+    )
+    assert home == Coordinate(1, 2, 3)
+    assert waypoints == [Coordinate(4, 5, 6)]
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        waypoints[0].lat = 0
+
+
+def test_parse_empty(tmp_path):
+    assert parse_waypoints_file(w(tmp_path, "")) == (None, [])
+    assert parse_waypoints_file(w(tmp_path, "waypoints: []")) == (None, [])
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "- {lat: 1, lon: 2, alt: 3}",  
+        "waypoints: 5", 
+        "waypoints: [nope]",  
+
+        # Check for missing lat, lon, or alt 
+        "waypoints: [{lat: 1, lon: 2}]", 
+        "waypoints: [{lat: 1, alt: 3}]",
+        "waypoints: [{lon: 2, alt: 3}]",
+
+        # Check invalid values 
+        "waypoints: [{lat: x, lon: 2, alt: 3}]",  
+        "waypoints: [{lat: 1, lon: y, alt: 3}]",  
+        "waypoints: [{lat: 1, lon: 2, alt: z}]",  
+
+        # Check out of range values 
+        "waypoints: [{lat: 91, lon: 2, alt: 3}]",  
+        "waypoints: [{lat: 1, lon: 181, alt: 3}]",
+
+        # Not yaml at all
+        "waypoints: [wrong", 
+    ],
+)
+def test_parse_bad(tmp_path, text):
+    with pytest.raises(ValueError):
+        parse_waypoints_file(w(tmp_path, text))
+
+
+def test_parse_missing_file(tmp_path):
+    with pytest.raises(OSError):
+        parse_waypoints_file(tmp_path / "invalid.yaml")
+
+N = Coordinate(1, 0, 0) 
+E = Coordinate (0, 1, 0)
+S = Coordinate(-1, 0, 0)
+W = Coordinate(0, -1, 0)
+
+def test_sort():
+    assert sort_clockwise_sweep([]) == []
+    assert sort_clockwise_sweep([N]) == [N]
+    assert sort_clockwise_sweep([N, E, S, W]) == [N, E, S, W]
+    assert sort_clockwise_sweep([N, E, S, W], Coordinate(0, 1, 0)) == [E, S, W, N]
+    assert sort_clockwise_sweep([N, E, S, W], Coordinate(0, 0, 0)) == [N, E, S, W]
+    near, far, opposite = Coordinate(1, 0, 0), Coordinate(2, 0, 0), Coordinate(-2, 0, 0)
+    assert sort_clockwise_sweep([far, opposite, near]) == [near, far, opposite]
