@@ -57,10 +57,10 @@ and follow its instructions. Otherwise (or if that command isn't available in yo
 
 ```bash
 git status
-git checkout -b bootcamp
+git checkout -b your-name-bootcamp
 ```
 
-All your work goes on this `bootcamp` branch.
+All your work goes on this `your-name-bootcamp` branch.
 
 ### 3. Meet the registry
 
