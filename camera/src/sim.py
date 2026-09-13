@@ -68,3 +68,15 @@ class SimCamera(AbstractCamera):
         """Turn the fake camera off. Safe to call more than once."""
         # TODO(bootcamper): implement.
         self._initialized = False
+
+    def _next_timestamp(self) -> float:
+        """Read the clock, making sure the number beats the last one.
+
+        ``time.monotonic()`` can return the same value twice if you call it
+        twice fast enough, which would break ordering, so nudge it up.
+        """
+        timestamp = time.monotonic()
+        if timestamp <= self._last_timestamp:
+            timestamp = self._last_timestamp + 1e-6
+        self._last_timestamp = timestamp
+        return timestamp
