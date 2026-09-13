@@ -55,7 +55,7 @@ class SimCamera(AbstractCamera):
             raise RuntimeError
         
         rng = np.random.default_rng(self._captures)
-        rgb_array = rng.integers(0, 256, size=(self._height, self._width, 3), dtype=np.uint8)
+        rgb_array = rng.integers(0, 256, size=(self.height, self.width, 3), dtype=np.uint8)
         frame = CameraFrame(rgb=rgb_array, timestamp=self._next_timestamp(), index=self._captures,)
         self._captures += 1
         return frame
