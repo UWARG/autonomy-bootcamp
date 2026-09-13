@@ -48,7 +48,7 @@ class SimCamera(AbstractCamera):
 
     def capture_frame(self) -> CameraFrame:
         """Make up the next frame."""
-        if not self._intialized:
+        if not self._initialized:
             raise RuntimeError
         
         rng = np.random.default_rng(self._captures)
