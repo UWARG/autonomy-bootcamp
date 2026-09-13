@@ -23,6 +23,7 @@ import numpy as np
 from .abstract_camera import AbstractCamera
 from .frame import CameraFrame
 
+
 class SimCamera(AbstractCamera):
     """Fake camera that makes up its own frames.
 
