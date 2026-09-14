@@ -1,4 +1,5 @@
 import pytest
+
 from src.types import Coordinate
 from src.waypoint_utils import (
     east_north_coordinate_offset_m,
