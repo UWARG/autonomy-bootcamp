@@ -16,9 +16,13 @@ indexes look different. Fill values, gradients, and
 ``numpy.random.default_rng(index)`` all work.
 """
 
+import time
+
+import numpy as np
+
 from .abstract_camera import AbstractCamera
 from .frame import CameraFrame
-import time
+
 
 class SimCamera(AbstractCamera):
     """Fake camera that makes up its own frames.
@@ -55,7 +59,11 @@ class SimCamera(AbstractCamera):
             raise RuntimeError
 
         frame = CameraFrame(
-            rgb = [self._index for _ in range (10)],
+            rgb = np.full(
+                (self._height, self._width, 3),
+                self._index,
+                dtype = np.uint8,
+            ),
             timestamp = self._next_timestamp(),
             index = self._index,
         )
