@@ -16,4 +16,4 @@ path = "sitl"
 path = "integration"
 
 [projects.intro]
-path = "intr"
+path = "intro"
