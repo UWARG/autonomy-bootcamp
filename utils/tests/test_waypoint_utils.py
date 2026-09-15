@@ -1,6 +1,4 @@
 """
-TODO(bootcamper): write the tests for ``src/waypoint_utils.py`` in here.
-
 The example below covers files that parse fine: with and without ``home``,
 and files with comments and blank lines in them. The rest is yours:
 
@@ -89,8 +87,96 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
 
 
 def test_placeholder():
-    # TODO(bootcamper): delete this and write real tests. It's only here so
-    # linter doesn't complain about unused imports before you start.
     assert callable(east_north_coordinate_offset_m)
     assert callable(parse_waypoints_file)
     assert callable(sort_clockwise_sweep)
+    assert sort_clockwise_sweep([Coordinate(6,8,0), Coordinate(3,4,0), Coordinate(2,5,0)], Coordinate(5,5,0)) == [Coordinate(6,8,0), Coordinate(2,5,0), Coordinate(3,4,0)]
+    assert sort_clockwise_sweep([Coordinate(0,1,0), Coordinate(1,0,0), Coordinate(0,-1,0), Coordinate(-1,0,0)], Coordinate(0,10,0)) == [Coordinate(0,1,0), Coordinate(-1,0,0), Coordinate(0,-1,0), Coordinate(1,0,0)]
+    assert sort_clockwise_sweep([Coordinate(0,4,0), Coordinate(0,2,0), Coordinate(0,1,0)], None) == [Coordinate(0,4,0), Coordinate(0,2,0), Coordinate(0,1,0)]
+    assert east_north_coordinate_offset_m(2, 2, 100, 100) == (pytest.approx(6857778.474787729, abs=1e-3), pytest.approx(10897117.862886224, abs=1e-3))
+    assert sort_clockwise_sweep([], Coordinate(5,5,0)) == []
+
+
+def test_invalid_coordinate_type(tmp_path):
+    path = write_to_tmp_waypoints_file(
+        tmp_path,
+        """
+        home: {lat: Shrimp Trawler, lon: 2, alt: 3}
+        waypoints:
+              - {lat: 4, lon: 5, alt: 6}
+        """
+    )
+
+    with pytest.raises(ValueError):
+        parse_waypoints_file(path)
+
+
+def test_invalid_coordinate_range(tmp_path):
+    path = write_to_tmp_waypoints_file(
+        tmp_path,
+        """
+        home: {lat: 99, lon: 99, alt: 3}
+        waypoints:
+              - {lat: 4, lon: 5, alt: 6}
+        """
+    )
+
+    with pytest.raises(ValueError):
+        parse_waypoints_file(path)
+
+
+def test_missing_alt(tmp_path):
+    path = write_to_tmp_waypoints_file(
+        tmp_path,
+        """
+        home: {lat: 99, lon: 99}
+        waypoints:
+              - {lat: 4, lon: 5}
+        """
+    )
+
+    with pytest.raises(ValueError):
+        parse_waypoints_file(path)
+
+
+def test_invalid_return(tmp_path):
+    path = write_to_tmp_waypoints_file(
+        tmp_path,
+        """
+        """
+    )
+
+    assert parse_waypoints_file(path) == (None, [])
+
+def test_parse_waypoints_file_and_sweep_edge_cases(tmp_path):
+    bad_yaml = write_to_tmp_waypoints_file(
+        tmp_path,
+        "home: [1, 2\nwaypoints: []\n",
+    )
+    with pytest.raises(ValueError):
+        parse_waypoints_file(bad_yaml)
+
+    bad_root = write_to_tmp_waypoints_file(
+        tmp_path,
+        """
+        - lat: 1
+          lon: 2
+          alt: 3
+        """,
+    )
+    with pytest.raises(ValueError):
+        parse_waypoints_file(bad_root)
+
+    bad_waypoints = write_to_tmp_waypoints_file(
+        tmp_path,
+        """
+        home: {lat: 1, lon: 2, alt: 3}
+        waypoints: {lat: 4, lon: 5, alt: 6}
+        """,
+    )
+    with pytest.raises(ValueError):
+        parse_waypoints_file(bad_waypoints)
+
+    missing = tmp_path / "missing.yaml"
+    with pytest.raises(FileNotFoundError):
+        parse_waypoints_file(missing)
