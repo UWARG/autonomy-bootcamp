@@ -47,16 +47,12 @@ class SimCamera(AbstractCamera):
 
     def initialize_camera(self) -> bool:
         """Turn the fake camera on and start counting from index 0."""
-        # TODO(bootcamper): implement.
         self._initialized = True
         self._captures = 0
         return True
 
     def capture_frame(self) -> CameraFrame:
         """Make up the next frame."""
-        # TODO(bootcamper): implement. Don't forget: RuntimeError if the
-        # camera isn't on, the same pixels every time for a given index,
-        # timestamps that always go up, and returning a copy.
         if not self._initialized:
             raise RuntimeError(
                 "capture_frame() called on a camera that is not initialized; "
@@ -80,7 +76,6 @@ class SimCamera(AbstractCamera):
 
     def stop(self) -> None:
         """Turn the fake camera off. Safe to call more than once."""
-        # TODO(bootcamper): implement.
         self._initialized = False
 
 #reuse method from fixed.py for frame to be able to generate next timestamp without worrying about time.monotonic()
