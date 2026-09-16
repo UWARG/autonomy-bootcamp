@@ -8,6 +8,7 @@ from itertools import pairwise
 
 import numpy as np
 import pytest
+
 from src.fixed import FixedCamera
 
 
