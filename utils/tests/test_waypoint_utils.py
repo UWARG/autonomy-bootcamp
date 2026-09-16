@@ -20,8 +20,6 @@ Graded by ``warg run utils grade-tests``: pass on the real code, 90% branch
 coverage, and fail on every broken copy in ``grader/mutants/``.
 """
 
-from dataclasses import FrozenInstanceError
-
 import pytest
 
 from src.waypoint_utils import (
