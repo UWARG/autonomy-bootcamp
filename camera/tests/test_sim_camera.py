@@ -11,7 +11,6 @@ from itertools import pairwise
 
 import numpy as np
 import pytest
-
 from src.sim import SimCamera
 
 
