@@ -26,6 +26,8 @@ coverage, and fail on every broken copy in ``grader/mutants/``.
 
 import pytest
 
+import dataclasses
+
 from src.waypoint_utils import (
     east_north_coordinate_offset_m,
     parse_waypoints_file,
@@ -85,12 +87,163 @@ def write_to_tmp_waypoints_file(tmp_path, text):
 )
 def test_parse_waypoints_file_success(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
+
+    result = parse_waypoints_file(path)
+
+    assert result == expected
+
+    with pytest.raises(dataclasses.FrozenInstanceError): # Checking that we can't change coordinate values
+        if result[0]:
+            result[0].lat = -1
+
+        for waypoint in result[1]:
+            waypoint.lat = -1
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        """
+          home: {lat: 1, lon: 2, test: 3}
+          waypoints:
+            - {lat: 4, lon: 5, test: 6}
+        """,
+        """
+          home: {lat: 1, test: 2, alt: 3}
+          waypoints:
+            - {lat: 4, test: 5, alt: 6}
+        """,
+        """
+          home: {test: 1, lon: 2, alt: 3}
+          waypoints:
+            - {test: 4, lon: 5, alt: 6}
+        """,
+        """
+          - non-mapping top level
+          home: {lat: 1, lon: 2, alt: 3}
+          waypoints:
+            - {lat: 4, lon: 5, alt: 6}
+        """,
+        """
+        home: {lat: 1, lon: 2, alt: 3}
+        waypoints:
+          - {lat: 'a', lon: 'b', alt: 'c'}
+        """,
+        """
+        home {lat: 1, lon: 2, alt: 3}
+        waypoints
+          : {lat: 4, lon: 5, alt: 6}
+        """,
+        """
+        home: {lat: 91, lon: -1, alt: 3}
+        waypoints:
+          - {lat: -91, lon: 1, alt: 6}
+        """,
+        """
+        home: {lat: 1, lon: -181, alt: 3}
+        waypoints:
+          - {lat: -1, lon: 181, alt: 6}
+        """
+    ],
+    ids=["faulty-waypoint-format (alt)", "faulty-waypoint-format (lon)", "faulty-waypoint-format (lat)", 
+         "top-level-mapping", "non-number values", "faulty YAML", 
+         "out of range values (lat)", "out of range values (long)"
+        ],
+)
+def test_parsing_bad_data(tmp_path, text):
+    path = write_to_tmp_waypoints_file(tmp_path, text)
+
+    with pytest.raises(ValueError):
+        parse_waypoints_file(path)
+
+
+def test_faulty_file_location():
+    with pytest.raises(OSError):
+        parse_waypoints_file("/some_faulty_path.txt")
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        (
+            """""",
+            (None, [])
+        ), (
+            """
+          home: {lat: 1, lon: 2, alt: 3}
+          waypoints:
+          """,
+            (Coordinate(1, 2, 3), [])
+        )
+    ],
+    ids=["empty file", "empty waypoints"]
+)
+def test_empty_file(tmp_path, text, expected):
+    path = write_to_tmp_waypoints_file(tmp_path, text)
+
     assert parse_waypoints_file(path) == expected
 
 
-def test_placeholder():
-    # TODO(bootcamper): delete this and write real tests. It's only here so
-    # linter doesn't complain about unused imports before you start.
-    assert callable(east_north_coordinate_offset_m)
-    assert callable(parse_waypoints_file)
-    assert callable(sort_clockwise_sweep)
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        (
+            [[Coordinate(1, 1, 1)]],
+            [Coordinate(1, 1, 1)],
+        ),
+        (
+            [[]],
+            [],
+        ),
+        (
+            [[Coordinate(10, 10, 1), Coordinate(15, 10, 1), Coordinate(15, 20, 1)]],
+            [Coordinate(15, 20, 1), Coordinate(10, 10, 1), Coordinate(15, 10, 1) ],
+        ),
+        (
+            [[Coordinate(10, 10, 1), Coordinate(15, 10, 1), Coordinate(15, 20, 1)], Coordinate(12, 8, 1)],
+            [Coordinate(15, 10, 1), Coordinate(15, 20, 1), Coordinate(10, 10, 1)],
+        ),
+        (
+            [[Coordinate(10, 12, 1), Coordinate(17, 10, 1), Coordinate(15, 20, 1)], Coordinate(14, 14, 1)],
+            [Coordinate(15, 20, 1), Coordinate(10, 12, 1), Coordinate(17, 10, 1)],
+        ),
+        (
+            [[Coordinate(0, 0, 1), Coordinate(6, 0, 1), Coordinate(9, 0, 0)]],
+            [ Coordinate(6, 0, 1), Coordinate(9, 0, 0), Coordinate(0, 0, 1)],
+        )
+    ],
+    ids=[
+        'not enough waypoints (1 waypoint)', 'not enough waypoints (0 waypoints)', 
+        'check sweep dir without home', 'check sweep dir with home', 
+        'check sweep dir with home on centroid', 'check overlapping waypoints'
+      ]
+)
+def test_sort_clockwise_sweep(text, expected):
+    assert sort_clockwise_sweep(*text) == expected
+
+@pytest.mark.parametrize(
+      ("text", "expected"),
+      [
+          (
+              (23.4, 43.12, -39.34, 39.39),
+              (-410751.42, -6976379.33)
+          ),
+          (
+              (0, 0, 134.68, 7),
+              (299874.59, 14975753.40)
+          ),
+          (
+              (0, 0, 1, 1),
+              (111190.84, 111195.08)
+          )
+      ],
+      ids=[
+          "east_north_coords_offset calc 1", "east_north_coords_offset calc 2", "east_north_coords_offset calc 3"
+      ]
+)
+def test_east_north_coords_offset(text, expected):
+    east, north = east_north_coordinate_offset_m(*text)
+    east_expected, north_expected = expected
+
+    assert east == pytest.approx(east_expected, abs=2)
+    assert north == pytest.approx(north_expected, abs=2)
