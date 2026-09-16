@@ -12,6 +12,14 @@ FROM ros:humble-ros-base
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    gnupg2 \
+    software-properties-common \
+  && curl -sSL https://githubusercontent.com | apt-key add - \
+  && apt-add-repository "deb http://ros.org $(lsb_release -sc) main" \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
     geographiclib-tools \
     python3-pip \
     ros-humble-mavros \
