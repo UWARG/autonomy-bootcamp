@@ -19,6 +19,8 @@ def create_perception_sweep(
     fly_factory: Callable[[int], py_trees.behaviour.Behaviour],
     capture_factory: Callable[[int], py_trees.behaviour.Behaviour],
 ) -> py_trees.behaviour.Behaviour:
+
+   
     """
     Builds the part of the tree that visits every waypoint in order.
 
@@ -56,5 +58,12 @@ def create_perception_sweep(
     Returns:
         The behavior at the top of the sweep.
     """
-    # TODO(bootcamper): build the composite described above and return it.
-    raise NotImplementedError
+    sweep = py_trees.composites.Sequence(
+    name="PerceptionSweep",
+    memory=True)
+
+
+    for x in range(waypoint_count):
+        sweep.add_child(fly_factory(x))
+        sweep.add_child(capture_factory(x))
+    return sweep
