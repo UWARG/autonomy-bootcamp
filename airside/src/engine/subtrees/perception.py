@@ -56,5 +56,34 @@ def create_perception_sweep(
     Returns:
         The behavior at the top of the sweep.
     """
-    # TODO(bootcamper): build the composite described above and return it.
-    raise NotImplementedError
+    root = py_trees.composites.Sequence(
+        #cretes a var root and assigns it to a sequence composite, a sequence is a behaviour
+        # that runs its children from left to right
+        #if child returns sucess the sequence moves one, if its RUNNING the sequence waits, 
+        #if its FAILURE the sequence returns FAILURE
+        name="PerceptionSweep",
+        #Give this behaviour a readable name, so if the behaviour tree gets printed you will see
+        #PerceptionSweep
+        memory=True,
+        #"Remember which child I was working on between ticks"
+        #e.g fly0 -> Sucess
+        #capture0 -> Sucess
+        #fly1 -> Running
+        #becus of memory = true the sequence cnotinues at fly1
+    )
+    for index in range(waypoint_count):
+        fly_behaviour = fly_factory(index)
+        #for index0 fly_factory(0) creates something like fly0 and we assign flybehaviour to that
+        capture_behaviour = capture_factory(index)
+        #same thing has fly_factory except now its with capture
+
+        root.add_children( # simply creating them isnt enough as they HAVE TO become children of the Sequence
+            [
+                fly_behaviour,
+                capture_behaviour,
+            ]
+        )
+        #we put it into a list, with flybehave coming first then capture
+
+    return root# the function return type is py_trees.behaviour.Behaviour and the sequence itself
+# is a behaviour so returning root satisfies that requirement

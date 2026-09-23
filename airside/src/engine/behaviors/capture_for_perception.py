@@ -91,8 +91,15 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         py_trees calls this on every fresh attempt, which is what lets the
         capture at the next waypoint ignore the picture from this one.
         """
-        # TODO(bootcamper): implement.
-        raise NotImplementedError
+        
+        frame = self._latest_frame()
+        #basically it asks whay camera frame is sitting on the blackboard, if the camera frame exists it puts it as frame.index == 7 or fram is None
+        self._starting_frame_index = frame.index if frame is not None else None
+        #suppose frame 7 exists when drone reaches the point then fram.index is 7 and so the it stores self._starting_frame_index = 7, later update() will be able to compare
+        # if there was no frame we store self._starting_frame_index = None
+        #either case the old frame will be different from the new frame and hence the new frame is well considered new
+        self._ticks_waited = 0
+        #This creates a counter for the current attempt and essentially resets it to 0 everytime init is called
 
     def update(self) -> py_trees.common.Status:
         """
@@ -101,5 +108,29 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         Returns fast every tick, so the rest of the tree keeps running while
         we wait. The class docstring says exactly what to do.
         """
-        # TODO(bootcamper): implement.
-        raise NotImplementedError
+
+        frame = self._latest_frame()
+        #What is the newest camera frame right now
+
+        if frame is not None and frame.index != self._starting_frame_index:
+            #this checks two conditions, first when frame is not None and so we must check this before
+            #acessing
+            # the second condition it checks is that if the two frames are not the same, if they are not the same then the conditions are True
+            self._publisher.publish_image(frame)
+            # sends the new camera frame to the perception system
+            self._publisher.publish_status(
+                {"phase": "capture", "frame_index": frame.index}
+            )
+            #saying that the mission is in "capture" phase and tells the rest of the system which frame was captured
+            return py_trees.common.Status.SUCCESS
+            # returns sucess becuz we got a new image
+
+        self._ticks_waited += 1
+        #this happens when the above condition doesnt follow thru and so "I checked for a new frame on this tick but didnt find one"
+
+        if self._ticks_waited >= self._timeout_ticks:
+            return py_trees.common.Status.FAILURE
+        #I have a certain amount of ticks before failure
+
+        return py_trees.common.Status.RUNNING
+        #I am still running since I have some amount of ticks
