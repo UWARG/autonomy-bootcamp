@@ -21,8 +21,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 # vendored next to this file.
 ARG ROS_SNAPSHOT=2026-08-07
 COPY airside/docker/ros-snapshots.asc /usr/share/keyrings/ros-snapshots.asc
-RUN rm /etc/apt/sources.list.d/ros2.sources \
-  && printf 'Types: deb\nURIs: http://snapshots.ros.org/humble/%s/ubuntu\nSuites: jammy\nComponents: main\nSigned-By: /usr/share/keyrings/ros-snapshots.asc\n' \
+RUN gpg --dearmor --output /usr/share/keyrings/ros-snapshots.gpg /usr/share/keyrings/ros-snapshots.asc \
+  && rm /usr/share/keyrings/ros-snapshots.asc \
+  && rm /etc/apt/sources.list.d/ros2.sources \
+  && printf 'Types: deb\nURIs: http://snapshots.ros.org/humble/%s/ubuntu\nSuites: jammy\nComponents: main\nSigned-By: /usr/share/keyrings/ros-snapshots.gpg\n' \
      "${ROS_SNAPSHOT}" > /etc/apt/sources.list.d/ros2-snapshot.sources
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -46,7 +48,7 @@ COPY . /bootcamp
 ENV PYTHONPATH=/bootcamp:/bootcamp/airside/src
 
 COPY airside/docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["ros2", "launch", "/bootcamp/airside/src/engine/launch/perception.launch.py"]
