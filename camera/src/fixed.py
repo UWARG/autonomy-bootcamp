@@ -47,7 +47,8 @@ class FixedCamera(AbstractCamera):
 
     def __init__(self, frames: list[np.ndarray]) -> None:
         if not isinstance(frames, list):
-            raise TypeError(f"frames must be a list, got {type(frames).__name__}")
+            raise TypeError(
+                f"frames must be a list, got {type(frames).__name__}")
         if not frames:
             raise ValueError("frames must not be empty")
         for position, frame in enumerate(frames):
