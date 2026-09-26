@@ -1,0 +1,3 @@
+- Full Name: Brian Low
+- Waterloo Email: b5low@uwaterloo.ca
+- GitHub Username: Big40-star
