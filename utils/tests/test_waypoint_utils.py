@@ -1,54 +1,35 @@
-"""
-TODO(bootcamper): write the tests for ``src/waypoint_utils.py`` in here.
-
-The example below covers files that parse fine: with and without ``home``,
-and files with comments and blank lines in them. The rest is yours:
-
-- Bad data: a file whose top level isn't a mapping, waypoints missing
-  ``lat``, ``lon``, or ``alt``, values that aren't numbers, YAML that
-  doesn't parse, and a file that isn't there.
-- Out of range: latitudes past +/-90 and longitudes past +/-180 get
-  rejected.
-- Nothing to work with: an empty file, an empty ``waypoints`` list, and
-  ``sort_clockwise_sweep`` given a list of 0 or 1 waypoints.
-- ``east_north_coordinate_offset_m``: offsets you worked out yourself,
-  compared with ``pytest.approx``. Never use ``==`` on meters.
-- Ordering: with no ``home``, ``sort_clockwise_sweep`` goes clockwise
-  starting from north.
-- With a ``home``: the order starts in home's direction instead, and goes
-  back to starting at north if home is right on top of the centroid.
-- Two waypoints in the same direction: the closer one comes first.
-- Parsing gives you frozen ``Coordinate`` objects that can't be changed.
-
-Graded by ``warg run utils grade-tests``: pass on the real code, 90% branch
-coverage, and fail on every broken copy in ``grader/mutants/``.
-"""
-
+"""Tests for waypoint_utils."""
+ 
+import math
+ 
 import pytest
-
+ 
+from src.constants import EARTH_RADIUS_M
+from src.types import Coordinate
 from src.waypoint_utils import (
     east_north_coordinate_offset_m,
     parse_waypoints_file,
     sort_clockwise_sweep,
 )
-from src.types import Coordinate
-
-# The helper and the test below are given to you.
-
-
+ 
+ONE_DEGREE_M = math.radians(1.0) * EARTH_RADIUS_M
+ 
+NORTH = Coordinate(1.0, 0.0, 10.0)
+EAST = Coordinate(0.0, 1.0, 10.0)
+SOUTH = Coordinate(-1.0, 0.0, 10.0)
+WEST = Coordinate(0.0, -1.0, 10.0)
+ 
+ 
 def write_to_tmp_waypoints_file(tmp_path, text):
     """Write ``text`` to a YAML file and hand back its path.
-
+ 
     ``tmp_path`` is a pytest fixture: a fresh empty directory per test.
     """
     path = tmp_path / "waypoints.yaml"
     path.write_text(text)
     return path
-
-
-# One test, three files. ``parametrize`` runs the test body once per
-# ``(text, expected)`` pair, and ``ids`` names each run so a failure tells you
-# which file broke.
+ 
+ 
 @pytest.mark.parametrize(
     ("text", "expected"),
     [
@@ -71,9 +52,9 @@ def write_to_tmp_waypoints_file(tmp_path, text):
         (
             """
             # a lap
-
+ 
             home: {lat: 1, lon: 2, alt: 3}
-
+ 
             waypoints:
               # first leg
               - {lat: 4, lon: 5, alt: 6}
@@ -86,11 +67,145 @@ def write_to_tmp_waypoints_file(tmp_path, text):
 def test_parse_waypoints_file_success(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
     assert parse_waypoints_file(path) == expected
-
-
-def test_placeholder():
-    # TODO(bootcamper): delete this and write real tests. It's only here so
-    # linter doesn't complain about unused imports before you start.
-    assert callable(east_north_coordinate_offset_m)
-    assert callable(parse_waypoints_file)
-    assert callable(sort_clockwise_sweep)
+ 
+ 
+@pytest.mark.parametrize(
+    ("lat", "lon", "expected_east", "expected_north"),
+    [
+        (1.0, 0.0, 0.0, ONE_DEGREE_M),
+        (-1.0, 0.0, 0.0, -ONE_DEGREE_M),
+        (0.0, 1.0, ONE_DEGREE_M, 0.0),
+        (0.0, -1.0, -ONE_DEGREE_M, 0.0),
+    ],
+    ids=["north", "south", "east", "west"],
+)
+def test_offset(lat, lon, expected_east, expected_north):
+    east, north = east_north_coordinate_offset_m(0.0, 0.0, lat, lon)
+    assert east == pytest.approx(expected_east, abs=1e-3)
+    assert north == pytest.approx(expected_north, abs=1e-3)
+ 
+ 
+def test_offset_east_at_latitude_60():
+    east, _ = east_north_coordinate_offset_m(60.0, 0.0, 60.0, 1.0)
+    assert east == pytest.approx(0.5 * ONE_DEGREE_M, abs=1e-3)
+ 
+ 
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("", (None, [])),
+        ("# nothing here\n", (None, [])),
+        ("waypoints: []\n", (None, [])),
+        ("waypoints:\n", (None, [])),
+        ("home: {lat: 1, lon: 2, alt: 3}\n", (Coordinate(1, 2, 3), [])),
+    ],
+    ids=["empty", "comment-only", "empty-list", "null-waypoints", "home-only"],
+)
+def test_parse_empty(tmp_path, text, expected):
+    path = write_to_tmp_waypoints_file(tmp_path, text)
+    assert parse_waypoints_file(path) == expected
+ 
+ 
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        (
+            "waypoints: [{lat: 90, lon: 180, alt: 0}]\n",
+            (None, [Coordinate(90, 180, 0)]),
+        ),
+        (
+            "waypoints: [{lat: -90, lon: -180, alt: 0}]\n",
+            (None, [Coordinate(-90, -180, 0)]),
+        ),
+    ],
+    ids=["max", "min"],
+)
+def test_parse_limits(tmp_path, text, expected):
+    path = write_to_tmp_waypoints_file(tmp_path, text)
+    assert parse_waypoints_file(path) == expected
+ 
+ 
+@pytest.mark.parametrize(
+    ("text", "message"),
+    [
+        ("waypoints: [\n", "invalid YAML"),
+        ("[1, 2]\n", "expected a mapping"),
+        ("waypoints: 5\n", "must be a list"),
+        ("waypoints: [5]\n", "must be a mapping"),
+        ("home: 5\n", "home must be a mapping"),
+        ("waypoints: [{lon: 2, alt: 3}]\n", "missing key"),
+        ("waypoints: [{lat: 1, alt: 3}]\n", "missing key"),
+        ("waypoints: [{lat: 1, lon: 2}]\n", "missing key"),
+        ("waypoints: [{lat: abc, lon: 2, alt: 3}]\n", "non-numeric"),
+        ("waypoints: [{lat: [1], lon: 2, alt: 3}]\n", "non-numeric"),
+        ("waypoints: [{lat: 91, lon: 0, alt: 0}]\n", "out of range"),
+        ("waypoints: [{lat: -91, lon: 0, alt: 0}]\n", "out of range"),
+        ("waypoints: [{lat: 0, lon: 181, alt: 0}]\n", "out of range"),
+        ("waypoints: [{lat: 0, lon: -181, alt: 0}]\n", "out of range"),
+    ],
+    ids=[
+        "bad-yaml",
+        "not-a-mapping",
+        "waypoints-not-list",
+        "waypoint-not-mapping",
+        "bad-home",
+        "no-lat",
+        "no-lon",
+        "no-alt",
+        "text-value",
+        "list-value",
+        "lat-high",
+        "lat-low",
+        "lon-high",
+        "lon-low",
+    ],
+)
+def test_parse_bad_data(tmp_path, text, message):
+    path = write_to_tmp_waypoints_file(tmp_path, text)
+    with pytest.raises(ValueError, match=message):
+        parse_waypoints_file(path)
+ 
+ 
+def test_parse_missing_file(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        parse_waypoints_file(tmp_path / "missing.yaml")
+ 
+ 
+def test_sort_empty():
+    assert sort_clockwise_sweep([]) == []
+ 
+ 
+def test_sort_one():
+    assert sort_clockwise_sweep([NORTH]) == [NORTH]
+ 
+ 
+def test_sort_clockwise_from_north():
+    result = sort_clockwise_sweep([SOUTH, WEST, EAST, NORTH])
+    assert result == [NORTH, EAST, SOUTH, WEST]
+ 
+ 
+def test_sort_starts_at_home():
+    home = Coordinate(0.0, 2.0, 10.0)
+    result = sort_clockwise_sweep([SOUTH, WEST, EAST, NORTH], home)
+    assert result == [EAST, SOUTH, WEST, NORTH]
+ 
+ 
+def test_sort_home_on_centroid():
+    home = Coordinate(0.0, 0.0, 10.0)
+    result = sort_clockwise_sweep([SOUTH, WEST, EAST, NORTH], home)
+    assert result == [NORTH, EAST, SOUTH, WEST]
+ 
+ 
+def test_sort_closer_first():
+    near = Coordinate(1.0, 0.0, 10.0)
+    far = Coordinate(2.0, 0.0, 10.0)
+    south = Coordinate(-3.0, 0.0, 10.0)
+    assert sort_clockwise_sweep([far, south, near]) == [near, far, south]
+ 
+ 
+def test_coordinate_is_frozen(tmp_path):
+    text = "waypoints: [{lat: 1, lon: 2, alt: 3}]\n"
+    path = write_to_tmp_waypoints_file(tmp_path, text)
+    _, waypoints = parse_waypoints_file(path)
+    with pytest.raises(AttributeError):
+        waypoints[0].lat = 5.0
