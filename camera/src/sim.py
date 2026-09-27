@@ -59,7 +59,7 @@ class SimCamera(AbstractCamera):
             )
 
         frame = CameraFrame(
-                        rgb=np.full((self._height, self._width, 3), self._captures % 256, dtype=np.uint8),
+            rgb=np.full((self._height, self._width, 3), self._captures % 256, dtype=np.uint8),
             timestamp=self._next_timestamp(),
             index=self._captures,
         )
