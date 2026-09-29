@@ -60,6 +60,9 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
             before giving up and returning FAILURE.
     """
 
+    _ticks_waited: int
+    _frame_index: int
+
     def __init__(self, name: str, publisher, timeout_ticks: int = 20) -> None:
         super().__init__(name=name)
         self._publisher = publisher
@@ -91,8 +94,13 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         py_trees calls this on every fresh attempt, which is what lets the
         capture at the next waypoint ignore the picture from this one.
         """
-        # TODO(bootcamper): implement.
-        raise NotImplementedError
+        self._ticks_waited = 0
+
+        latest_frame = self._latest_frame()
+        if latest_frame is None:
+            self._frame_index = None
+        else:
+            self._frame_index = latest_frame.index
 
     def update(self) -> py_trees.common.Status:
         """
@@ -101,5 +109,16 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         Returns fast every tick, so the rest of the tree keeps running while
         we wait. The class docstring says exactly what to do.
         """
-        # TODO(bootcamper): implement.
-        raise NotImplementedError
+        latest_frame = self._latest_frame()
+        self._ticks_waited += 1 #pretty sure theres a documentation error, must tick every time
+        
+        if latest_frame is not None and latest_frame.index != self._frame_index:
+            self._publisher.publish_image(latest_frame)
+            self._publisher.publish_status({"phase": "capture", "frame_index": latest_frame.index})
+            return py_trees.common.Status.SUCCESS
+
+        elif self._ticks_waited < self._timeout_ticks: 
+            return py_trees.common.Status.RUNNING
+        
+        else:
+            return py_trees.common.Status.FAILURE
