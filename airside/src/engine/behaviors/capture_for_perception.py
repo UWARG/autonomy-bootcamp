@@ -71,6 +71,7 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         self.blackboard.register_key(
             key=blackboard_keys.LATEST_FRAME, access=py_trees.common.Access.READ
         )
+        #đăng ký key là read dc 
 
     def _latest_frame(self):
         """
@@ -78,11 +79,13 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
 
         Collapses "key never written" and "key holds None" into one answer,
         so callers don't have to catch ``KeyError`` everywhere.
+        Combine cả 2 về thành 1 kết quả là None => để k ph try except 2 chỗ, chỉ 1 chỗ là đủ
         """
         try:
             return self.blackboard.get(blackboard_keys.LATEST_FRAME)
         except KeyError:
             return None
+        #nếu đã điền none sẵn => ở trhop try nó tự return none, k thì none
 
     def initialise(self) -> None:
         """
@@ -92,7 +95,13 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         capture at the next waypoint ignore the picture from this one.
         """
         # TODO(bootcamper): implement.
-        raise NotImplementedError
+        frame = self._latest_frame()
+        if frame is None:
+            self._seen_index = None
+        else:
+            self._seen_index = frame.index
+        self._ticks_waited = 0 # nó để ở đây thay vì init vì init chỉ chạy 1 lần => để đây để nó reset lại
+
 
     def update(self) -> py_trees.common.Status:
         """
@@ -102,4 +111,16 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         we wait. The class docstring says exactly what to do.
         """
         # TODO(bootcamper): implement.
-        raise NotImplementedError
+        frame = self._latest_frame()
+        if (frame is not None) and (frame.index != self._seen_index):
+            self._publisher.publish_image(frame)
+            #gọi publish_image r truyền frame vào
+            self._publisher.publish_status({"phase": "capture", "frame_index": frame.index})
+            #gọi status => truyền vào dictionary
+            return py_trees.common.Status.SUCCESS
+        else:
+            self._ticks_waited += 1
+            if self._ticks_waited >= self._timeout_ticks:
+                return py_trees.common.Status.FAILURE
+            else:
+                return py_trees.common.Status.RUNNING

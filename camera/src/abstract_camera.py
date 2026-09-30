@@ -13,11 +13,12 @@ from .frame import CameraFrame
 
 
 class AbstractCamera(abc.ABC):
-    """Base class all cameras inherit from."""
+    """Base class all cameras inherit from. (Abstract Base Class)"""
 
     @abc.abstractmethod
     def initialize_camera(self) -> bool:
-        """Turn the camera on.
+        """@abc... => kiểm tra xem nó đã có hàm bắt buộc chưa
+        Turn the camera on.
 
         Nothing gets opened in ``__init__``, so building a camera is always
         cheap and can't fail. This is where the real work happens, and you
@@ -29,7 +30,7 @@ class AbstractCamera(abc.ABC):
 
     @abc.abstractmethod
     def capture_frame(self) -> CameraFrame:
-        """Take a picture.
+        """Take a picture. => chạy xong bắt buộc trả về 1 đối tượng bức ảnh thuộc kiểu CameraFrame
 
         For this bootcamp you can assume capturing always succeeds, so this
         always gives you a frame and callers have nothing to check.

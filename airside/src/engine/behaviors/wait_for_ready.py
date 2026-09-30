@@ -36,12 +36,14 @@ class WaitForReady(py_trees.behaviour.Behaviour):
         # reading a key you never registered raises AttributeError, so a
         # behavior quietly using data it never mentioned can't happen.
         self.blackboard = self.attach_blackboard_client(name=self.name)
+        #attach_blackboard_client: đăng kí behavior này với blackboard (bộ nhớ chung để  có quyền dc đọc / ghi)
         for key in (
             blackboard_keys.VEHICLE_CONNECTED,
             blackboard_keys.VEHICLE_MODE,
             blackboard_keys.VEHICLE_ARMED,
         ):
-            self.blackboard.register_key(key=key, access=py_trees.common.Access.READ)
+            #khai báo trc 3 key mà behavior sẽ đọc
+            self.blackboard.register_key(key=key, access=py_trees.common.Access.READ) #chỉ đọc k ghi
 
     def setup(self, **kwargs: object) -> None:
         """
@@ -50,6 +52,9 @@ class WaitForReady(py_trees.behaviour.Behaviour):
         The container passes ``node=<rclpy Node>`` here and the code in
         ``engine/ros/`` takes it. We ignore it on purpose, which is what
         keeps this behavior runnable on a laptop with no ROS.
+
+        Trong container thật, setup dc truyền nod=<...> nhưng code trong engine/ros/ mới là nơi dùng cái đó
+        => cố tình bỏ qua để chạy dc trên lap k có ros (robot operating system)
         """
 
     def initialise(self) -> None:
@@ -80,7 +85,12 @@ class WaitForReady(py_trees.behaviour.Behaviour):
             f"waiting (connected={connected}, mode={mode}, armed={armed})"
         )
         return py_trees.common.Status.RUNNING
+    #nếu đọc dc giá trị nhưng chưa đủ điều kiện (connected nhưng chưa arm => trả RUNNING, chờ tick sau kiểm tra lại)
+
 
     def terminate(self, new_status: py_trees.common.Status) -> None:
         """Nothing to clean up. We keep no state and start no work, so
         being interrupted costs nothing."""
+"""Nếu chưa tìm thấy dữ liệu cần, thì đừng crash — cứ báo 'RUNNING' 
+(tức 'chưa xong, tick sau tính tiếp'), 
+rồi để cái tree tự gọi lại nó ở lần tick kế tiếp"""

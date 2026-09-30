@@ -24,7 +24,7 @@ class FixedCamera(AbstractCamera):
 
     Args:
         frames: A list, with at least one item, of ``(height, width, 3)``
-            ``uint8`` numpy arrays. The camera keeps its own copies, so
+            ``uint8`` numpy arrays (nó sẽ cho ra kiểu đậm nhạt từ 0 => 255). The camera keeps its own copies, so
             changing your arrays afterwards does nothing to it.
 
     Raises:

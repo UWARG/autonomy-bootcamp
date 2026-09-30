@@ -29,7 +29,7 @@ def east_north_coordinate_offset_m(
     )
     north = math.radians(to_lat - from_lat) * EARTH_RADIUS_M
     return east, north
-
+#đưa tọa độ ban đầu + cuối => tính khoảng cách
 
 def _coordinate_from_entry(entry: Any, path: str | Path, context: str) -> Coordinate:
     """
@@ -67,7 +67,8 @@ def _coordinate_from_entry(entry: Any, path: str | Path, context: str) -> Coordi
         )
 
     return coordinate
-
+#các tọa độ k public => phải dùng parse waypoints file để check
+#để ở coordinate để tránh phải dùng đi dùng lại (tại entry là any nên dùng j cx dc), còn parse là chỉ cần check 1 lần
 
 def parse_waypoints_file(
     path: str | Path,
@@ -124,6 +125,7 @@ def parse_waypoints_file(
     ]
 
     return home, waypoints
+#các test k cần lặp lại => return home và waypoints để bắt đầu quay
 
 
 def sort_clockwise_sweep(
@@ -164,3 +166,4 @@ def sort_clockwise_sweep(
         return (relative_bearing, distance)
 
     return sorted(waypoints, key=sweep_key)
+#nhận danh sách => sắp xếp lại để drone đi 1 cách effective

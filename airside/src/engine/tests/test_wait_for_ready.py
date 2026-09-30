@@ -14,6 +14,7 @@ from engine.behaviors.wait_for_ready import WaitForReady
 
 RUNNING = py_trees.common.Status.RUNNING
 SUCCESS = py_trees.common.Status.SUCCESS
+#đặt tên cho gọn
 
 
 def _tick(behaviour: py_trees.behaviour.Behaviour) -> py_trees.common.Status:
@@ -26,13 +27,15 @@ def _publish_state(board, connected: bool, mode: str, armed: bool) -> None:
     board.set(blackboard_keys.VEHICLE_CONNECTED, connected)
     board.set(blackboard_keys.VEHICLE_MODE, mode)
     board.set(blackboard_keys.VEHICLE_ARMED, armed)
-
+#hàm giả lập telemetry (1 file code viết sẵn, chạy trong container hỏi liên tục xem kết nối / mode/ armed chưa => tự động ghi câu trả lời lên blackboard)
+#telemetry là kết quả khi drone truyền về, cần ros nên ở đây nó tạo hàm public state để giả dụ
 
 def test_runs_when_no_telemetry_has_arrived():
     # Nothing on the blackboard at all, so the drone's status hasn't come
     # through yet. That's normal at startup, so it stays RUNNING.
     behaviour = WaitForReady()
     assert _tick(behaviour) == RUNNING
+    #k dc crash phải trả running
 
 
 def test_runs_when_only_some_keys_are_set(board):
@@ -40,6 +43,7 @@ def test_runs_when_only_some_keys_are_set(board):
     board.set(blackboard_keys.VEHICLE_CONNECTED, True)
     behaviour = WaitForReady()
     assert _tick(behaviour) == RUNNING
+    #chỉ trả 1 trong 3 key, còn lại chưa có
 
 
 def test_runs_until_connected(board):
@@ -58,12 +62,13 @@ def test_runs_until_armed(board):
     _publish_state(board, connected=True, mode="GUIDED", armed=False)
     behaviour = WaitForReady()
     assert _tick(behaviour) == RUNNING
-
+# 3 test này là đủ 3 key nhưng thiếu 1 điều kiện
 
 def test_succeeds_when_fully_ready(board):
     _publish_state(board, connected=True, mode="GUIDED", armed=True)
     behaviour = WaitForReady()
     assert _tick(behaviour) == SUCCESS
+    #đúng cả 3
 
 
 def test_transitions_to_success_as_telemetry_updates(board):
@@ -78,3 +83,9 @@ def test_transitions_to_success_as_telemetry_updates(board):
 
     _publish_state(board, connected=True, mode="GUIDED", armed=True)
     assert _tick(behaviour) == SUCCESS
+    #mô phỏng các lần tick để thành success
+    #tick 1: connected nhưng còn ở stabilize chưa armed => running
+    #tick 2: chuyển sang guided nhưng chưa armed => running
+    #tick 3: đủ cả 3 => success
+#armed là mở khóa động cơ, cho phép động cơ có thể quay
+#guided: chấp nhận điều khiển từ bên ngoài
