@@ -1,0 +1,3 @@
+Kaitlyn Chan
+k253chan@uwaterloo.ca
+kaitlynlaichan
