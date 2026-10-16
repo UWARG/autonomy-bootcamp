@@ -1,0 +1,3 @@
+name = "intro"
+description = "Bootcamp introduction project."
+depends_on = []
