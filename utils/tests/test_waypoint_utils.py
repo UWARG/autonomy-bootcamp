@@ -24,14 +24,16 @@ Graded by ``warg run utils grade-tests``: pass on the real code, 90% branch
 coverage, and fail on every broken copy in ``grader/mutants/``.
 """
 
+from dataclasses import FrozenInstanceError
+
 import pytest
 
+from src.types import Coordinate
 from src.waypoint_utils import (
     east_north_coordinate_offset_m,
     parse_waypoints_file,
     sort_clockwise_sweep,
 )
-from src.types import Coordinate
 
 # The helper and the test below are given to you.
 
@@ -88,9 +90,126 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
     assert parse_waypoints_file(path) == expected
 
 
-def test_placeholder():
-    # TODO(bootcamper): delete this and write real tests. It's only here so
-    # linter doesn't complain about unused imports before you start.
-    assert callable(east_north_coordinate_offset_m)
-    assert callable(parse_waypoints_file)
-    assert callable(sort_clockwise_sweep)
+@pytest.mark.parametrize("text", ["", "{}", "waypoints: []", "waypoints: null"])
+def test_empty_waypoints(tmp_path, text):
+    path = write_to_tmp_waypoints_file(tmp_path, text)
+    assert parse_waypoints_file(path) == (None, [])
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "[]",
+        "hello",
+        "waypoints: [",
+        "waypoints: {lat: 1, lon: 2, alt: 3}",
+    ],
+)
+def test_invalid_file_contents(tmp_path, text):
+    path = write_to_tmp_waypoints_file(tmp_path, text)
+    with pytest.raises(ValueError):
+        parse_waypoints_file(path)
+
+
+@pytest.mark.parametrize("section", ["home: {entry}", "waypoints: [{entry}]"])
+@pytest.mark.parametrize(
+    "entry",
+    [
+        "5",
+        "{lon: 2, alt: 3}",
+        "{lat: 1, alt: 3}",
+        "{lat: 1, lon: 2}",
+        "{lat: bad, lon: 2, alt: 3}",
+        "{lat: 1, lon: bad, alt: 3}",
+        "{lat: 1, lon: 2, alt: bad}",
+        "{lat: null, lon: 2, alt: 3}",
+        "{lat: 91, lon: 2, alt: 3}",
+        "{lat: -91, lon: 2, alt: 3}",
+        "{lat: 1, lon: 181, alt: 3}",
+        "{lat: 1, lon: -181, alt: 3}",
+    ],
+)
+def test_invalid_coordinate(tmp_path, section, entry):
+    path = write_to_tmp_waypoints_file(tmp_path, section.format(entry=entry))
+    with pytest.raises(ValueError):
+        parse_waypoints_file(path)
+
+
+def test_missing_file(tmp_path):
+    with pytest.raises(OSError):
+        parse_waypoints_file(tmp_path / "missing.yaml")
+
+
+@pytest.mark.parametrize("lat, lon", [(90, 180), (-90, -180)])
+def test_coordinate_boundaries(tmp_path, lat, lon):
+    path = write_to_tmp_waypoints_file(
+        tmp_path, f"waypoints: [{{lat: {lat}, lon: {lon}, alt: 0}}]"
+    )
+    assert parse_waypoints_file(path) == (None, [Coordinate(lat, lon, 0)])
+
+
+def test_numeric_strings(tmp_path):
+    path = write_to_tmp_waypoints_file(
+        tmp_path, 'waypoints: [{lat: "1.5", lon: "-2.5", alt: "10"}]'
+    )
+    assert parse_waypoints_file(path) == (None, [Coordinate(1.5, -2.5, 10)])
+
+
+@pytest.mark.parametrize(
+    "coordinates, expected",
+    [
+        ((0, 0, 0, 0), (0, 0)),
+        ((0, 0, 0, 1), (111195.0802, 0)),
+        ((0, 0, 1, 0), (0, 111195.0802)),
+        ((0, 0, 0, -1), (-111195.0802, 0)),
+        ((0, 0, -1, 0), (0, -111195.0802)),
+        ((59, 10, 61, 11), (55597.5401, 222390.1605)),
+    ],
+)
+def test_coordinate_offsets(coordinates, expected):
+    assert east_north_coordinate_offset_m(*coordinates) == pytest.approx(expected, abs=0.01)
+
+
+@pytest.mark.parametrize("waypoints", [[], [Coordinate(1, 2, 3)]])
+def test_short_sweep(waypoints):
+    result = sort_clockwise_sweep(waypoints)
+    assert result == waypoints
+    assert result is not waypoints
+
+
+@pytest.mark.parametrize(
+    "home, expected",
+    [
+        (None, [0, 1, 2, 3]),
+        (Coordinate(0, 2, 0), [1, 2, 3, 0]),
+        (Coordinate(0, -2, 0), [3, 0, 1, 2]),
+        (Coordinate(0, 0, 0), [0, 1, 2, 3]),
+    ],
+)
+def test_clockwise_order(home, expected):
+    north = Coordinate(1, 0, 10)
+    east = Coordinate(0, 1, 10)
+    south = Coordinate(-1, 0, 10)
+    west = Coordinate(0, -1, 10)
+    points = [north, east, south, west]
+    waypoints = [south, north, west, east]
+    original = list(waypoints)
+    assert sort_clockwise_sweep(waypoints, home) == [points[i] for i in expected]
+    assert waypoints == original
+
+
+def test_same_bearing_nearest_first():
+    near = Coordinate(1, 0, 10)
+    far = Coordinate(2, 0, 10)
+    south = Coordinate(-3, 0, 10)
+    assert sort_clockwise_sweep([far, south, near]) == [near, far, south]
+
+
+def test_parsed_coordinates_are_frozen(tmp_path):
+    path = write_to_tmp_waypoints_file(
+        tmp_path, "home: {lat: 1, lon: 2, alt: 3}\nwaypoints: [{lat: 4, lon: 5, alt: 6}]"
+    )
+    home, waypoints = parse_waypoints_file(path)
+    for coordinate in [home, *waypoints]:
+        with pytest.raises(FrozenInstanceError):
+            coordinate.lat = 0
