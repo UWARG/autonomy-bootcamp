@@ -21,3 +21,5 @@ htmlcov/
 logs/
 results/
 compose-logs.txt
+
+.python-version
