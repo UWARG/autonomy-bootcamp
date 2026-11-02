@@ -16,6 +16,10 @@ indexes look different. Fill values, gradients, and
 ``numpy.random.default_rng(index)`` all work.
 """
 
+import time
+
+import numpy as np
+
 from .abstract_camera import AbstractCamera
 from .frame import CameraFrame
 
@@ -36,21 +40,44 @@ class SimCamera(AbstractCamera):
         """
         # TODO(bootcamper): save the arguments and set up your state
         # (FixedCamera.__init__ shows you what that looks like).
-        raise NotImplementedError
+        
+        self.__initialized = False
+        self.width = width
+        self.height = height
+        self.__last_timestamp = float("-inf")
+        # raise NotImplementedError
 
     def initialize_camera(self) -> bool:
         """Turn the fake camera on and start counting from index 0."""
         # TODO(bootcamper): implement.
-        raise NotImplementedError
+        self.__initialized = True
+        self.index = 0
+        return True
+        # raise NotImplementedError
 
     def capture_frame(self) -> CameraFrame:
         """Make up the next frame."""
         # TODO(bootcamper): implement. Don't forget: RuntimeError if the
         # camera isn't on, the same pixels every time for a given index,
         # timestamps that always go up, and returning a copy.
-        raise NotImplementedError
+        if not self.__initialized:
+            raise RuntimeError("Camera is not initialized.")
+        frame = CameraFrame(
+            index=self.index,
+            rgb=np.full((self.height, self.width, 3), self.index % 256, dtype=np.uint8),
+            timestamp=self._next_timestamp(),
+        )
+        self.index += 1
+        return frame
 
     def stop(self) -> None:
         """Turn the fake camera off. Safe to call more than once."""
         # TODO(bootcamper): implement.
-        raise NotImplementedError
+        self.__initialized = False
+
+    def _next_timestamp(self) -> float:
+        timestamp = time.monotonic()
+        if timestamp <= self.__last_timestamp:
+            timestamp = self.__last_timestamp + 1e-6
+        self.__last_timestamp = timestamp
+        return timestamp
