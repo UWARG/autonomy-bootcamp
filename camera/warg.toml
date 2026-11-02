@@ -1,0 +1,12 @@
+name = "camera"
+description = "Camera hardware abstraction layer: lifecycle contract, worked example, and the SimCamera assignment."
+
+depends_on = []
+
+[commands]
+setup = "uv sync --extra dev"
+test = "uv run --extra dev pytest"
+lint = "uv run --extra dev ruff check ."
+
+[ci]
+pr = ["lint", "test"]
