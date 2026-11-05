@@ -1,0 +1,16 @@
+{
+  "result": "success",
+  "mode": "perception",
+  "phases": {
+    "set_mode_guided": true,
+    "arm": true,
+    "wait_for_ready": true,
+    "takeoff": true,
+    "land": true,
+    "sweep": true
+  },
+  "captures": 3,
+  "waypoints_visited": 3,
+  "duration_s": 47.9,
+  "detail": "mission completed"
+}

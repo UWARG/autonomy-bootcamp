@@ -1,0 +1,37 @@
+$ python3 .github/scripts/check_intro.py
+PASS: projects.toml registers [projects.intro] with path = "intro"
+PASS: intro/warg.toml exists and parses as TOML
+PASS: intro/README.md exists and is not empty
+
+intro check passed: all requirements met.
+Exit code: 0
+
+$ warg list
+                                 WARG projects                                  
+┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Project     ┃ Depends on    ┃ Description                                    ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ airside     │ camera, utils │ Perception behavior-tree engine (Part 4): pure │
+│             │               │ py_trees behaviors tested on the host, ROS     │
+│             │               │ plumbing provided for the container.           │
+│ camera      │               │ Camera hardware abstraction layer: lifecycle   │
+│             │               │ contract, worked example, and the SimCamera    │
+│             │               │ assignment.                                    │
+│ integration │ airside, sitl │ Part 5 SITL integration mission: compose       │
+│             │               │ orchestration and acceptance tests.            │
+│ intro       │               │ Bootcamp introduction project.                 │
+│ sitl        │               │ Pinned ArduCopter SITL image providing flight  │
+│             │               │ dynamics for the Part 5 mission.               │
+│ utils       │               │ Waypoint parsing and ordering utilities        │
+│             │               │ (Bootcamp Part 3: testing).                    │
+└─────────────┴───────────────┴────────────────────────────────────────────────┘
+Exit code: 0
+
+$ warg info intro
+intro
+Bootcamp introduction project.
+Dependency order:
+  - intro
+Commands:
+Exit code: 0
+

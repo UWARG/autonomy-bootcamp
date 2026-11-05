@@ -1,0 +1,18 @@
+$ warg run camera lint
+All checks passed!
+Exit code: 0
+
+$ warg run camera test
+============================= test session starts ==============================
+platform darwin -- Python 3.14.7, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/max/Documents/Codex/2026-11-05/hi-c/work/autonomy-bootcamp/camera
+configfile: pyproject.toml
+testpaths: tests
+collected 31 items
+
+tests/test_fixed_camera.py ..................                            [ 58%]
+tests/test_sim_camera.py .............                                   [100%]
+
+============================== 31 passed in 0.11s ==============================
+Exit code: 0
+

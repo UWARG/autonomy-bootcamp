@@ -1,0 +1,4 @@
+$ warg run integration test
+.                                                                        [100%]
+1 passed in 62.64s (0:01:02)
+Exit code: 0

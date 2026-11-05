@@ -1,0 +1,19 @@
+$ warg run airside lint
+All checks passed!
+Exit code: 0
+
+$ warg run airside test
+============================= test session starts ==============================
+platform darwin -- Python 3.14.7, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/max/Documents/Codex/2026-11-05/hi-c/work/autonomy-bootcamp/airside
+configfile: pyproject.toml
+testpaths: src/engine/tests
+collected 17 items
+
+src/engine/tests/test_capture.py ......                                  [ 35%]
+src/engine/tests/test_perception.py ....                                 [ 58%]
+src/engine/tests/test_wait_for_ready.py .......                          [100%]
+
+============================== 17 passed in 0.03s ==============================
+Exit code: 0
+

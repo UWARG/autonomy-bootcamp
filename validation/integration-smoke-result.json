@@ -1,0 +1,15 @@
+{
+  "result": "success",
+  "mode": "smoke",
+  "phases": {
+    "set_mode_guided": true,
+    "arm": true,
+    "wait_for_ready": true,
+    "takeoff": true,
+    "land": true
+  },
+  "captures": 0,
+  "waypoints_visited": 0,
+  "duration_s": 39.5,
+  "detail": "mission completed"
+}

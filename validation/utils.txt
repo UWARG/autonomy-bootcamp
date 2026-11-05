@@ -1,0 +1,24 @@
+$ warg run utils lint
+All checks passed!
+Exit code: 0
+
+$ warg run utils grade-tests
+Grading tests/test_waypoint_utils.py in utils/
+GATE 1  PASS  suite green, branch coverage 100% (>= 90%)
+GATE 2  running 12 mutants...
+  mutant_01.py   killed   sweep ordering: dropped % TWO_PI normalization of the relative bearing
+  mutant_02.py   killed   tie-break: equal-bearing waypoints ordered farthest-first
+  mutant_03.py   killed   range check: latitude validated against longitude bounds
+  mutant_04.py   killed   axes swapped: east/north returned in the wrong order
+  mutant_05.py   killed   start bearing: measured from home to centroid (reference reversed)
+  mutant_06.py   killed   degrees/radians slip: north offset not converted to radians
+  mutant_07.py   killed   validation: non-numeric lat/lon/alt values accepted
+  mutant_08.py   killed   empty input: empty waypoints file raises instead of returning (None, [])
+  mutant_09.py   killed   empty input: trivial-list guard removed from sort_clockwise_sweep
+  mutant_10.py   killed   sweep ordering: sorted in reverse (counterclockwise)
+  mutant_11.py   killed   missing keys: 'alt' dropped from the required-key check
+  mutant_12.py   killed   east offset: dropped cos(latitude) scaling factor
+GATE 2  PASS  all 12 mutants killed
+RESULT  PASS  nice work, your tests catch every bug we planted.
+Exit code: 0
+
