@@ -1,4 +1,0 @@
-$ warg run integration lint
-All checks passed!
-Exit code: 0
-
