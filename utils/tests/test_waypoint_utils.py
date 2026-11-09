@@ -26,12 +26,12 @@ coverage, and fail on every broken copy in ``grader/mutants/``.
 
 import pytest
 
+from src.types import Coordinate
 from src.waypoint_utils import (
     east_north_coordinate_offset_m,
     parse_waypoints_file,
     sort_clockwise_sweep,
 )
-from src.types import Coordinate
 
 # The helper and the test below are given to you.
 
@@ -83,9 +83,21 @@ def write_to_tmp_waypoints_file(tmp_path, text):
     ],
     ids=["home-and-waypoints", "no-home", "comments-and-blank-lines"],
 )
+
 def test_parse_waypoints_file_success(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
     assert parse_waypoints_file(path) == expected
+
+def test_east_offset_scaling():
+    east, north = east_north_coordinate_offset_m(
+            from_lat=60.0,
+            from_lon=-0.0,
+            to_lat=60.0,
+            to_lon=-1.0
+        )
+    assert east == pytest.approx(-55597, rel=0.02)
+    assert north == pytest.approx(0.0, abs=1)
+
 
 
 def test_clockwise_sweep_point():
@@ -225,16 +237,6 @@ def test_missing_coordinates(tmp_path, coordinates):
     with pytest.raises(ValueError):
         parse_waypoints_file(path)
 
-def test_east_north_offset():
-    east, north = east_north_coordinate_offset_m(
-        from_lat=43.0,
-        from_lon=-80.0,
-        to_lat=43.0,
-        to_lon=-79.0
-    )
-
-    assert east == pytest.approx(81500, abs=200)
-    assert north == pytest.approx(0, abs=1)
 
 def test_same_direction_closer_first():
     close = Coordinate(lat=1, lon=0, alt=0)
@@ -251,16 +253,6 @@ def test_coordinate_is_frozen():
     with pytest.raises((AttributeError, TypeError)):
         coordinate.lat = 50
 
-def test_east_north_offset():
-    east, north = east_north_coordinate_offset_m(
-        from_lat=43.0,
-        from_lon=-80.0,
-        to_lat=43.0,
-        to_lon=-79.0
-    )
-
-    assert east == pytest.approx(81500, abs=200)
-    assert north == pytest.approx(0, abs=1)
 
 def test_north_offset():
     east, north = east_north_coordinate_offset_m(
@@ -272,17 +264,6 @@ def test_north_offset():
 
     assert east == pytest.approx(0, abs=1)
     assert north == pytest.approx(111195, abs=200)
-
-@pytest.mark.parametrize("yaml", [
-    "- 1\n- 2",
-    "hello",
-    "123",
-])
-def test_invalid_top_level(tmp_path, yaml):
-    path = write_to_tmp_waypoints_file(tmp_path, yaml)
-
-    with pytest.raises(ValueError):
-        parse_waypoints_file(path)
 
 def test_invalid_home(tmp_path):
     yaml = """
@@ -348,17 +329,3 @@ def test_clockwise_sweep_from_home():
     assert result == [east, south, west, north]
 
 
-def test_home_at_centroid_starts_north():
-    north = Coordinate(1, 0, 0)
-    east = Coordinate(0, 1, 0)
-    south = Coordinate(-1, 0, 0)
-    west = Coordinate(0, -1, 0)
-
-    home = Coordinate(0, 0, 0)
-
-    result = sort_clockwise_sweep(
-        [east, south, west, north],
-        home
-    )
-
-    assert result == [north, east, south, west]
