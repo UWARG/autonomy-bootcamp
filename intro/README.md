@@ -1,6 +1,6 @@
-Ariel Wang
+Name: Ariel Wang
 
-a668wang@uwaterloo.ca
+Waterloo Email: a668wang@uwaterloo.ca
 
-warieltech
+Github Username: warieltech
 
