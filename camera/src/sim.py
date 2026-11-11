@@ -15,6 +15,9 @@ here or in any SimCamera built with the same size, and frames with different
 indexes look different. Fill values, gradients, and
 ``numpy.random.default_rng(index)`` all work.
 """
+import time
+
+import numpy as np
 
 from .abstract_camera import AbstractCamera
 from .frame import CameraFrame
@@ -34,23 +37,36 @@ class SimCamera(AbstractCamera):
             width: Frame width in pixels.
             height: Frame height in pixels.
         """
-        # TODO(bootcamper): save the arguments and set up your state
-        # (FixedCamera.__init__ shows you what that looks like).
-        raise NotImplementedError
+        self._initialized = False
+        self._captures = 0
+        self._last_timestamp = float("-inf")
+        self._width = width
+        self._height = height
 
     def initialize_camera(self) -> bool:
         """Turn the fake camera on and start counting from index 0."""
-        # TODO(bootcamper): implement.
-        raise NotImplementedError
+        self._initialized = True
+        self._captures = 0
+        return True
+        
 
     def capture_frame(self) -> CameraFrame:
         """Make up the next frame."""
-        # TODO(bootcamper): implement. Don't forget: RuntimeError if the
-        # camera isn't on, the same pixels every time for a given index,
-        # timestamps that always go up, and returning a copy.
-        raise NotImplementedError
+        if not self._initialized:
+            raise RuntimeError("camera is not initialized")
+        
+        frame = CameraFrame(
+            rgb = np.full((self._height, self._width, 3), self._captures, dtype =np.uint8),
+            timestamp = time.monotonic(),
+            index = self._captures
+        )
+        if frame.timestamp <= self._last_timestamp:
+            frame.timestamp = self._last_timestamp + 1e-6
+        self._last_timestamp = frame.timestamp
+        self._captures += 1
 
+        return frame
+    
     def stop(self) -> None:
         """Turn the fake camera off. Safe to call more than once."""
-        # TODO(bootcamper): implement.
-        raise NotImplementedError
+        self._initialized = False
