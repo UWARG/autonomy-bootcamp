@@ -1,3 +1,3 @@
-Matthew Kim,
-m398kim@uwaterloo.ca,
-MatthewKim07
+**Name:** Matthew Kim\
+**Email:** m398kim@uwaterloo.ca\
+**GitHub:** MatthewKim07
