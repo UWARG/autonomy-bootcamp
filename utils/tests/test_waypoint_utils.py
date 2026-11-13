@@ -24,16 +24,16 @@ Graded by ``warg run utils grade-tests``: pass on the real code, 90% branch
 coverage, and fail on every broken copy in ``grader/mutants/``.
 """
 
-import pytest
-
 from dataclasses import FrozenInstanceError
 
+import pytest
+
+from src.types import Coordinate
 from src.waypoint_utils import (
     east_north_coordinate_offset_m,
     parse_waypoints_file,
     sort_clockwise_sweep,
 )
-from src.types import Coordinate
 
 # The helper and the test below are given to you.
 
@@ -118,7 +118,7 @@ def test_parse_waypoints_file_frozen_coordinate_output(tmp_path):
     
     path = write_to_tmp_waypoints_file(tmp_path, text)
     with pytest.raises(FrozenInstanceError):
-        home, waypoints = parse_waypoints_file(path)
+        home, _waypoints = parse_waypoints_file(path)
         home.lat = 0
 
 @pytest.mark.parametrize(
