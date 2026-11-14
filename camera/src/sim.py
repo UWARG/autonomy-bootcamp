@@ -18,9 +18,10 @@ indexes look different. Fill values, gradients, and
 
 import time
 
+import numpy as np
+
 from .abstract_camera import AbstractCamera
 from .frame import CameraFrame
-import numpy as np
 
 
 class SimCamera(AbstractCamera):
