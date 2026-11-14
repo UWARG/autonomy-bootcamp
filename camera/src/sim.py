@@ -36,7 +36,9 @@ class SimCamera(AbstractCamera):
         """
         # TODO(bootcamper): save the arguments and set up your state
         # (FixedCamera.__init__ shows you what that looks like).
-        raise NotImplementedError
+        self._initialized = False
+        self._last_timestamp = float("-inf")
+        self._frame = 0
 
     def initialize_camera(self) -> bool:
         """Turn the fake camera on and start counting from index 0."""
