@@ -16,8 +16,11 @@ indexes look different. Fill values, gradients, and
 ``numpy.random.default_rng(index)`` all work.
 """
 
+import time
+
 from .abstract_camera import AbstractCamera
 from .frame import CameraFrame
+import numpy as np
 
 
 class SimCamera(AbstractCamera):
@@ -39,6 +42,8 @@ class SimCamera(AbstractCamera):
         self._initialized = False
         self._last_timestamp = float("-inf")
         self._frame = 0
+        self._width = width
+        self._height = height
 
     def initialize_camera(self) -> bool:
         """Turn the fake camera on and start counting from index 0."""
@@ -51,9 +56,34 @@ class SimCamera(AbstractCamera):
         # TODO(bootcamper): implement. Don't forget: RuntimeError if the
         # camera isn't on, the same pixels every time for a given index,
         # timestamps that always go up, and returning a copy.
-        raise NotImplementedError
+        if not self._initialized:
+            raise RuntimeError("Please ensure the camera has been turned on before capturing a frame.")
+
+        generator = np.random.default_rng(self._frame)
+
+        frame = CameraFrame(
+             rgb=generator.integers(0, 256, size=(self._width, self._height)),
+             timestamp=self._next_timestamp(),
+             index=self._frame
+        )
+
+        self._frame += 1
+        return frame
+
 
     def stop(self) -> None:
         """Turn the fake camera off. Safe to call more than once."""
         # TODO(bootcamper): implement.
         raise NotImplementedError
+
+    def _next_timestamp(self) -> float:
+            """Read the clock, making sure the number beats the last one.
+    
+            ``time.monotonic()`` can return the same value twice if you call it
+            twice fast enough, which would break ordering, so nudge it up.
+            """
+            timestamp = time.monotonic()
+            if timestamp <= self._last_timestamp:
+                timestamp = self._last_timestamp + 1e-6
+            self._last_timestamp = timestamp
+            return timestamp
