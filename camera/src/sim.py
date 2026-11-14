@@ -51,6 +51,8 @@ class SimCamera(AbstractCamera):
         self._initialized = True
         self._frame = 0
 
+        return True
+
     def capture_frame(self) -> CameraFrame:
         """Make up the next frame."""
         # TODO(bootcamper): implement. Don't forget: RuntimeError if the
@@ -62,7 +64,7 @@ class SimCamera(AbstractCamera):
         generator = np.random.default_rng(self._frame)
 
         frame = CameraFrame(
-             rgb=generator.integers(0, 256, size=(self._width, self._height)),
+             rgb=generator.integers(0, 256, size=(self._height, self._width, 3), dtype=np.uint8),
              timestamp=self._next_timestamp(),
              index=self._frame
         )
