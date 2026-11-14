@@ -73,8 +73,7 @@ class SimCamera(AbstractCamera):
 
     def stop(self) -> None:
         """Turn the fake camera off. Safe to call more than once."""
-        # TODO(bootcamper): implement.
-        raise NotImplementedError
+        self._initialized = False
 
     def _next_timestamp(self) -> float:
             """Read the clock, making sure the number beats the last one.
