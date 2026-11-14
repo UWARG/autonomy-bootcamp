@@ -43,7 +43,8 @@ class SimCamera(AbstractCamera):
     def initialize_camera(self) -> bool:
         """Turn the fake camera on and start counting from index 0."""
         # TODO(bootcamper): implement.
-        raise NotImplementedError
+        self._initialized = True
+        self._frame = 0
 
     def capture_frame(self) -> CameraFrame:
         """Make up the next frame."""
