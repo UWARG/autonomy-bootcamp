@@ -26,12 +26,12 @@ coverage, and fail on every broken copy in ``grader/mutants/``.
 
 import pytest
 
+from src.types import Coordinate
 from src.waypoint_utils import (
     east_north_coordinate_offset_m,
     parse_waypoints_file,
     sort_clockwise_sweep,
 )
-from src.types import Coordinate
 
 # The helper and the test below are given to you.
 
@@ -86,6 +86,59 @@ def write_to_tmp_waypoints_file(tmp_path, text):
 def test_parse_waypoints_file_success(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
     assert parse_waypoints_file(path) == expected
+
+@pytest.mark.parametrize(
+        ("text", "expected"),
+        [
+            (
+                """
+                # YAML not parseable
+                home {lat: 1, lon: 2, alt: 3}
+                waypoints
+                  - {lat: 4}
+                """,
+                (ValueError)
+            ),
+            (
+                """
+                # first layer not a mapping
+                - home: {lat: 1, lon: 2, alt: 3}
+                - waypoints:
+                  - {lat: 4}
+                """,
+                (ValueError)
+            ),
+            (
+              """
+              # values are not numbers
+              home: {lat: a, lon: b, alt: c}
+              waypoints: 
+                - {lat: d}
+              """,
+              (ValueError)
+            ),
+            (
+                """
+                # missing 'lat', 'lon', 'alt'
+                home: {lon: 2, alt: 3}
+                waypoints:
+                  - {lat: 4}
+                """,
+                (ValueError)
+            ),
+        ],
+        ids=["malformed-yaml", "first-layer-not-mapping", "values-not-numbers", "missing-field"]
+)
+def test_parse_waypoints_file_failure_malformed_data(tmp_path, text, expected):
+    path = write_to_tmp_waypoints_file(tmp_path, text)
+    with pytest.raises(expected):
+      parse_waypoints_file(path)
+
+def test_parse_waypoints_file_failure_missing_file(tmp_path):
+    with pytest.raises(OSError):
+        parse_waypoints_file(tmp_path / "no-path")
+        
+    
 
 
 def test_placeholder():
