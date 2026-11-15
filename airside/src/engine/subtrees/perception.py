@@ -56,5 +56,9 @@ def create_perception_sweep(
     Returns:
         The behavior at the top of the sweep.
     """
-    # TODO(bootcamper): build the composite described above and return it.
-    raise NotImplementedError
+    # memory=True: resume at the child that was running last tick instead of
+    # re-running children that already succeeded.
+    sweep = py_trees.composites.Sequence(name="PerceptionSweep", memory=True)
+    for index in range(waypoint_count):
+        sweep.add_children([fly_factory(index), capture_factory(index)])
+    return sweep
