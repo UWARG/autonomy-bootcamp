@@ -92,8 +92,6 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
     assert parse_waypoints_file(path) == expected
 
 
-
-
 # ---------------------------------------------------------------------------
 # parse_waypoints_file: more files that parse
 # ---------------------------------------------------------------------------
@@ -120,7 +118,9 @@ def test_parse_home_only(tmp_path):
 
 
 def test_parse_accepts_string_path(tmp_path):
-    path = write_to_tmp_waypoints_file(tmp_path, "waypoints:\n  - {lat: 4, lon: 5, alt: 6}\n")
+    path = write_to_tmp_waypoints_file(
+        tmp_path, "waypoints:\n  - {lat: 4, lon: 5, alt: 6}\n"
+    )
     assert parse_waypoints_file(str(path)) == (None, [Coordinate(4, 5, 6)])
 
 
@@ -238,7 +238,9 @@ def test_parse_waypoint_missing_keys_raises(tmp_path, entry, missing):
 
 
 def test_parse_home_missing_key_raises(tmp_path):
-    path = write_to_tmp_waypoints_file(tmp_path, "home: {lat: 1, lon: 2}\nwaypoints: []\n")
+    path = write_to_tmp_waypoints_file(
+        tmp_path, "home: {lat: 1, lon: 2}\nwaypoints: []\n"
+    )
     with pytest.raises(ValueError, match="home is missing key"):
         parse_waypoints_file(path)
 
@@ -364,7 +366,9 @@ def test_offset_east_shrinks_with_latitude():
 def test_offset_east_uses_mean_latitude():
     # Going from lat 0 to lat 60, the east offset is scaled by cos(30).
     east, north = east_north_coordinate_offset_m(0, 0, 60, 1)
-    assert east == pytest.approx(METERS_PER_DEGREE * math.cos(math.radians(30)), abs=0.01)
+    assert east == pytest.approx(
+        METERS_PER_DEGREE * math.cos(math.radians(30)), abs=0.01
+    )
     assert east == pytest.approx(96297.76, abs=0.1)
     assert north == pytest.approx(60 * METERS_PER_DEGREE, abs=0.01)
 
@@ -380,7 +384,9 @@ def test_offset_is_antisymmetric():
 
 def test_offset_small_realistic_distance():
     # About 30 m north and 10 m west around the WARG field.
-    east, north = east_north_coordinate_offset_m(43.471520, -80.541400, 43.471790, -80.541524)
+    east, north = east_north_coordinate_offset_m(
+        43.471520, -80.541400, 43.471790, -80.541524
+    )
     assert north == pytest.approx(30.02, abs=0.01)
     assert east == pytest.approx(-10.01, abs=0.01)
 
@@ -523,9 +529,9 @@ def test_sort_same_direction_closer_comes_first_with_home():
 
 
 def test_sort_uses_centroid_not_first_waypoint():
-    # The centroid of these is (CENTER_LAT, CENTER_LON + D). Measured from
-    # there, NORTH-ish points split around it correctly only if the real
-    # centroid is used.
+    # The centroid of these three is (CENTER_LAT, CENTER_LON + D), which is
+    # not where any waypoint is. Bearings only come out right if they're
+    # measured from that real centroid.
     a = Coordinate(CENTER_LAT + D, CENTER_LON, 0)
     b = Coordinate(CENTER_LAT + D, CENTER_LON + 2 * D, 0)
     c = Coordinate(CENTER_LAT - 2 * D, CENTER_LON + D, 0)
@@ -535,7 +541,13 @@ def test_sort_uses_centroid_not_first_waypoint():
 
 
 def test_sort_keeps_every_waypoint():
-    waypoints = [WEST, SOUTH, EAST, NORTH, Coordinate(CENTER_LAT + D, CENTER_LON + D, 0)]
+    waypoints = [
+        WEST,
+        SOUTH,
+        EAST,
+        NORTH,
+        Coordinate(CENTER_LAT + D, CENTER_LON + D, 0),
+    ]
     result = sort_clockwise_sweep(waypoints)
     assert len(result) == len(waypoints)
     assert set(result) == set(waypoints)

@@ -115,9 +115,7 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
 
         self._ticks += 1
         if self._ticks >= self._timeout_ticks:
-            self.feedback_message = (
-                f"no new frame after {self._timeout_ticks} ticks"
-            )
+            self.feedback_message = f"no new frame after {self._timeout_ticks} ticks"
             return py_trees.common.Status.FAILURE
 
         self.feedback_message = "waiting for a new frame"

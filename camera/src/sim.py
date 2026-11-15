@@ -76,9 +76,7 @@ class SimCamera(AbstractCamera):
         A new array is built on every call, so nobody shares it.
         """
         rng = np.random.default_rng(index)
-        return rng.integers(
-            0, 256, size=(self._height, self._width, 3), dtype=np.uint8
-        )
+        return rng.integers(0, 256, size=(self._height, self._width, 3), dtype=np.uint8)
 
     def _next_timestamp(self) -> float:
         """Read the clock, nudging it up if it didn't move since last time."""
