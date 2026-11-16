@@ -127,8 +127,26 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
             ),
             (
                 """
-                # missing 'lat', 'lon', 'alt'
+                # missing 'lat'
                 home: {lon: 2, alt: 3}
+                waypoints:
+                  - {lat: 4}
+                """,
+                (ValueError)
+            ),
+            (
+                """
+                # missing 'lon'
+                home: {lat:1, alt: 3}
+                waypoints:
+                  - {lat: 4}
+                """,
+                (ValueError)
+            ),
+            (
+                """
+                # missing 'alt'
+                home: {lat: 1, lon: 2}
                 waypoints:
                   - {lat: 4}
                 """,
@@ -179,7 +197,7 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
                 (ValueError)
             )
         ],
-        ids=["malformed-yaml", "first-layer-not-mapping", "values-not-numbers", "missing-field", "out-of-range-lat-plus-ninety", "out-of-range-lat-negative-ninety", "out-of-range-lon-plus-one-eighty", "out-of-range-lon-negative-one-eighty", "missing-waypoints-array"]
+        ids=["malformed-yaml", "first-layer-not-mapping", "values-not-numbers", "missing-field-lat", "missing-field-lon", "missing-field-alt", "out-of-range-lat-plus-ninety", "out-of-range-lat-negative-ninety", "out-of-range-lon-plus-one-eighty", "out-of-range-lon-negative-one-eighty", "missing-waypoints-array"]
 )
 def test_parse_waypoints_file_failure_malformed_data(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
