@@ -60,13 +60,13 @@ def test_constructor_accepts_positional_parameters() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_capture_before_initialize_raises() -> None:
+def test_capture_before_initialize_raises() -> None:    # done
     camera = SimCamera()
     with pytest.raises(RuntimeError):
         camera.capture_frame()
 
 
-def test_initialize_returns_true() -> None:
+def test_initialize_returns_true() -> None:     # done
     camera = SimCamera()
     assert camera.initialize_camera() is True
 
