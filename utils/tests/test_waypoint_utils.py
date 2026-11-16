@@ -25,6 +25,7 @@ coverage, and fail on every broken copy in ``grader/mutants/``.
 """
 
 import pytest
+import dataclasses
 
 from src.types import Coordinate
 from src.waypoint_utils import (
@@ -244,9 +245,24 @@ def test_parse_waypoints_file_failure_missing_file(tmp_path):
                     Coordinate(-0.01, 0.0, 0.0),
                     Coordinate(0.0, -0.01, 0.0),
                 ]
+            ),
+            (
+                [
+                  Coordinate(-0.01, 0.0, 0.0),
+                  Coordinate(-0.02, 0.0, 0.0),
+                  Coordinate(0.01, 0.0, 0.0),
+                  Coordinate(0.0, -0.01, 0.0)
+                ],
+                None,
+                [
+                    Coordinate(0.01, 0.0, 0.0),
+                    Coordinate(-0.01, 0.0, 0.0),
+                    Coordinate(-0.02, 0.0, 0.0),
+                    Coordinate(0.0, -0.01, 0.0)
+                ]
             )
         ],
-        ids=["1-waypoint", "0-waypoints", "home-is-none", "home-is-not-none", "home-is-centroid"]
+        ids=["1-waypoint", "0-waypoints", "home-is-none", "home-is-not-none", "home-is-centroid", "two-waypoints-in-same-direction"]
 )
 def test_sort_clockwise_sweep_success(waypoints, home, expected):
     results = sort_clockwise_sweep(waypoints, home)
