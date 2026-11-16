@@ -80,8 +80,14 @@ def write_to_tmp_waypoints_file(tmp_path, text):
             """,
             (Coordinate(1, 2, 3), [Coordinate(4, 5, 6)]),
         ),
+        (
+            """
+            # no data
+            """,
+            (None, [])
+        )
     ],
-    ids=["home-and-waypoints", "no-home", "comments-and-blank-lines"],
+    ids=["home-and-waypoints", "no-home", "comments-and-blank-lines", "no-data"],
 )
 def test_parse_waypoints_file_success(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
@@ -161,9 +167,17 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
                   - {lat: 1}
                 """,
                 (ValueError)
+            ),
+            (
+                """
+                # Empty waypoints
+                home: {lat: 100, lon: -200, alt: 3}
+                waypoints:
+                """,
+                (ValueError)
             )
         ],
-        ids=["malformed-yaml", "first-layer-not-mapping", "values-not-numbers", "missing-field", "out-of-range-lat-plus-ninety", "out-of-range-lat-negative-ninety", "out-of-range-lon-plus-one-eighty", "out-of-range-lon-negative-one-eighty"]
+        ids=["malformed-yaml", "first-layer-not-mapping", "values-not-numbers", "missing-field", "out-of-range-lat-plus-ninety", "out-of-range-lat-negative-ninety", "out-of-range-lon-plus-one-eighty", "out-of-range-lon-negative-one-eighty", "missing-waypoints-array"]
 )
 def test_parse_waypoints_file_failure_malformed_data(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
@@ -173,6 +187,29 @@ def test_parse_waypoints_file_failure_malformed_data(tmp_path, text, expected):
 def test_parse_waypoints_file_failure_missing_file(tmp_path):
     with pytest.raises(OSError):
         parse_waypoints_file(tmp_path / "no-path")
+@pytest.mark.parametrize(
+        ("waypoints", "home", "expected"),
+        [
+            (
+                [Coordinate(1, 2, 3)],
+                None,
+                [Coordinate(1, 2, 3)]
+            ),
+            (
+                [],
+                None,
+                []
+            )
+        ],
+        ids=["1-waypoint", "0-waypoints"]
+)
+def test_sort_clockwise_sweep_success(waypoints, home, expected):
+    results = sort_clockwise_sweep(waypoints, home)
+    assert len(waypoints) == len(results)
+    for i, waypoint in enumerate(results):
+        assert waypoint.lat == pytest.approx(expected[i].lat)
+        assert waypoint.lon == pytest.approx(expected[i].lon)
+        assert waypoint.alt == pytest.approx(expected[i].alt)
 
 
 def test_placeholder():
