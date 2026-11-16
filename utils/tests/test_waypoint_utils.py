@@ -24,8 +24,9 @@ Graded by ``warg run utils grade-tests``: pass on the real code, 90% branch
 coverage, and fail on every broken copy in ``grader/mutants/``.
 """
 
-import pytest
 import dataclasses
+
+import pytest
 
 from src.types import Coordinate
 from src.waypoint_utils import (
@@ -271,6 +272,11 @@ def test_sort_clockwise_sweep_success(waypoints, home, expected):
         assert waypoint.lat == pytest.approx(expected[i].lat)
         assert waypoint.lon == pytest.approx(expected[i].lon)
         assert waypoint.alt == pytest.approx(expected[i].alt)
+
+def test_sort_clockwise_sweep_failure():
+    coord = Coordinate(1, 2, 3)
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        coord.lat = 99
 
 def test_east_north_coordinate_offset_m_success():
     (east, north) = east_north_coordinate_offset_m(1, 2, 3, 4)
