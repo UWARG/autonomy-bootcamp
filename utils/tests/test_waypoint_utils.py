@@ -211,6 +211,11 @@ def test_sort_clockwise_sweep_success(waypoints, home, expected):
         assert waypoint.lon == pytest.approx(expected[i].lon)
         assert waypoint.alt == pytest.approx(expected[i].alt)
 
+def test_east_north_coordinate_offset_m_success():
+    (east, north) = east_north_coordinate_offset_m(1, 2, 3, 4)
+    assert east == pytest.approx(222254.68639)
+    assert north == pytest.approx(222390.160467)
+
 
 def test_placeholder():
     # TODO(bootcamper): delete this and write real tests. It's only here so
