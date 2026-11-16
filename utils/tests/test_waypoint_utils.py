@@ -126,8 +126,44 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
                 """,
                 (ValueError)
             ),
+            (
+                """
+                # out of range (lat +90)
+                home: {lat: 100, lon: 2, alt: 3}
+                waypoints:
+                  - {lat: 100}
+                """,
+                (ValueError)
+            ),
+            (
+                """
+                # out of range (lat -90)
+                home: {lat: -100, lon: 2, alt: 3}
+                waypoints:
+                  - {lat: -100}
+                """,
+                (ValueError)
+            ),
+            (
+                """
+                # out of range (lat +180)
+                home: {lat: 1, lon: 200, alt: 3}
+                waypoints:
+                  - {lat: 1}
+                """,
+                (ValueError)
+            ),
+            (
+                """
+                # out of range (lat -180)
+                home: {lat: 100, lon: -200, alt: 3}
+                waypoints:
+                  - {lat: 1}
+                """,
+                (ValueError)
+            )
         ],
-        ids=["malformed-yaml", "first-layer-not-mapping", "values-not-numbers", "missing-field"]
+        ids=["malformed-yaml", "first-layer-not-mapping", "values-not-numbers", "missing-field", "out-of-range-lat-plus-ninety", "out-of-range-lat-negative-ninety", "out-of-range-lon-plus-one-eighty", "out-of-range-lon-negative-one-eighty"]
 )
 def test_parse_waypoints_file_failure_malformed_data(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
@@ -137,8 +173,6 @@ def test_parse_waypoints_file_failure_malformed_data(tmp_path, text, expected):
 def test_parse_waypoints_file_failure_missing_file(tmp_path):
     with pytest.raises(OSError):
         parse_waypoints_file(tmp_path / "no-path")
-        
-    
 
 
 def test_placeholder():
