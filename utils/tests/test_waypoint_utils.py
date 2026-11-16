@@ -214,9 +214,39 @@ def test_parse_waypoints_file_failure_missing_file(tmp_path):
                     Coordinate(-0.01, 0.0, 0.0),
                     Coordinate(0.0, -0.01, 0.0),
                 ]
+            ),
+            (
+                [
+                    Coordinate(-0.01, 0.0, 0.0),
+                    Coordinate(0.0, 0.01, 0.0),
+                    Coordinate(0.01, 0.0, 0.0),
+                    Coordinate(0.0, -0.01, 0.0)
+                ],
+                Coordinate(0.0, 0.02, 0.0),
+                [
+                    Coordinate(0.0, 0.01, 0.0),
+                    Coordinate(-0.01, 0.0, 0.0),
+                    Coordinate(0.0, -0.01, 0.0),
+                    Coordinate(0.01, 0.0, 0.0)
+                ]
+            ),
+            (
+                [
+                  Coordinate(-0.01, 0.0, 0.0),
+                  Coordinate(0.0, 0.01, 0.0),
+                  Coordinate(0.01, 0.0, 0.0),
+                  Coordinate(0.0, -0.01, 0.0)
+                ],
+                Coordinate(0.0, 0.0, 0.0),
+                [
+                    Coordinate(0.01, 0.0, 0.0),
+                    Coordinate(0.0, 0.01, 0.0),
+                    Coordinate(-0.01, 0.0, 0.0),
+                    Coordinate(0.0, -0.01, 0.0),
+                ]
             )
         ],
-        ids=["1-waypoint", "0-waypoints", "home-is-none"]
+        ids=["1-waypoint", "0-waypoints", "home-is-none", "home-is-not-none", "home-is-centroid"]
 )
 def test_sort_clockwise_sweep_success(waypoints, home, expected):
     results = sort_clockwise_sweep(waypoints, home)
