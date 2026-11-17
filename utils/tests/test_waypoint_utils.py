@@ -87,9 +87,17 @@ def write_to_tmp_waypoints_file(tmp_path, text):
             # no data
             """,
             (None, [])
+        ),
+        (
+            """
+            # Empty waypoints
+            home: {lat: 1, lon: 2, alt: 3}
+            waypoints:
+            """,
+            (Coordinate(1, 2, 3), [])
         )
     ],
-    ids=["home-and-waypoints", "no-home", "comments-and-blank-lines", "no-data"],
+    ids=["home-and-waypoints", "no-home", "comments-and-blank-lines", "no-data", "no-waypoints"],
 )
 def test_parse_waypoints_file_success(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
@@ -112,7 +120,7 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
                 # first layer not a mapping
                 - home: {lat: 1, lon: 2, alt: 3}
                 - waypoints:
-                  - {lat: 4}
+                  - {lat: 4, lon: 5, alt: 6}
                 """,
                 (ValueError)
             ),
@@ -121,7 +129,7 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
               # values are not numbers
               home: {lat: a, lon: b, alt: c}
               waypoints: 
-                - {lat: d}
+                - {lat: d, lon: e, alt: f}
               """,
               (ValueError)
             ),
@@ -137,7 +145,7 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
             (
                 """
                 # missing 'lon'
-                home: {lat:1, lon: 2, alt: 3}
+                home: {lat: 1, lon: 2, alt: 3}
                 waypoints:
                   - {lat: 4, alt: 6}
                 """,
@@ -187,17 +195,9 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
                   - {lat: 1, lon: -200, alt: 3}
                 """,
                 (ValueError)
-            ),
-            (
-                """
-                # Empty waypoints
-                home: {lat: 100, lon: -200, alt: 3}
-                waypoints:
-                """,
-                (ValueError)
             )
         ],
-        ids=["malformed-yaml", "first-layer-not-mapping", "values-not-numbers", "missing-field-lat", "missing-field-lon", "missing-field-alt", "out-of-range-lat-plus-ninety", "out-of-range-lat-negative-ninety", "out-of-range-lon-plus-one-eighty", "out-of-range-lon-negative-one-eighty", "missing-waypoints-array"]
+        ids=["malformed-yaml", "first-layer-not-mapping", "values-not-numbers", "missing-field-lat", "missing-field-lon", "missing-field-alt", "out-of-range-lat-plus-ninety", "out-of-range-lat-negative-ninety", "out-of-range-lon-plus-one-eighty", "out-of-range-lon-negative-one-eighty"]
 )
 def test_parse_waypoints_file_failure_malformed_data(tmp_path, text, expected):
     path = write_to_tmp_waypoints_file(tmp_path, text)
@@ -207,6 +207,7 @@ def test_parse_waypoints_file_failure_malformed_data(tmp_path, text, expected):
 def test_parse_waypoints_file_failure_missing_file(tmp_path):
     with pytest.raises(OSError):
         parse_waypoints_file(tmp_path / "no-path")
+
 @pytest.mark.parametrize(
         ("waypoints", "home", "expected"),
         [
