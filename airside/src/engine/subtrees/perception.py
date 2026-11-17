@@ -63,4 +63,6 @@ def create_perception_sweep(
 
         seq.add_children([fly_behavior, capture_behavior])
 
+    return seq
+
 
