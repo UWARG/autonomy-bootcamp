@@ -128,27 +128,27 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
             (
                 """
                 # missing 'lat'
-                home: {lon: 2, alt: 3}
+                home: {lat: 1, lon: 2, alt: 3}
                 waypoints:
-                  - {lat: 4}
+                  - {lon: 5, alt: 6}
                 """,
                 (ValueError)
             ),
             (
                 """
                 # missing 'lon'
-                home: {lat:1, alt: 3}
+                home: {lat:1, lon: 2, alt: 3}
                 waypoints:
-                  - {lat: 4}
+                  - {lat: 4, alt: 6}
                 """,
                 (ValueError)
             ),
             (
                 """
                 # missing 'alt'
-                home: {lat: 1, lon: 2}
+                home: {lat: 1, lon: 2, alt: 3}
                 waypoints:
-                  - {lat: 4}
+                  - {lat: 4, lon: 5}
                 """,
                 (ValueError)
             ),
@@ -270,11 +270,15 @@ def test_parse_waypoints_file_failure_missing_file(tmp_path):
                   Coordinate(-0.01, 0.0, 0.0),
                   Coordinate(-0.02, 0.0, 0.0),
                   Coordinate(0.01, 0.0, 0.0),
-                  Coordinate(0.0, -0.01, 0.0)
+                  Coordinate(0.0, -0.01, 0.0), 
+                  Coordinate(0.02, 0.0, 0.0),
+                  Coordinate(0.0, 0.01, 0.0)
                 ],
                 None,
                 [
                     Coordinate(0.01, 0.0, 0.0),
+                    Coordinate(0.02, 0.0, 0.0),
+                    Coordinate(0.0, 0.01, 0.0),
                     Coordinate(-0.01, 0.0, 0.0),
                     Coordinate(-0.02, 0.0, 0.0),
                     Coordinate(0.0, -0.01, 0.0)
