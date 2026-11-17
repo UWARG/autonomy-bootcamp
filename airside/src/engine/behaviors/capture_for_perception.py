@@ -91,8 +91,13 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         py_trees calls this on every fresh attempt, which is what lets the
         capture at the next waypoint ignore the picture from this one.
         """
-        # TODO(bootcamper): implement.
-        raise NotImplementedError
+        frame = self._latest_frame()
+        #Write down the index of whatever frame is on LATEST_FRAME right now, or None if there isn't one yet.
+        if frame is None:
+            self._start_index = None
+        else:
+            self._start_index = frame.index
+        self._ticks = 0
 
     def update(self) -> py_trees.common.Status:
         """
@@ -101,5 +106,15 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         Returns fast every tick, so the rest of the tree keeps running while
         we wait. The class docstring says exactly what to do.
         """
-        # TODO(bootcamper): implement.
-        raise NotImplementedError
+        frame = self._latest_frame()
+        #If LATEST_FRAME has a frame whose index isn't the one you wrote down, that's a new picture. Call publisher.publish_image(frame), then publisher.publish_status({"phase": "capture", "frame_index": frame.index}), and return SUCCESS.
+        if frame is not None and frame.index != self._start_index:
+            #if frame index is not start index or none  (means there is a new picture)
+            self._publisher.publish_image(frame)
+            self._publisher.publish_status({"phase": "capture", "frame_index": frame.index})
+            return py_trees.common.Status.SUCCESS
+
+        self._ticks += 1 #add one to the counter
+        if self._ticks >= self._timeout_ticks: #in init at the top of the class (should be 20)
+            return py_trees.common.Status.FAILURE
+        return py_trees.common.Status.RUNNING
