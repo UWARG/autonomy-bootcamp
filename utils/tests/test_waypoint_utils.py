@@ -155,36 +155,36 @@ def test_parse_waypoints_file_success(tmp_path, text, expected):
             (
                 """
                 # out of range (lat +90)
-                home: {lat: 100, lon: 2, alt: 3}
+                home: {lat: 1, lon: 2, alt: 3}
                 waypoints:
-                  - {lat: 100}
+                  - {lat: 100, lon: 2, alt: 3}
                 """,
                 (ValueError)
             ),
             (
                 """
                 # out of range (lat -90)
-                home: {lat: -100, lon: 2, alt: 3}
+                home: {lat: 1, lon: 2, alt: 3}
                 waypoints:
-                  - {lat: -100}
+                  - {lat: -100, lon: 2, alt: 3}
                 """,
                 (ValueError)
             ),
             (
                 """
-                # out of range (lat +180)
-                home: {lat: 1, lon: 200, alt: 3}
+                # out of range (lon +180)
+                home: {lat: 1, lon: 2, alt: 3}
                 waypoints:
-                  - {lat: 1}
+                  - {lat: 1, lon: 200, alt: 3}
                 """,
                 (ValueError)
             ),
             (
                 """
-                # out of range (lat -180)
-                home: {lat: 100, lon: -200, alt: 3}
+                # out of range (lon -180)
+                home: {lat: 1, lon: 2, alt: 3}
                 waypoints:
-                  - {lat: 1}
+                  - {lat: 1, lon: -200, alt: 3}
                 """,
                 (ValueError)
             ),
