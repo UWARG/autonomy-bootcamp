@@ -305,11 +305,3 @@ def test_east_north_coordinate_offset_m_success():
     (east, north) = east_north_coordinate_offset_m(1, 2, 3, 4)
     assert east == pytest.approx(222254.68639)
     assert north == pytest.approx(222390.160467)
-
-
-def test_placeholder():
-    # TODO(bootcamper): delete this and write real tests. It's only here so
-    # linter doesn't complain about unused imports before you start.
-    assert callable(east_north_coordinate_offset_m)
-    assert callable(parse_waypoints_file)
-    assert callable(sort_clockwise_sweep)
