@@ -92,11 +92,11 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         capture at the next waypoint ignore the picture from this one.
         """
         frame = self._latest_frame()
-        if not frame:
+        if frame is None:
             self._latest_index = None
         else:
             self._latest_index = frame.index
-        self.tick = 0
+        self._tick = 0
 
     def update(self) -> py_trees.common.Status:
         """
@@ -106,14 +106,20 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         we wait. The class docstring says exactly what to do.
         """
         frame = self._latest_frame()
+        if frame is None:
+            self._tick += 1
+            if self._tick >= self._timeout_ticks:
+                return py_trees.common.Status.FAILURE
+
+            return py_trees.common.Status.RUNNING
 
         if frame.index != self._latest_index:
             self._publisher.publish_image(frame)
             self._publisher.publish_status({"phase": "capture", "frame_index": frame.index})
             return py_trees.common.Status.SUCCESS
 
-        self.tick += 1
-        if (self.tick >= self._timeout_ticks):
+        self._tick += 1
+        if (self._tick >= self._timeout_ticks):
             return py_trees.common.Status.FAILURE
 
         return py_trees.common.Status.RUNNING
