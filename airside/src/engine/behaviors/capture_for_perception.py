@@ -64,6 +64,8 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         super().__init__(name=name)
         self._publisher = publisher
         self._timeout_ticks = timeout_ticks
+        self._ticks_counter = 0
+        self._latest_frame_index = None
 
         # We already set up the blackboard for you here, with permission to
         # read the latest camera frame.
@@ -92,7 +94,11 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         capture at the next waypoint ignore the picture from this one.
         """
         # TODO(bootcamper): implement.
-        raise NotImplementedError
+
+        self._latest_frame_index = self._latest_frame()
+        if self._latest_frame_index is not None:
+            self._latest_frame_index = self._latest_frame_index.index
+        self._ticks_counter = 0
 
     def update(self) -> py_trees.common.Status:
         """
@@ -102,4 +108,21 @@ class CaptureForPerception(py_trees.behaviour.Behaviour):
         we wait. The class docstring says exactly what to do.
         """
         # TODO(bootcamper): implement.
-        raise NotImplementedError
+
+        new_frame = self._latest_frame()
+        new_frame_index = None
+        if new_frame is not None:
+            new_frame_index = new_frame.index
+        
+        if new_frame_index != self._latest_frame_index:
+            self._latest_frame_index = new_frame_index
+            self._publisher.publish_image(new_frame)
+            self._publisher.publish_status({"phase": "capture",
+                "frame_index": new_frame.index})
+            return py_trees.common.Status.SUCCESS
+        
+        self._ticks_counter += 1
+        if self._ticks_counter == self._timeout_ticks:
+            return py_trees.common.Status.FAILURE
+        
+        return py_trees.common.Status.RUNNING
