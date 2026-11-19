@@ -13,6 +13,10 @@ from collections.abc import Callable
 
 import py_trees
 
+RUNNING = py_trees.common.Status.RUNNING
+SUCCESS = py_trees.common.Status.SUCCESS
+FAILURE = py_trees.common.Status.FAILURE
+
 
 def create_perception_sweep(
     waypoint_count: int,
@@ -57,4 +61,14 @@ def create_perception_sweep(
         The behavior at the top of the sweep.
     """
     # TODO(bootcamper): build the composite described above and return it.
-    raise NotImplementedError
+
+    root = py_trees.composites.Sequence(name="Sweep", memory=True)
+
+    for i in range(waypoint_count):
+      root.add_children([
+         fly_factory(i),
+         capture_factory(i)
+      ])
+
+    return root
+    
